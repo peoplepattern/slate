@@ -13,12 +13,6 @@ toc_footers:
 
 includes:
   - introduction
-  - authentication
-  - data_objects
-  - enrich_api
-  - lookup_api
-  - search_api
-  - aggregate_api
   - errors
 
 search: true
