@@ -1008,7 +1008,7 @@ are also supported.
 <p>Retrieve a single profile from the Lookup API by query a social
 profile identifier. Social profile identifiers are of the form</p>
 
-<p><service>:<id></p>
+<p>&rsquo;[service]:[id]&rsquo;</p>
 
 <p>For example:</p>
 
@@ -1027,7 +1027,7 @@ Batches of profiles can be retrived by submitting a list of ids
 
           <h1 id="search-api">Search API</h1>
 
-<h2 id="this-service-allows-you-to-search-the-pdb-and-discover-an-audience-based-on-a-search-query">This service allows you to search the pdb and discover an audience based on a search query</h2>
+<h2 id="search-the-portrait-database-pdb">Search the Portrait Database (Pdb)</h2>
 
 <h3 id="get-pattern">GET pattern</h3>
 <pre class="highlight shell"><code>curl <span class="s1">'/pdb/search?queryString=joe'</span>
@@ -1044,14 +1044,222 @@ Batches of profiles can be retrived by submitting a list of ids
 <blockquote>
 <p>Response will look like:</p>
 </blockquote>
-<pre class="highlight shell"><code><span class="o">[{</span><span class="s2">"</span><span class="nv">$schema</span><span class="s2">"</span>:<span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span>,<span class="s2">"twitter"</span>:<span class="o">{</span><span class="s2">"statuses_count"</span>:708,<span class="s2">"followers_count"</span>:48,<span class="s2">"friends_count"</span>:86,<span class="s2">"lang"</span>:<span class="s2">"en"</span>,<span class="s2">"listed_count"</span>:0,<span class="s2">"screen_name"</span>:<span class="s2">"jszulueta"</span>,<span class="s2">"favourites_count"</span>:3<span class="o">}</span>,<span class="s2">"enrichments"</span>:<span class="o">{</span><span class="s2">"psychographics"</span>:<span class="o">{</span><span class="s2">"languages"</span>:<span class="o">{</span><span class="s2">"android"</span>:5,<span class="s2">"ios"</span>:6<span class="o">}</span>,<span class="s2">"interests"</span>:<span class="o">{</span><span class="s2">"business"</span>:2,<span class="s2">"health_care"</span>:3,<span class="s2">"military"</span>:6,<span class="s2">"consumer_electronics"</span>:5,<span class="s2">"beverages"</span>:3,<span class="s2">"computers"</span>:2,<span class="s2">"other_sports"</span>:2,<span class="s2">"science"</span>:3,<span class="s2">"crafts"</span>:1,<span class="s2">"design"</span>:3,<span class="s2">"religion"</span>:3,<span class="s2">"shopping"</span>:4,<span class="s2">"food"</span>:6,<span class="s2">"local_life"</span>:11,<span class="s2">"travel"</span>:22,<span class="s2">"multimedia"</span>:52,<span class="s2">"family"</span>:2,<span class="s2">"beauty"</span>:1,<span class="s2">"environmentalism"</span>:2,<span class="s2">"humor"</span>:4<span class="o">}</span>,<span class="s2">"sentiment"</span>:<span class="o">{</span><span class="s2">"neutral"</span>:1,<span class="s2">"positive"</span>:126<span class="o">}</span>,<span class="s2">"mentions"</span>:[<span class="s2">"twitter:122302784"</span>,<span class="s2">"twitter:14120151"</span>,<span class="s2">"twitter:2166412230"</span>,<span class="s2">"twitter:960481315"</span>,<span class="s2">"twitter:71983360"</span>,<span class="s2">"twitter:106915372"</span>,<span class="s2">"twitter:14511951"</span>,<span class="s2">"twitter:15092616"</span>,<span class="s2">"twitter:2576461322"</span>,<span class="s2">"twitter:326380075"</span>,<span class="s2">"twitter:347258974"</span>,<span class="s2">"twitter:3746042353"</span>,<span class="s2">"twitter:871351657"</span><span class="o">]</span>,<span class="s2">"hashtags"</span>:[<span class="s2">"3d"</span>,<span class="s2">"fps"</span>,<span class="s2">"mobile"</span>,<span class="s2">"pg3d"</span>,<span class="s2">"pixelgun"</span>,<span class="s2">"pixelgun3d"</span>,<span class="s2">"shooter"</span>,<span class="s2">"HiddenRisks"</span>,<span class="s2">"TheSMStoreMakati3DS"</span>,<span class="s2">"WaltDisney"</span>,<span class="s2">"gifersation"</span><span class="o">]}</span>,<span class="s2">"demographics"</span>:<span class="o">{</span><span class="s2">"race"</span>:<span class="s2">"white"</span>,<span class="s2">"birthyear"</span>:1999,<span class="s2">"gender"</span>:<span class="s2">"female"</span><span class="o">}</span>,<span class="s2">"account_type"</span>:<span class="s2">"person"</span>,<span class="s2">"version"</span>:<span class="s2">"0.10"</span>,<span class="s2">"vcard"</span>:<span class="o">{</span><span class="s2">"name"</span>:<span class="o">{</span><span class="s2">"fn"</span>:<span class="s2">"Joe Zulueta"</span><span class="o">}}</span>,<span class="s2">"interestingness"</span>:0.8452886615186165<span class="o">}</span>,<span class="s2">"screenName"</span>:<span class="s2">"jszulueta"</span>,<span class="s2">"objectType"</span>:<span class="s2">"profile"</span>,<span class="s2">"id"</span>:<span class="s2">"twitter:130573602"</span>,<span class="s2">"displayScreenName"</span>:<span class="s2">"jszulueta"</span>,<span class="s2">"provider"</span>:<span class="o">{</span><span class="s2">"id"</span>:<span class="s2">"twitter"</span><span class="o">}</span>,<span class="s2">"published"</span>:<span class="s2">"2010-04-07T17:56:08.000Z"</span>,<span class="s2">"displayName"</span>:<span class="s2">"★ joe"</span>,<span class="s2">"image"</span>:<span class="o">{</span><span class="s2">"url"</span>:<span class="s2">"http://pbs.twimg.com/profile_images/491912407841644544/7dD2PrDr_normal.jpeg"</span><span class="o">}</span>,<span class="s2">"summary"</span>:<span class="s2">"joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe"</span>,<span class="s2">"indexedAt"</span>:<span class="s2">"2015-11-03T23:31:29.870Z"</span>,<span class="s2">"location"</span>:<span class="s2">"Manila"</span><span class="o">}]</span>
+<pre class="highlight shell"><code><span class="o">[</span>
+   <span class="o">{</span>
+      <span class="s2">"</span><span class="nv">$schema</span><span class="s2">"</span>:<span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span>,
+      <span class="s2">"twitter"</span>:<span class="o">{</span>
+         <span class="s2">"statuses_count"</span>:708,
+         <span class="s2">"followers_count"</span>:48,
+         <span class="s2">"friends_count"</span>:86,
+         <span class="s2">"lang"</span>:<span class="s2">"en"</span>,
+         <span class="s2">"listed_count"</span>:0,
+         <span class="s2">"screen_name"</span>:<span class="s2">"jszulueta"</span>,
+         <span class="s2">"favourites_count"</span>:3
+      <span class="o">}</span>,
+      <span class="s2">"enrichments"</span>:<span class="o">{</span>
+         <span class="s2">"psychographics"</span>:<span class="o">{</span>
+            <span class="s2">"languages"</span>:<span class="o">{</span>
+               <span class="s2">"android"</span>:5,
+               <span class="s2">"ios"</span>:6
+            <span class="o">}</span>,
+            <span class="s2">"interests"</span>:<span class="o">{</span>
+               <span class="s2">"business"</span>:2,
+               <span class="s2">"health_care"</span>:3,
+               <span class="s2">"military"</span>:6,
+               <span class="s2">"consumer_electronics"</span>:5,
+               <span class="s2">"beverages"</span>:3,
+               <span class="s2">"computers"</span>:2,
+               <span class="s2">"other_sports"</span>:2,
+               <span class="s2">"science"</span>:3,
+               <span class="s2">"crafts"</span>:1,
+               <span class="s2">"design"</span>:3,
+               <span class="s2">"religion"</span>:3,
+               <span class="s2">"shopping"</span>:4,
+               <span class="s2">"food"</span>:6,
+               <span class="s2">"local_life"</span>:11,
+               <span class="s2">"travel"</span>:22,
+               <span class="s2">"multimedia"</span>:52,
+               <span class="s2">"family"</span>:2,
+               <span class="s2">"beauty"</span>:1,
+               <span class="s2">"environmentalism"</span>:2,
+               <span class="s2">"humor"</span>:4
+            <span class="o">}</span>,
+            <span class="s2">"sentiment"</span>:<span class="o">{</span>
+               <span class="s2">"neutral"</span>:1,
+               <span class="s2">"positive"</span>:126
+            <span class="o">}</span>,
+            <span class="s2">"mentions"</span>:[
+               <span class="s2">"twitter:122302784"</span>,
+               <span class="s2">"twitter:14120151"</span>,
+               <span class="s2">"twitter:2166412230"</span>,
+               <span class="s2">"twitter:960481315"</span>,
+               <span class="s2">"twitter:71983360"</span>,
+               <span class="s2">"twitter:106915372"</span>,
+               <span class="s2">"twitter:14511951"</span>,
+               <span class="s2">"twitter:15092616"</span>,
+               <span class="s2">"twitter:2576461322"</span>,
+               <span class="s2">"twitter:326380075"</span>,
+               <span class="s2">"twitter:347258974"</span>,
+               <span class="s2">"twitter:3746042353"</span>,
+               <span class="s2">"twitter:871351657"</span>
+            <span class="o">]</span>,
+            <span class="s2">"hashtags"</span>:[
+               <span class="s2">"3d"</span>,
+               <span class="s2">"fps"</span>,
+               <span class="s2">"mobile"</span>,
+               <span class="s2">"pg3d"</span>,
+               <span class="s2">"pixelgun"</span>,
+               <span class="s2">"pixelgun3d"</span>,
+               <span class="s2">"shooter"</span>,
+               <span class="s2">"HiddenRisks"</span>,
+               <span class="s2">"TheSMStoreMakati3DS"</span>,
+               <span class="s2">"WaltDisney"</span>,
+               <span class="s2">"gifersation"</span>
+            <span class="o">]</span>
+         <span class="o">}</span>,
+         <span class="s2">"demographics"</span>:<span class="o">{</span>
+            <span class="s2">"race"</span>:<span class="s2">"white"</span>,
+            <span class="s2">"birthyear"</span>:1999,
+            <span class="s2">"gender"</span>:<span class="s2">"female"</span>
+         <span class="o">}</span>,
+         <span class="s2">"account_type"</span>:<span class="s2">"person"</span>,
+         <span class="s2">"version"</span>:<span class="s2">"0.10"</span>,
+         <span class="s2">"vcard"</span>:<span class="o">{</span>
+            <span class="s2">"name"</span>:<span class="o">{</span>
+               <span class="s2">"fn"</span>:<span class="s2">"Joe Zulueta"</span>
+            <span class="o">}</span>
+         <span class="o">}</span>,
+         <span class="s2">"interestingness"</span>:0.8452886615186165
+      <span class="o">}</span>,
+      <span class="s2">"screenName"</span>:<span class="s2">"jszulueta"</span>,
+      <span class="s2">"objectType"</span>:<span class="s2">"profile"</span>,
+      <span class="s2">"id"</span>:<span class="s2">"twitter:130573602"</span>,
+      <span class="s2">"displayScreenName"</span>:<span class="s2">"jszulueta"</span>,
+      <span class="s2">"provider"</span>:<span class="o">{</span>
+         <span class="s2">"id"</span>:<span class="s2">"twitter"</span>
+      <span class="o">}</span>,
+      <span class="s2">"published"</span>:<span class="s2">"2010-04-07T17:56:08.000Z"</span>,
+      <span class="s2">"displayName"</span>:<span class="s2">"★ joe"</span>,
+      <span class="s2">"image"</span>:<span class="o">{</span>
+         <span class="s2">"url"</span>:<span class="s2">"http://pbs.twimg.com/profile_images/491912407841644544/7dD2PrDr_normal.jpeg"</span>
+      <span class="o">}</span>,
+      <span class="s2">"summary"</span>:<span class="s2">"joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe"</span>,
+      <span class="s2">"indexedAt"</span>:<span class="s2">"2015-11-03T23:31:29.870Z"</span>,
+      <span class="s2">"location"</span>:<span class="s2">"Manila"</span>
+   <span class="o">}</span>
+<span class="o">]</span>
 </code></pre>
 <pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
 <span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
 <span class="na">Content-Length</span><span class="p">:</span> <span class="s">1088</span>
 
-<span class="p">[{</span><span class="nt">"$schema"</span><span class="p">:</span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="nt">"twitter"</span><span class="p">:{</span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="mi">708</span><span class="p">,</span><span class="nt">"followers_count"</span><span class="p">:</span><span class="mi">48</span><span class="p">,</span><span class="nt">"friends_count"</span><span class="p">:</span><span class="mi">86</span><span class="p">,</span><span class="nt">"lang"</span><span class="p">:</span><span class="s2">"en"</span><span class="p">,</span><span class="nt">"listed_count"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="nt">"screen_name"</span><span class="p">:</span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="mi">3</span><span class="p">},</span><span class="nt">"enrichments"</span><span class="p">:{</span><span class="nt">"psychographics"</span><span class="p">:{</span><span class="nt">"languages"</span><span class="p">:{</span><span class="nt">"android"</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="nt">"ios"</span><span class="p">:</span><span class="mi">6</span><span class="p">},</span><span class="nt">"interests"</span><span class="p">:{</span><span class="nt">"business"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"health_care"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"military"</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="nt">"beverages"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"computers"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"other_sports"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"science"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"crafts"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">"design"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"religion"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"shopping"</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span><span class="nt">"food"</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="nt">"local_life"</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="nt">"travel"</span><span class="p">:</span><span class="mi">22</span><span class="p">,</span><span class="nt">"multimedia"</span><span class="p">:</span><span class="mi">52</span><span class="p">,</span><span class="nt">"family"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"beauty"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">"environmentalism"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"humor"</span><span class="p">:</span><span class="mi">4</span><span class="p">},</span><span class="nt">"sentiment"</span><span class="p">:{</span><span class="nt">"neutral"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">"positive"</span><span class="p">:</span><span class="mi">126</span><span class="p">},</span><span class="nt">"mentions"</span><span class="p">:[</span><span class="s2">"twitter:122302784"</span><span class="p">,</span><span class="s2">"twitter:14120151"</span><span class="p">,</span><span class="s2">"twitter:2166412230"</span><span class="p">,</span><span class="s2">"twitter:960481315"</span><span class="p">,</span><span class="s2">"twitter:71983360"</span><span class="p">,</span><span class="s2">"twitter:106915372"</span><span class="p">,</span><span class="s2">"twitter:14511951"</span><span class="p">,</span><span class="s2">"twitter:15092616"</span><span class="p">,</span><span class="s2">"twitter:2576461322"</span><span class="p">,</span><span class="s2">"twitter:326380075"</span><span class="p">,</span><span class="s2">"twitter:347258974"</span><span class="p">,</span><span class="s2">"twitter:3746042353"</span><span class="p">,</span><span class="s2">"twitter:871351657"</span><span class="p">],</span><span class="nt">"hashtags"</span><span class="p">:[</span><span class="s2">"3d"</span><span class="p">,</span><span class="s2">"fps"</span><span class="p">,</span><span class="s2">"mobile"</span><span class="p">,</span><span class="s2">"pg3d"</span><span class="p">,</span><span class="s2">"pixelgun"</span><span class="p">,</span><span class="s2">"pixelgun3d"</span><span class="p">,</span><span class="s2">"shooter"</span><span class="p">,</span><span class="s2">"HiddenRisks"</span><span class="p">,</span><span class="s2">"TheSMStoreMakati3DS"</span><span class="p">,</span><span class="s2">"WaltDisney"</span><span class="p">,</span><span class="s2">"gifersation"</span><span class="p">]},</span><span class="nt">"demographics"</span><span class="p">:{</span><span class="nt">"race"</span><span class="p">:</span><span class="s2">"white"</span><span class="p">,</span><span class="nt">"birthyear"</span><span class="p">:</span><span class="mi">1999</span><span class="p">,</span><span class="nt">"gender"</span><span class="p">:</span><span class="s2">"female"</span><span class="p">},</span><span class="nt">"account_type"</span><span class="p">:</span><span class="s2">"person"</span><span class="p">,</span><span class="nt">"version"</span><span class="p">:</span><span class="s2">"0.10"</span><span class="p">,</span><span class="nt">"vcard"</span><span class="p">:{</span><span class="nt">"name"</span><span class="p">:{</span><span class="nt">"fn"</span><span class="p">:</span><span class="s2">"Joe Zulueta"</span><span class="p">}},</span><span class="nt">"interestingness"</span><span class="p">:</span><span class="mf">0.8452886615186165</span><span class="p">},</span><span class="nt">"screenName"</span><span class="p">:</span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="nt">"objectType"</span><span class="p">:</span><span class="s2">"profile"</span><span class="p">,</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"twitter:130573602"</span><span class="p">,</span><span class="nt">"displayScreenName"</span><span class="p">:</span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="nt">"provider"</span><span class="p">:{</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"twitter"</span><span class="p">},</span><span class="nt">"published"</span><span class="p">:</span><span class="s2">"2010-04-07T17:56:08.000Z"</span><span class="p">,</span><span class="nt">"displayName"</span><span class="p">:</span><span class="s2">"★ joe"</span><span class="p">,</span><span class="nt">"image"</span><span class="p">:{</span><span class="nt">"url"</span><span class="p">:</span><span class="s2">"http://pbs.twimg.com/profile_images/491912407841644544/7dD2PrDr_normal.jpeg"</span><span class="p">},</span><span class="nt">"summary"</span><span class="p">:</span><span class="s2">"joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe"</span><span class="p">,</span><span class="nt">"indexedAt"</span><span class="p">:</span><span class="s2">"2015-11-03T23:31:29.870Z"</span><span class="p">,</span><span class="nt">"location"</span><span class="p">:</span><span class="s2">"Manila"</span><span class="p">}]</span><span class="w">
+<span class="p">[</span><span class="w">
+   </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"$schema"</span><span class="p">:</span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"twitter"</span><span class="p">:{</span><span class="w">
+         </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="mi">708</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="mi">48</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="mi">86</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"lang"</span><span class="p">:</span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="mi">3</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"enrichments"</span><span class="p">:{</span><span class="w">
+         </span><span class="nt">"psychographics"</span><span class="p">:{</span><span class="w">
+            </span><span class="nt">"languages"</span><span class="p">:{</span><span class="w">
+               </span><span class="nt">"android"</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"ios"</span><span class="p">:</span><span class="mi">6</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"interests"</span><span class="p">:{</span><span class="w">
+               </span><span class="nt">"business"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"health_care"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"military"</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"beverages"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"computers"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"other_sports"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"science"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"crafts"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"design"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"religion"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"shopping"</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"food"</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"local_life"</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"travel"</span><span class="p">:</span><span class="mi">22</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="mi">52</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"family"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"beauty"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"environmentalism"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"humor"</span><span class="p">:</span><span class="mi">4</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"sentiment"</span><span class="p">:{</span><span class="w">
+               </span><span class="nt">"neutral"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="w">
+               </span><span class="nt">"positive"</span><span class="p">:</span><span class="mi">126</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"mentions"</span><span class="p">:[</span><span class="w">
+               </span><span class="s2">"twitter:122302784"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:14120151"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:2166412230"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:960481315"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:71983360"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:106915372"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:14511951"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:15092616"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:2576461322"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:326380075"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:347258974"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:3746042353"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"twitter:871351657"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nt">"hashtags"</span><span class="p">:[</span><span class="w">
+               </span><span class="s2">"3d"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"fps"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"pg3d"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"pixelgun"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"pixelgun3d"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"shooter"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"HiddenRisks"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"TheSMStoreMakati3DS"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"WaltDisney"</span><span class="p">,</span><span class="w">
+               </span><span class="s2">"gifersation"</span><span class="w">
+            </span><span class="p">]</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="nt">"demographics"</span><span class="p">:{</span><span class="w">
+            </span><span class="nt">"race"</span><span class="p">:</span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="mi">1999</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"gender"</span><span class="p">:</span><span class="s2">"female"</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="nt">"account_type"</span><span class="p">:</span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"version"</span><span class="p">:</span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+         </span><span class="nt">"vcard"</span><span class="p">:{</span><span class="w">
+            </span><span class="nt">"name"</span><span class="p">:{</span><span class="w">
+               </span><span class="nt">"fn"</span><span class="p">:</span><span class="s2">"Joe Zulueta"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+         </span><span class="p">},</span><span class="w">
+         </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="mf">0.8452886615186165</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"screenName"</span><span class="p">:</span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"objectType"</span><span class="p">:</span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"twitter:130573602"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"displayScreenName"</span><span class="p">:</span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"provider"</span><span class="p">:{</span><span class="w">
+         </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"twitter"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"published"</span><span class="p">:</span><span class="s2">"2010-04-07T17:56:08.000Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"displayName"</span><span class="p">:</span><span class="s2">"★ joe"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"image"</span><span class="p">:{</span><span class="w">
+         </span><span class="nt">"url"</span><span class="p">:</span><span class="s2">"http://pbs.twimg.com/profile_images/491912407841644544/7dD2PrDr_normal.jpeg"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"summary"</span><span class="p">:</span><span class="s2">"joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"indexedAt"</span><span class="p">:</span><span class="s2">"2015-11-03T23:31:29.870Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"location"</span><span class="p">:</span><span class="s2">"Manila"</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
 </span></code></pre>
+
+<p>Search the Pdb by defining a search string using specific demographic and psychographic criteria.  The search syntax is based on <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a></p>
 
           <h1 id="aggregate-api">Aggregate API</h1>
 
