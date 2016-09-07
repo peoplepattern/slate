@@ -46,3 +46,6 @@ Our currently supported services are
 - `twitter`
 - `instagram`
 
+<aside class="notice">
+Batches of profiles can be retrived by submitting a list of ids
+</aside>
