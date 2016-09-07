@@ -33,3 +33,30 @@ Content-Length: 1088
 ```
 
 This service enables you to get insights at an aggregate level based on an audience.  This service will, for example, return the age range for an entire audience, or the aggregate interests for the same audience.
+
+### Data model
+
+field | description
+------|------------
+enrichments.demographics.account_type| key / value pairs where key is an enumerated account_type, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.demographics.birthyear:| key / value pairs where key is a birthyear, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.demographics.race:| key / value pairs where key is an enumerated race, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.demographics.gender:| key / value pairs where key is an enumerated gender, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.psychographics.interests:| key / value pairs where key is an enumerated interest, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.psychographics.languages:| key / value pairs where key is an enumerated language, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.psychographics.sentiment:| key / value pairs where key is an enumerated sentiment, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.extended.marital_status| key / value pairs where key is an enumerated marital_status, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.extended.parental_status| key / value pairs where key is an enumerated parental_status, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.extended.political_affiliation| key / value pairs where key is an enumerated political_affiliation, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.extended.religion| key / value pairs where key is an enumerated religion, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.extended.sexual_orientation| key / value pairs where key is an enumerated sexual_orientation, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.place.dma| top dmas, expressed as a map, where key is a dma identifier, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.place.city| top cities, expressed as a map, where key is a city identifier, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.place.state:| top states, expressed as a map, where key is a state identifier, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.place.utc_offset| top utc_offsets, expressed as a map, where key is a utc_offset identifier, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.place.time_zone| top time_zones, expressed as a map, where key is a utc_offset identifier, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.place.metro_area| top metro_areas, expressed as a map, where key is a metro_area identifier, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.place.continent| top continents, expressed as a map, where key is a continent identifier, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.place.language| top languages, expressed as a map, where key is a ISO language identifier, and value is a percentage of population expressed as a double between 0 and 1
+enrichments.posts.hashtags| top hashtags, expressed as a map, where key is a hashtag, and value is a percentage of posts expressed as a double between 0 and 1
+enrichments.posts.mentions| top mentioned accounts, expressed as a map, where key is a profile id, and value is a percentage of posts expressed as a double between 0 and 1
