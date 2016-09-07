@@ -35,7 +35,7 @@ Content-Length: 1088
 Retrieve a single profile from the Lookup API by query a social
 profile identifier. Social profile identifiers are of the form
 
-    <service>:<id>
+    '[service]:[id]'
     
 For example:
 
