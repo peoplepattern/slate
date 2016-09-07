@@ -1085,6 +1085,104 @@ Batches of profiles can be retrived by submitting a list of ids
 
 <p>This service enables you to get insights at an aggregate level based on an audience.  This service will, for example, return the age range for an entire audience, or the aggregate interests for the same audience.</p>
 
+<h3 id="data-model">Data model</h3>
+
+<table><thead>
+<tr>
+<th>field</th>
+<th>description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>enrichments.demographics.account_type</td>
+<td>key / value pairs where key is an enumerated account_type, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.demographics.birthyear:</td>
+<td>key / value pairs where key is a birthyear, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.demographics.race:</td>
+<td>key / value pairs where key is an enumerated race, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.demographics.gender:</td>
+<td>key / value pairs where key is an enumerated gender, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.psychographics.interests:</td>
+<td>key / value pairs where key is an enumerated interest, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.psychographics.languages:</td>
+<td>key / value pairs where key is an enumerated language, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.psychographics.sentiment:</td>
+<td>key / value pairs where key is an enumerated sentiment, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.extended.marital_status</td>
+<td>key / value pairs where key is an enumerated marital_status, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.extended.parental_status</td>
+<td>key / value pairs where key is an enumerated parental_status, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.extended.political_affiliation</td>
+<td>key / value pairs where key is an enumerated political_affiliation, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.extended.religion</td>
+<td>key / value pairs where key is an enumerated religion, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.extended.sexual_orientation</td>
+<td>key / value pairs where key is an enumerated sexual_orientation, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.place.dma</td>
+<td>top dmas, expressed as a map, where key is a dma identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.place.city</td>
+<td>top cities, expressed as a map, where key is a city identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.place.state:</td>
+<td>top states, expressed as a map, where key is a state identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.place.utc_offset</td>
+<td>top utc_offsets, expressed as a map, where key is a utc_offset identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.place.time_zone</td>
+<td>top time_zones, expressed as a map, where key is a utc_offset identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.place.metro_area</td>
+<td>top metro_areas, expressed as a map, where key is a metro_area identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.place.continent</td>
+<td>top continents, expressed as a map, where key is a continent identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.place.language</td>
+<td>top languages, expressed as a map, where key is a ISO language identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.posts.hashtags</td>
+<td>top hashtags, expressed as a map, where key is a hashtag, and value is a percentage of posts expressed as a double between 0 and 1</td>
+</tr>
+<tr>
+<td>enrichments.posts.mentions</td>
+<td>top mentioned accounts, expressed as a map, where key is a profile id, and value is a percentage of posts expressed as a double between 0 and 1</td>
+</tr>
+</tbody></table>
+
           <h1 id="errors">Errors</h1>
 
 <p>The People Pattern API uses the following error codes:</p>
