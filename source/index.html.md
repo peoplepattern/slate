@@ -12,7 +12,13 @@ toc_footers:
   - <a href="https://app.peoplepattern.com/signin">Log in</a>
 
 includes:
-
+  - introduction
+  - authentication
+  - data_objects
+  - enrich_api
+  - lookup_api
+  - search_api
+  - aggregate_api
   - errors
 
 search: true
