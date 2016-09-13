@@ -136,21 +136,26 @@ provides access to resources we&rsquo;ve compiled and maintain.</p>
 
 <p>For the <a href="#lookup-api">Lookup</a>, <a href="#search-api">Search</a> and
 <a href="#aggregate-api">Aggregate</a> APIs, the resource accessed is the
-PDB itself. For the <a href="#enrich-api">Enrich API</a>, the resource
+Pdb itself. For the <a href="#enrich-api">Enrich API</a>, the resource
 (or resources) are our compiled predictive models.</p>
 
           <h2 id="base-url">Base URL</h2>
 
-<p>All URLs referenced in the documentation have the following base:
-<code class="prettyprint">https://api.peoplepattern.com</code>
-The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.</p>
+<p>All URLs referenced in the documentation have the following base:</p>
+
+<p><code class="prettyprint">https://api.peoplepattern.com</code></p>
+
+<p>The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.</p>
 
 <h2 id="authentication">Authentication</h2>
 
-<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  This means that you will provide your security token with the Authorization header for authentication.
-<code class="prettyprint">curl https://api.peoplepattern.com/enrich \</code>
-<code class="prettyprint">-H &quot;Authorization: secretkey&quot;</code>
-You can find your security token <a href="https://app.peoplepattern.com/edit">on your account page</a></p>
+<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  This means that you will provide your security token with the Authorization header for authentication.</p>
+
+<p><code class="prettyprint">curl https://api.peoplepattern.com/enrich \</code></p>
+
+<p><code class="prettyprint">-H &quot;Authorization: secretkey&quot;</code></p>
+
+<p>You can find your security token <a href="https://app.peoplepattern.com/edit">on your account page</a></p>
 
 <aside class="notice">
 You must replace <code>secretkey</code> with your personal API key.
