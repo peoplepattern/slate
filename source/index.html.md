@@ -12,7 +12,6 @@ toc_footers:
 
 includes:
   - introduction
-  - authentication
   - data_objects
   - enrich_api
   - lookup_api

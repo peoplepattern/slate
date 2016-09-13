@@ -16,11 +16,14 @@ curl https://api.peoplepattern.com/... \
   -H "Authorization: secretkey"
 ```
 
-> Make sure to replace `secretkey` with your API key.
+> Make sure to replace `secretkey` with your API security token.
 
 HTTP requests to the API are protected with [Token Based authentication](https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/).  This means that you will provide your security token with the Authorization header for authentication.
 
-You can find your security token [on your account page](https://app.peoplepattern.com/edit)
+`curl https://api.peoplepattern.com/... \`
+`  -H "Authorization: secretkey"`
+
+You can find your security token [on your account page](https://app.peoplepattern.com/edit).
 
 <aside class="notice">
 You must replace <code>secretkey</code> with your personal API key.
