@@ -1184,7 +1184,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 <h3 id="lookup-a-single-profile">Lookup a single profile</h3>
 <pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/lookup?id=twitter:14132201'</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
-  -H<span class="s1">'Accept: application/json'</span> 
+  -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
@@ -1319,7 +1319,184 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 <h3 id="lookup-a-batch-of-profiles">Lookup a batch of profiles</h3>
 <pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/lookup?id=twitter:14132201,twitter:119837224&amp;fields=displayName'</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
-  -H<span class="s1">'Accept: application/json'</span> 
+  -H <span class="s2">"Accept: application/json"</span> 
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"twitter:14132201"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Kenneth Cho"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"twitter:119837224"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jason Baldridge"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>When looking up a batch of profiles the response will include each submitted social platform identifier, if a profile is not found in the Pdb it is left out of the response.</p>
+
+<h3 id="http-post">HTTP POST</h3>
+
+<p>To lookup a profile, make an HTTP POST request to <a href="#resource-uri">PDB Lookup endpoint</a>.  </p>
+
+<h4 id="post-parameters">POST PARAMETERS</h4>
+
+<table><thead>
+<tr>
+<th>PARAMETER</th>
+<th>REQUIRED</th>
+<th>DESCRIPTION</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">body</code></td>
+<td>Yes</td>
+<td>an array of <a href="#pdb-fields">Pdb fields</a> to be returned for each discovered profile and a second array of the social ids to lookup, in the format &ldquo;$service:$service_id&rdquo; ie. &ldquo;twitter:12345&rdquo;</td>
+</tr>
+</tbody></table>
+
+<h3 id="lookup-a-single-profile">Lookup a single profile</h3>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/lookup \
+  -X POST \
+  -H "Authorization: secretkey" \
+  -H "Accept: application/json" \
+  -d '</span><span class="o">{</span><span class="s2">"ids"</span>: <span class="o">[</span><span class="s2">"twitter:14132201"</span><span class="o">]}</span><span class="s1">'
+</span></code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1995</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2162</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1905</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">132</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chonuff"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">375</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"psychographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mi">36</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"small_business"</span><span class="p">:</span><span class="w"> </span><span class="mi">23</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mi">36</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"leisure_sports"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="w"> </span><span class="mi">45</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"charity"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"other_sports"</span><span class="p">:</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mi">21</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"tv"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"finance"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"design"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"school_life"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"shopping"</span><span class="p">:</span><span class="w"> </span><span class="mi">36</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mi">66</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"marketing"</span><span class="p">:</span><span class="w"> </span><span class="mi">49</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"parenting"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"art"</span><span class="p">:</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"politics"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"beauty"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"environmentalism"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"en"</span><span class="p">:</span><span class="w"> </span><span class="mi">193</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"it"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"fr"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"pt"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"mentions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"twitter:1115726696"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:14132201"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:119837224"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:2467338618"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:135486789"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:60642052"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:16031509"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:3193477555"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:61546029"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:78691237"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:100054113"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:10069172"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:1043358110"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:11833202"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:123060735"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:1322691"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:1347753500"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:14800270"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:153229750"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"twitter:1536791610"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"hashtags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"CannesLions"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"PPinCannes"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"Branding"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"CulturatiSummit"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"analytics"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"atx"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"bisongrove2015"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"datapopupaustin"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"design"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"entrepreneur"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"mrx"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"socialmedia"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"sxsw"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"AI"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"ATX"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"AWXII"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"Advocate"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"AudienceInsights"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"BigData"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"BroLove"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"east-asian"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1972</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Kenneth Cho"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.977957927320845</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"screenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chonuff"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-03-16T18:03:20.429Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:14132201"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"displayScreenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"chonuff"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-03-16T18:03:20.429Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-03-16T18:03:20.429Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Kenneth Cho"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://pbs.twimg.com/profile_images/531528884588511232/VB-ZMgWI_normal.jpeg"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Co-founder of @PeoplePattern &amp; @Spredfast. Father of 2 bon vivants. Played college ball &amp; the clarinet."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"indexedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T05:24:24.739Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://t.co/iedzuEKtSM"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Austin"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>When looking up a profile the response will include the submitted social platform identifier, if a profile is not found in the Pdb it is left out of the response.</p>
+
+<h3 id="lookup-a-batch-of-profiles">Lookup a batch of profiles</h3>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/lookup?'</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"fields": ["displayName"],"ids": ["twitter:14132201","twitter:119837224"]}'</span>
+
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"twitter:14132201"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
