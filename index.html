@@ -121,42 +121,40 @@
       <div class="content">
         <h1 id="people-pattern-audience-intelligence-api">People Pattern Audience Intelligence API</h1>
 
-<p>The People Pattern Audience Intelligence API enables you to use People Pattern&rsquo;s
-audience intelligence and model predictions within your application.
-We provide access to our Portrait Database (Pdb) and machine
+<p>The People Pattern Audience Intelligence API provides access People Pattern&rsquo;s
+audience intelligence and model predictions as well as our Portrait Database (Pdb).
+You can query the Pdb directly to retrieve portraits with psychographic and demographic attributes pre-appended, 
+or you can submit profile and post data to the API and get it enriched.  These are the same services and machine
 learning-based models which we use in the
 <a href="http://app.peoplepattern.com">People Pattern</a> application.</p>
 
-          <h2 id="overview">Overview</h2>
-
-<p>The People Pattern API suite enables you to access content from
-our person-based dataset (PDB), and enrich your own text and person
-data with our models. We break this down into four areas of
-functionality:</p>
-
-<ul>
-<li><a href="#lookup-api">Lookup API</a> Look up profile records in the PDB by ID</li>
-<li><a href="#search-api">Search API</a> Search for profile records in the PDB by
-certain criteria</li>
-<li><a href="#summarize-api">Summarize API</a> Summarize demographic and other
-attributes of profile records in the PDB, either for sets of IDs
-or search criteria</li>
-<li><a href="#enrich-api">Enrich API</a> Enrich profile and text data you provide
-with our compiled predictive models</li>
-</ul>
-
-<h2 id="api-philosophy">API Philosophy</h2>
-
-<p>Each of the APIs described above is stateless, in that we do not
+<p>The API described above is stateless, in that we do not
 store any data provided by you (the client) for application
 functionality &ndash; i.e. the service does not support HTTP PUT,
 POST, or DELETE requests, at least in spirit. Rather, the API
 provides access to resources we&rsquo;ve compiled and maintain.</p>
 
 <p>For the <a href="#lookup-api">Lookup</a>, <a href="#search-api">Search</a> and
-<a href="#summarize-api">Summarize</a> APIs, the resource accessed is the
+<a href="#aggregate-api">Aggregate</a> APIs, the resource accessed is the
 PDB itself. For the <a href="#enrich-api">Enrich API</a>, the resource
 (or resources) are our compiled predictive models.</p>
+
+          <h2 id="base-url">Base URL</h2>
+
+<p>All URLs referenced in the documentation have the following base:
+<code class="prettyprint">https://api.peoplepattern.com</code>
+The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.</p>
+
+<h2 id="authentication">Authentication</h2>
+
+<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  This means that you will provide your security token with the Authorization header for authentication.
+<code class="prettyprint">curl https://api.peoplepattern.com/enrich \</code>
+<code class="prettyprint">-H &quot;Authorization: secretkey&quot;</code>
+You can find your security token <a href="https://app.peoplepattern.com/edit">on your account page</a></p>
+
+<aside class="notice">
+You must replace <code>secretkey</code> with your personal API key.
+</aside>
 
           <h1 id="authentication">Authentication</h1>
 
