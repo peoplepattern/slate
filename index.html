@@ -158,54 +158,15 @@ curl https://api.peoplepattern.com/... <span class="se">\</span>
 </code></pre>
 
 <blockquote>
-<p>Make sure to replace <code class="prettyprint">secretkey</code> with your API key.</p>
+<p>Make sure to replace <code class="prettyprint">secretkey</code> with your API security token.</p>
 </blockquote>
 
 <p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  This means that you will provide your security token with the Authorization header for authentication.</p>
 
-<p>You can find your security token <a href="https://app.peoplepattern.com/edit">on your account page</a></p>
+<p><code class="prettyprint">curl https://api.peoplepattern.com/... \</code>
+<code class="prettyprint">-H &quot;Authorization: secretkey&quot;</code></p>
 
-<aside class="notice">
-You must replace <code>secretkey</code> with your personal API key.
-</aside>
-
-          <h1 id="authentication">Authentication</h1>
-
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl https://api.peoplepattern.com/... <span class="se">\</span>
-  -H <span class="s2">"Authorization: secretkey"</span>
-</code></pre>
-
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">secretkey</code> with your API key.</p>
-</blockquote>
-
-<p>To access the People Pattern APIs you must acquire an authorization
-key. This may be retrieved from the People Pattern dashboard application
-via the following steps.</p>
-
-<h3 id="acquire-your-key-from-the-people-pattern-dashboard">Acquire your key from the People Pattern dashboard</h3>
-
-<p><strong>Step 1</strong> Go to your company <a href="#authentication">administration</a> page</p>
-
-<p><img alt="Click Company administration from account menu" src="images/images/to-co-admin.png" /></p>
-
-<p><strong>Step 2</strong> Select &ldquo;Manage API key&rdquo; tab</p>
-
-<p><img alt="Click Manage API key tab" src="images/images/to-manage-keys.png" /></p>
-
-<p><strong>Step 3</strong> I really don&rsquo;t know how the rest of this is going to
-play out, consider this just a template or example.</p>
-
-<h3 id="using-your-key">Using your key</h3>
-
-<p>Requests to the API must contain an authorization header of the
-following <a href="#lookup-api">form</a>.</p>
-
-<p><code class="prettyprint">Authorization: token secretkey</code></p>
+<p>You can find your security token <a href="https://app.peoplepattern.com/edit">on your account page</a>.</p>
 
 <aside class="notice">
 You must replace <code>secretkey</code> with your personal API key.
