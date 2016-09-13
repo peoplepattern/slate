@@ -322,7 +322,7 @@ back to the client with a `peoplepattern` field filled with
 [post enrichments](#post-enrichments).
 
 
-## Enrich a post batch
+### Enrich a batch of posts
 
 ```shell
 curl https://api.peoplepattern.com/enrich/post \
