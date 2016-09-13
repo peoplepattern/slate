@@ -17,7 +17,7 @@ via the following steps.
 
 ### Acquire your key from the People Pattern dashboard
 
-**Step 1** Go to your company administration page
+**Step 1** Go to your company [administration](#Authentication) page
 
 ![Click Company administration from account menu](images/to-co-admin.png)
 
