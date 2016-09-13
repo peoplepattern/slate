@@ -148,14 +148,18 @@ Pdb itself. For the <a href="#enrich-api">Enrich API</a>, the resource
 <p>The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.</p>
 
 <h2 id="authentication">Authentication</h2>
-<pre class="highlight shell"><code><span class="gp">&gt; </span>To authorize, use this code:
 
-<span class="c"># With shell, you can just pass the correct header with each request</span>
+<blockquote>
+<p>To authorize, use this code:</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
 curl https://api.peoplepattern.com/... <span class="se">\</span>
   -H <span class="s2">"Authorization: securitytoken"</span>
-
-<span class="gp">&gt; </span>Make sure to replace <span class="sb">`</span>securitytoken<span class="sb">`</span> with your API security token.
 </code></pre>
+
+<blockquote>
+<p>Make sure to replace <code class="prettyprint">securitytoken</code> with your API security token.</p>
+</blockquote>
 
 <p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  The People Pattern API expected for the API security token to be included in all API requests to the server in a header that looks like the following:</p>
 
