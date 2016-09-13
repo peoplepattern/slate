@@ -22,10 +22,10 @@ To enrich a profile, make an HTTP POST request to [Profile Enrich endpoint](#res
 We use the HTTP POST method, since some clients do not allow you to
 send request bodies with HTTP GET requests.
 
-#### POST Parameters
+#### POST PARAMETERS
 
 PARAMETER     | REQUIRED | DESCRIPTION
---------------|-----------------
+--------------|----------|------
 `body`        | Yes      | a [profile object](#profile-input) or an array of proflie objects
 
 <aside class="notice">
@@ -117,7 +117,7 @@ enrich profile endpoint, the profile data structure is passed
 back to the client with a `peoplepattern` field filled with
 [profile enrichments](#profile-enrichments).
 
-## Enrich a batch of profiles
+### Enrich a batch of profiles
 
 ```shell
 curl https://api.peoplepattern.com/enrich/profile \
