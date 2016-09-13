@@ -25,7 +25,7 @@ send request bodies with HTTP GET requests.
 #### POST PARAMETERS
 
 PARAMETER     | REQUIRED | DESCRIPTION
---------------|----------|------
+--------------|----------|------------
 `body`        | Yes      | a [profile object](#profile-input) or an array of proflie objects
 
 <aside class="notice">
@@ -277,10 +277,10 @@ To enrich a post, make an HTTP POST request to [Post Enrich endpoint](#resource-
 We use the HTTP POST method, since some clients do not allow you to
 send request bodies with HTTP GET requests.
 
-#### POST Parameters
+#### POST PARAMETERS
 
 PARAMETER     | REQUIRED | DESCRIPTION
---------------|-----------------
+--------------|----------|-------------
 `body`        | Yes      | a [post object](#post-input) or a array of post objects
 
 <aside class="notice">
