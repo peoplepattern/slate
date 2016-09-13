@@ -1,47 +1,26 @@
 # Enrich API
 
-The Enrich API enables you to access the predictions of our
-profile and text models to extract personal attributes, like
-demographics and location information, from standard
-semistructured profile data structures.
+The Enrich API provides access to our audience intelligence 
+and machine-learned based models used to extract personal attributes, 
+like demographics and location information from profile and post data. 
+This endpoint supports POST requests only. 
 
-### Why you might need the Enrich API
+This API takes as input a serialized as JSON object, and echoes that
+content back in the response along with predicted enrichments. This
+allows you to include an identifier which gets returned in the response and may
+be used as a reference id.
 
-Similar functionality is provided by the [Lookup API](#lookup-api)
-provided you have social profile IDs or screen names. For many
-users, IDs or screen names are more easily acquired (e.g. off of
-CRMs or user databases) than full profile content, which usually
-must be fetched from a social network API.
 
-This API fills some gaps in Lookup API functionality:
+## Enrich a profile
 
-- Our PDB is largely (though not entirely) comprised of Twitter
-  data, so for social network data from other resources your
-  application may have access to -- Reddit profile data, for
-  example -- you can enrich this data with the Enrich API.
-- We've collected a large number of Twitter profiles in the PDB,
-  but do not guarantee total coverage. Moreover, as users change
-  their screen names often, we can not guarantee being able to
-  find a user by an outdated screen name, or one which has been
-  very recently changed
-- The Enrich API gives you textual enrichments on individual
-  texts (i.e. social media posts), for **sentiment**,
-  **language** and **interests** attributes. The PDB access
-  APIs only provide access to profile attributes.
+### Resource URI
 
-### Enrich API philosophy
+`/enrich/profile`
 
-This API enriches your content; for this reason, it takes as
-input fairly arbitrary data serialized as JSON, and echoes that
-content back in the response only with predicted enrichments. This
-allows the client to, for instance, include an identifier which may
-be used to retrieve the record from a database to update with
-People Pattern enrichments; by including these details in the
-API response body, the client does not need to keep track of
-which records in single or batch responses correspond with which
-inputs.
-
-## Enrich a single profile
+### Required Parameters
+table | table
+-|-
+table2|table2
 
 ```http
 POST /enrich/profile HTTP/1.1
