@@ -736,11 +736,21 @@ be used as a reference id.</p>
 We use the HTTP POST method, since some clients do not allow you to
 send request bodies with HTTP GET requests.</p>
 
-<h4 id="post-parameters">POST Parameters</h4>
+<h4 id="post-parameters">POST PARAMETERS</h4>
 
-<p>PARAMETER     | REQUIRED | DESCRIPTION
-&mdash;&mdash;&mdash;&mdash;&ndash;|&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;
-<code class="prettyprint">body</code>        | Yes      | a <a href="#profile-input">profile object</a> or an array of proflie objects</p>
+<table><thead>
+<tr>
+<th>PARAMETER</th>
+<th>REQUIRED</th>
+<th>DESCRIPTION</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">body</code></td>
+<td>Yes</td>
+<td>a <a href="#profile-input">profile object</a> or an array of proflie objects</td>
+</tr>
+</tbody></table>
 
 <aside class="notice">
 The Enrich API also supports document formats provided by social media
@@ -827,7 +837,7 @@ enrich profile endpoint, the profile data structure is passed
 back to the client with a <code class="prettyprint">peoplepattern</code> field filled with
 <a href="#profile-enrichments">profile enrichments</a>.</p>
 
-<h2 id="enrich-a-batch-of-profiles">Enrich a batch of profiles</h2>
+<h3 id="enrich-a-batch-of-profiles">Enrich a batch of profiles</h3>
 <pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/profile <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
