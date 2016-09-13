@@ -3,69 +3,30 @@
 The Enrich API provides access to our audience intelligence 
 and machine-learned based models used to extract personal attributes, 
 like demographics and location information from profile and post data. 
-This endpoint supports POST requests only. 
 
 This API takes as input a serialized as JSON object, and echoes that
 content back in the response along with predicted enrichments. This
 allows you to include an identifier which gets returned in the response and may
 be used as a reference id.
 
+## Profile Enrich
 
-## Enrich a profile
+When enriching a profile the profile data structure is passed back to the client along with the profile enrichments.
 
 ### Resource URI
 
 `/enrich/profile`
 
-### Required Parameters
-table | table
--|-
-table2|table2
-
-```http
-POST /enrich/profile HTTP/1.1
-Host: api.peoplepattern.com
-Accept: application/json
-Content-type: application/json
-Authoriation: secretkey
-
-{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}
-```
-
-```shell
-curl https://api.peoplepattern.com/enrich/profile \
-  -X POST \
-  -H "Authorization: secretkey" \
-  -H "Content-type: application/json" \
-  -H "Accept: application/json" \
-  -d '{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}'
-```
-
-> Response will look like:
-
-```shell
-{"name":"Joe User","username":"juser","description":"my profile","location":"Boston, USA","peoplepattern":{"account_type":"person" ....
-```
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-X-Request-Id: 9372aa09-eb86-4366-889e-02a1a5107432
-
-{"name":"Joe User","username":"juser","description":"my profile","location":"Boston, USA","peoplepattern":{"account_type":"person" ....
-```
-
-When passing a single [profile](#profile-input) to the
-enrich profile endpoint, the profile data structure is passed
-back to the client with a `peoplepattern` field filled with
-[profile enrichments](#profile-enrichments).
-
-<aside class="notice">
+### HTTP POST
+To enrich a profile, make an HTTP POST request to [Profile Enrich endpoint](#resource-uri).  
 We use the HTTP POST method, since some clients do not allow you to
-send request bodies with HTTP requests. For some requests, especially
-<a href="#enrich-a-profile-batch">the profile batch call</a>, we want
-to ensure the API supports JSON request bodies.
-</aside>
+send request bodies with HTTP GET requests.
+
+#### POST Parameters
+
+PARAMETER     | REQUIRED | DESCRIPTION
+--------------|-----------------
+`body`        | Yes      | a [profile object](#profile-input) or an array of proflie objects
 
 <aside class="notice">
 The Enrich API also supports document formats provided by social media
@@ -76,17 +37,87 @@ in its original format only with a new "peoplepattern" field, populated
 as above.
 </aside>
 
-## Enrich a profile batch
+### Enrich a single profile
 
-```http
-POST /enrich/profile HTTP/1.1
-Host: api.peoplepattern.com
-Accept: application/json
-Content-type: application/json
-Authoriation: secretkey
-
-[{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}, {"name": "Mary Brown", "username": "mbrown", "description": "This is Mary's profile"}]
+```shell
+curl https://api.peoplepattern.com/enrich/profile \
+  -X POST \
+  -H "Authorization: secretkey" \
+  -H "Content-type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}'
 ```
+
+```json
+{
+  "name": "Joe User",
+  "username": "juser",
+  "description": "my profile",
+  "location": "Boston, USA",
+  "peoplepattern": {
+    "account_type": "person",
+    "spam": false,
+    "adult": false,
+    "vcard": {
+      "name": {
+        "given-name": "Joe",
+        "family-name": "User",
+        "fn": "Joe User"
+      },
+      "email": []
+    },
+    "demographics": {
+      "birthyear": 1985,
+      "gender": "male",
+      "race": "white"
+    },
+    "place": {
+      "name": "Boston, Massachusetts",
+      "city": true,
+      "geo_name_id": 4930956,
+      "type": "City",
+      "location": {
+        "dma": "Boston, MA-Manchester, NH",
+        "city": "Boston",
+        "state": "Massachusetts",
+        "state_abbreviation": "MA",
+        "utc_offset": "-18000",
+        "time_zone": "America/New_York",
+        "metro_area": "Boston-Cambridge-Newton, MA-NH",
+        "continent": "NA",
+        "language": "en",
+        "population": 617594,
+        "place_type": "City",
+        "country": "United States",
+        "country_code": "US",
+        "coordinates": {
+          "longitude": 42.35843,
+          "latitude": -71.05977
+        }
+      }
+    },
+    "extended_demographics": {},
+    "interestingness": 0.8431624560581947,
+    "_meta": {
+      "source": "current-models",
+      "model_version": "0.11-pre4",
+      "predict_fields": [
+        "name",
+        "username",
+        "description",
+        "location"
+      ]
+    }
+  }
+}
+```
+
+When passing a single [profile](#profile-input) to the
+enrich profile endpoint, the profile data structure is passed
+back to the client with a `peoplepattern` field filled with
+[profile enrichments](#profile-enrichments).
+
+## Enrich a batch of profiles
 
 ```shell
 curl https://api.peoplepattern.com/enrich/profile \
@@ -97,19 +128,128 @@ curl https://api.peoplepattern.com/enrich/profile \
   -d '[{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}, {"name": "Mary Brown", "username": "mbrown", "description": "This is Marys profile"}]'
 ```
 
-> Response will look like:
-
-```shell
-[{"status":"success","code":200,"response":{"account_type":"person","spam":false,"adult":false,"vcard":{"name":{"given-name":"Joe","family-name":"User","fn":"Joe User"},"email":[]},"demographics":{"birthyear":1985,"gender":"male","race":"white"},"place":{"city":true,"geo_name_id":4930956,"type":"City","location":{"dma":"Boston, MA-Manchester, NH","city":"Boston","state":"Massachusetts","state_abbreviation":"MA","utc_offset":"-18000","time_zone":"America/New_York","metro_area":"Boston-Cambridge-Newton, MA-NH","continent":"NA","language":"en","population":617594,"place_type":"City","country":"United States","country_code":"US","coordinates":{"longitude":42.35843,"latitude":-71.05977}}}}]
+```json
+[
+  {
+    "status": "success",
+    "code": 200,
+    "result": {
+      "name": "Joe User",
+      "username": "juser",
+      "description": "my profile",
+      "location": "Boston, USA",
+      "peoplepattern": {
+        "account_type": "person",
+        "spam": false,
+        "adult": false,
+        "vcard": {
+          "name": {
+            "given-name": "Joe",
+            "family-name": "User",
+            "fn": "Joe User"
+          },
+          "email": []
+        },
+        "demographics": {
+          "birthyear": 1985,
+          "gender": "male",
+          "race": "white"
+        },
+        "place": {
+          "name": "Boston, Massachusetts",
+          "city": true,
+          "geo_name_id": 4930956,
+          "type": "City",
+          "location": {
+            "dma": "Boston, MA-Manchester, NH",
+            "city": "Boston",
+            "state": "Massachusetts",
+            "state_abbreviation": "MA",
+            "utc_offset": "-18000",
+            "time_zone": "America/New_York",
+            "metro_area": "Boston-Cambridge-Newton, MA-NH",
+            "continent": "NA",
+            "language": "en",
+            "population": 617594,
+            "place_type": "City",
+            "country": "United States",
+            "country_code": "US",
+            "coordinates": {
+              "longitude": 42.35843,
+              "latitude": -71.05977
+            }
+          }
+        },
+        "extended_demographics": {},
+        "interestingness": 0.8431624560581947,
+        "_meta": {
+          "source": "current-models",
+          "model_version": "0.11-pre4",
+          "predict_fields": [
+            "name",
+            "username",
+            "description",
+            "location"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "status": "success",
+    "code": 200,
+    "result": {
+      "name": "Mary Brown",
+      "username": "mbrown",
+      "description": "This is Mary's profile",
+      "peoplepattern": {
+        "account_type": "person",
+        "spam": false,
+        "adult": false,
+        "vcard": {
+          "name": {
+            "given-name": "Mary",
+            "family-name": "Brown",
+            "fn": "Mary Brown"
+          },
+          "email": []
+        },
+        "demographics": {
+          "birthyear": 1962,
+          "gender": "female",
+          "race": "white"
+        },
+        "extended_demographics": {},
+        "interestingness": 0.9613207296903373,
+        "_meta": {
+          "source": "current-models",
+          "model_version": "0.11-pre4",
+          "predict_fields": [
+            "name",
+            "username",
+            "description"
+          ]
+        }
+      }
+    }
+  }
+]
 ```
 
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-X-Request-Id: 9372aa09-eb86-4366-889e-02a1a5107432
+When passing a batch of profiles to the enrich profile endpoint,
+the client receives a batch of responses. Since each profile request
+may succeed or fail individually, the batch of responses included
+their own meta-data with respect to the response status.
 
-[{"status":"success","code":200,"response":{"account_type":"person","spam":false,"adult":false,"vcard":{"name":{"given-name":"Joe","family-name":"User","fn":"Joe User"},"email":[]},"demographics":{"birthyear":1985,"gender":"male","race":"white"},"place":{"city":true,"geo_name_id":4930956,"type":"City","location":{"dma":"Boston, MA-Manchester, NH","city":"Boston","state":"Massachusetts","state_abbreviation":"MA","utc_offset":"-18000","time_zone":"America/New_York","metro_area":"Boston-Cambridge-Newton, MA-NH","continent":"NA","language":"en","population":617594,"place_type":"City","country":"United States","country_code":"US","coordinates":{"longitude":42.35843,"latitude":-71.05977}}}}]
-```
+<aside class="notice">
+As with the single-profile call, batches of Twitter API format "users"
+are also supported.
+</aside>
+
+### Error Sample
+
+To see a comprehensive list of error status returned the the People Pattern Audience Intelligence API please see the [Errors section](#errors).  
+Here we have displayed what a same error response would look like from the Enrich API.
 
 > Example invalid format call with output
 
@@ -124,35 +264,32 @@ curl https://api.peoplepattern.com/enrich/profile \
 [{"status":"error","code":400,"error":{"input":{},"message":"No valid fields provided for profile content"}}]
 ```
 
-```http
-POST /enrich/profile HTTP/1.1
-Host: api.peoplepattern.com
-Accept: application/json
-Content-type: application/json
-Authoriation: secretkey
+## Post Enrich
 
-[{}]
-```
+When enriching a post the post data structure is passed back to the client along with the profile enrichments.
 
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-X-Request-Id: 9372aa09-eb86-4366-889e-02a1a5107432
+### Resource URI
 
-[{"status":"error","code":400,"error":{"input":{},"message":"No valid fields provided for profile content"}}]
-```
+`/enrich/post`
 
-When passing a batch of profiles to the enrich profile endpoint,
-the client receives a batch of responses. Since each profile request
-may succeed or fail individually, the batch of responses included
-their own meta-data with respect to the response status.
+### HTTP POST
+To enrich a post, make an HTTP POST request to [Post Enrich endpoint](#resource-uri).  
+We use the HTTP POST method, since some clients do not allow you to
+send request bodies with HTTP GET requests.
+
+#### POST Parameters
+
+PARAMETER     | REQUIRED | DESCRIPTION
+--------------|-----------------
+`body`        | Yes      | a [post object](#post-input) or a array of post objects
 
 <aside class="notice">
-As with the single-profile call, batches of Twitter API format "users"
-are also supported.
+Similar to the Twitter API's <a href="https://dev.twitter.com/overview/api/tweets">tweet</a>
+data structures which contain a "text" field, the Enrich API
+social media post enrichment call will work with the same tweet JSON
 </aside>
 
-## Enrich a social media post
+### Enrich a single post
 
 ```shell
 curl https://api.peoplepattern.com/enrich/post \
@@ -163,28 +300,20 @@ curl https://api.peoplepattern.com/enrich/post \
   -d '{"text":"Bowling tonight? or kung-fu?"}'
 ```
 
-```http
-POST /enrich/post HTTP/1.1
-Host: api.peoplepattern.com
-Accept: application/json
-Content-type: application/json
-Authoriation: secretkey
-
-{"text":"Bowling tonight? or kung-fu?"}
-```
-
-> Response will look like:
-
-```shell
-{"text":"Bowling tonight? or kung-fu?","peoplepattern":{"interests":["leisure_sports"],"languages":["en"],"sentiment":"neutral","interestingness":0.7085509373685894}}
-```
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-X-Request-Id: 80990215-d2f5-4dbd-836c-9bb3f3613539
-
-{"text":"Bowling tonight? or kung-fu?","peoplepattern":{"interests":["leisure_sports"],"languages":["en"],"sentiment":"neutral","interestingness":0.7085509373685894}}
+```json
+{
+  "text": "Bowling tonight? or kung-fu?",
+  "peoplepattern": {
+    "interests": [
+      "leisure_sports"
+    ],
+    "languages": [
+      "en"
+    ],
+    "sentiment": "neutral",
+    "interestingness": 0.7085509373685894
+  }
+}
 ```
 
 When passing a single [post](#post-input) to the
@@ -192,11 +321,6 @@ enrich post endpoint, the post data structure is passed
 back to the client with a `peoplepattern` field filled with
 [post enrichments](#post-enrichments).
 
-<aside class="notice">
-Since the Twitter API standard <a href="https://dev.twitter.com/overview/api/tweets">tweet</a>
-data structures do contain a "text" field, the Enrich API
-social media post enrichment call will work with tweet JSON
-</aside>
 
 ## Enrich a post batch
 
@@ -209,28 +333,60 @@ curl https://api.peoplepattern.com/enrich/post \
   -d '[{"text":"Bowling tonight? or kung-fu?"},{"text":"I love bowling with friends"},{"text":"But I also love eating at home with the family"}]'
 ```
 
-```http
-POST /enrich/post HTTP/1.1
-Host: api.peoplepattern.com
-Accept: application/json
-Content-type: application/json
-Authoriation: secretkey
-
-[{"text":"Bowling tonight? or kung-fu?"},{"text":"I love bowling with friends"},{"text":"But I also love eating at home with the family"}]
-```
-
-> Response will look like:
-
-```shell
-[{"status":"success","code":200,"result":{"text":"Bowling tonight? or kung-fu?","peoplepattern":{"interests":["leisure_sports"],"languages":["en"],"sentiment":"neutral","interestingness":0.7085509373685894}}},{"status":"success","code":200,"result":{"text":"I love bowling with friends","peoplepattern":{"interests":["leisure_sports"],"languages":["en"],"sentiment":"positive","interestingness":0.5522605037296693}}},{"status":"success","code":200,"result":{"text":"But I also love eating at home with the family","peoplepattern":{"interests":["family"],"languages":["en"],"sentiment":"positive","interestingness":0.5893891902193789}}}]
-```
-
-```http
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-X-Request-Id: 80990215-d2f5-4dbd-836c-9bb3f3613539
-
-[{"status":"success","code":200,"result":{"text":"Bowling tonight? or kung-fu?","peoplepattern":{"interests":["leisure_sports"],"languages":["en"],"sentiment":"neutral","interestingness":0.7085509373685894}}},{"status":"success","code":200,"result":{"text":"I love bowling with friends","peoplepattern":{"interests":["leisure_sports"],"languages":["en"],"sentiment":"positive","interestingness":0.5522605037296693}}},{"status":"success","code":200,"result":{"text":"But I also love eating at home with the family","peoplepattern":{"interests":["family"],"languages":["en"],"sentiment":"positive","interestingness":0.5893891902193789}}}]
+```json
+[
+  {
+    "status": "success",
+    "code": 200,
+    "result": {
+      "text": "Bowling tonight? or kung-fu?",
+      "peoplepattern": {
+        "interests": [
+          "leisure_sports"
+        ],
+        "languages": [
+          "en"
+        ],
+        "sentiment": "neutral",
+        "interestingness": 0.7085509373685894
+      }
+    }
+  },
+  {
+    "status": "success",
+    "code": 200,
+    "result": {
+      "text": "I love bowling with friends",
+      "peoplepattern": {
+        "interests": [
+          "leisure_sports"
+        ],
+        "languages": [
+          "en"
+        ],
+        "sentiment": "positive",
+        "interestingness": 0.5522605037296693
+      }
+    }
+  },
+  {
+    "status": "success",
+    "code": 200,
+    "result": {
+      "text": "But I also love eating at home with the family",
+      "peoplepattern": {
+        "interests": [
+          "family"
+        ],
+        "languages": [
+          "en"
+        ],
+        "sentiment": "positive",
+        "interestingness": 0.5893891902193789
+      }
+    }
+  }
+]
 ```
 
 When passing a batch of posts to the enrich post endpoint,
@@ -242,3 +398,21 @@ their own meta-data with respect to the response status.
 As with the single-post call, batches of Twitter API format "tweets"
 are also supported.
 </aside>
+
+### Error Sample
+
+To see a comprehensive list of error status returned the the People Pattern Audience Intelligence API please see the [Errors section](#errors).  
+Here we have displayed what a same error response would look like from the Enrich API.
+
+> Example invalid format call with output
+
+```shell
+curl https://api.peoplepattern.com/enrich/post \
+  -X POST \
+  -H "Authorization: secretkey" \
+  -H "Content-type: application/json" \
+  -H "Accept: application/json" \
+  -d '[{}]'
+
+[{"status":"error","code":400,"error":{"input":{},"message":"No valid fields provided for profile content"}}]
+```

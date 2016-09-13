@@ -6,6 +6,10 @@ All URLs referenced in the documentation have the following base:
 
 The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.
 
+All calls require a Content-Type header
+
+`Content-type: application/json`
+
 ## Authentication
 
 > To authorize, use this code:
