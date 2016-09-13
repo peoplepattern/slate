@@ -13,12 +13,12 @@ be used as a reference id.
 
 When enriching a profile the profile data structure is passed back to the client along with the profile enrichments.
 
-### Resource URI
+### Resource URI enrich-profile
 
 `/enrich/profile`
 
 ### HTTP POST
-To enrich a profile, make an HTTP POST request to [Profile Enrich endpoint](#resource-uri).  
+To enrich a profile, make an HTTP POST request to [Profile Enrich endpoint](#resource-uri-enrich-profile).  
 We use the HTTP POST method, since some clients do not allow you to
 send request bodies with HTTP GET requests.
 
@@ -268,12 +268,12 @@ curl https://api.peoplepattern.com/enrich/profile \
 
 When enriching a post the post data structure is passed back to the client along with the profile enrichments.
 
-### Resource URI
+### Resource URI enrich-post
 
 `/enrich/post`
 
 ### HTTP POST
-To enrich a post, make an HTTP POST request to [Post Enrich endpoint](#resource-uri).  
+To enrich a post, make an HTTP POST request to [Post Enrich endpoint](#resource-uri-enrich-post).  
 We use the HTTP POST method, since some clients do not allow you to
 send request bodies with HTTP GET requests.
 
