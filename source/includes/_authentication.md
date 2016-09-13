@@ -17,7 +17,7 @@ via the following steps.
 
 ### Acquire your key from the People Pattern dashboard
 
-**Step 1** Go to your company [administration](#Authentication) page
+**Step 1** Go to your company [administration](#authentication) page
 
 ![Click Company administration from account menu](images/to-co-admin.png)
 
@@ -31,7 +31,7 @@ play out, consider this just a template or example.
 ### Using your key
 
 Requests to the API must contain an authorization header of the
-following form.
+following [form](#lookup-api).
 
 `Authorization: token secretkey`
 
