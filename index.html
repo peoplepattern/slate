@@ -154,22 +154,21 @@ Pdb itself. For the <a href="#enrich-api">Enrich API</a>, the resource
 </blockquote>
 <pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
 curl https://api.peoplepattern.com/... <span class="se">\</span>
-  -H <span class="s2">"Authorization: secretkey"</span>
+  -H <span class="s2">"Authorization: securitytoken"</span>
 </code></pre>
 
 <blockquote>
-<p>Make sure to replace <code class="prettyprint">secretkey</code> with your API security token.</p>
+<p>Make sure to replace <code class="prettyprint">securitytoken</code> with your API security token.</p>
 </blockquote>
 
-<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  This means that you will provide your security token with the Authorization header for authentication.</p>
+<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  The People Pattern API expected for the API security token to be included in all API requests to the server in a header that looks like the following:</p>
 
-<p><code class="prettyprint">curl https://api.peoplepattern.com/... \</code>
-<code class="prettyprint">-H &quot;Authorization: secretkey&quot;</code></p>
+<p>`Authorization: securitytoken</p>
 
 <p>You can find your security token <a href="https://app.peoplepattern.com/edit">on your account page</a>.</p>
 
 <aside class="notice">
-You must replace <code>secretkey</code> with your personal API key.
+You must replace <code>securitytoken</code> with your personal API security token.
 </aside>
 
           <h1 id="data-objects">Data objects</h1>
