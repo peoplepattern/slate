@@ -20,7 +20,7 @@ curl https://api.peoplepattern.com/... \
 
 HTTP requests to the API are protected with [Token Based authentication](https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/).  The People Pattern API expected for the API security token to be included in all API requests to the server in a header that looks like the following:
 
-`Authorization: securitytoken
+`Authorization: securitytoken`
 
 You can find your security token [on your account page](https://app.peoplepattern.com/edit).
 
