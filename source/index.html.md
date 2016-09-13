@@ -40,5 +40,5 @@ provides access to resources we've compiled and maintain.
 
 For the [Lookup](#lookup-api), [Search](#search-api) and
 [Aggregate](#aggregate-api) APIs, the resource accessed is the
-PDB itself. For the [Enrich API](#enrich-api), the resource
+Pdb itself. For the [Enrich API](#enrich-api), the resource
 (or resources) are our compiled predictive models.
