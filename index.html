@@ -147,6 +147,10 @@ Pdb itself. For the <a href="#enrich-api">Enrich API</a>, the resource
 
 <p>The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.</p>
 
+<p>All calls require a Content-Type header</p>
+
+<p><code class="prettyprint">Content-type: application/json</code></p>
+
 <h2 id="authentication">Authentication</h2>
 
 <blockquote>
@@ -711,64 +715,32 @@ predicted languages and predicted sentiment</p>
 
 <p>The Enrich API provides access to our audience intelligence 
 and machine-learned based models used to extract personal attributes, 
-like demographics and location information from profile and post data. 
-This endpoint supports POST requests only. </p>
+like demographics and location information from profile and post data. </p>
 
 <p>This API takes as input a serialized as JSON object, and echoes that
 content back in the response along with predicted enrichments. This
 allows you to include an identifier which gets returned in the response and may
 be used as a reference id.</p>
 
-<h2 id="enrich-a-profile">Enrich a profile</h2>
+<h2 id="profile-enrich">Profile Enrich</h2>
+
+<p>When enriching a profile the profile data structure is passed back to the client along with the profile enrichments.</p>
 
 <h3 id="resource-uri">Resource URI</h3>
 
 <p><code class="prettyprint">/enrich/profile</code></p>
 
-<h3 id="required-parameters">Required Parameters</h3>
+<h3 id="http-post">HTTP POST</h3>
 
-<p>table | table
--|-
-table2|table2</p>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/enrich/profile</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">api.peoplepattern.com</span>
-<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Authoriation</span><span class="p">:</span> <span class="s">secretkey</span>
-
-<span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"Joe User"</span><span class="p">,</span><span class="w"> </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"juser"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my profile"</span><span class="p">,</span><span class="w"> </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston, USA"</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/profile <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}'</span>
-</code></pre>
-
-<blockquote>
-<p>Response will look like:</p>
-</blockquote>
-<pre class="highlight shell"><code><span class="o">{</span><span class="s2">"name"</span>:<span class="s2">"Joe User"</span>,<span class="s2">"username"</span>:<span class="s2">"juser"</span>,<span class="s2">"description"</span>:<span class="s2">"my profile"</span>,<span class="s2">"location"</span>:<span class="s2">"Boston, USA"</span>,<span class="s2">"peoplepattern"</span>:<span class="o">{</span><span class="s2">"account_type"</span>:<span class="s2">"person"</span> ....
-</code></pre>
-<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json; charset=utf-8</span>
-<span class="na">X-Request-Id</span><span class="p">:</span> <span class="s">9372aa09-eb86-4366-889e-02a1a5107432</span>
-
-<span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"Joe User"</span><span class="p">,</span><span class="nt">"username"</span><span class="p">:</span><span class="s2">"juser"</span><span class="p">,</span><span class="nt">"description"</span><span class="p">:</span><span class="s2">"my profile"</span><span class="p">,</span><span class="nt">"location"</span><span class="p">:</span><span class="s2">"Boston, USA"</span><span class="p">,</span><span class="nt">"peoplepattern"</span><span class="p">:{</span><span class="nt">"account_type"</span><span class="p">:</span><span class="s2">"person"</span><span class="w"> </span><span class="err">....</span><span class="w">
-</span></code></pre>
-
-<p>When passing a single <a href="#profile-input">profile</a> to the
-enrich profile endpoint, the profile data structure is passed
-back to the client with a <code class="prettyprint">peoplepattern</code> field filled with
-<a href="#profile-enrichments">profile enrichments</a>.</p>
-
-<aside class="notice">
+<p>To enrich a profile, make an HTTP POST request to <a href="#resource-uri">Profile Enrich endpoint</a>.<br>
 We use the HTTP POST method, since some clients do not allow you to
-send request bodies with HTTP requests. For some requests, especially
-<a href="#enrich-a-profile-batch">the profile batch call</a>, we want
-to ensure the API supports JSON request bodies.
-</aside>
+send request bodies with HTTP GET requests.</p>
+
+<h4 id="post-parameters">POST Parameters</h4>
+
+<p>PARAMETER     | REQUIRED | DESCRIPTION
+&mdash;&mdash;&mdash;&mdash;&ndash;|&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;
+<code class="prettyprint">body</code>        | Yes      | a <a href="#profile-input">profile object</a> or an array of proflie objects</p>
 
 <aside class="notice">
 The Enrich API also supports document formats provided by social media
@@ -779,15 +751,83 @@ in its original format only with a new &ldquo;peoplepattern&rdquo; field, popula
 as above.
 </aside>
 
-<h2 id="enrich-a-profile-batch">Enrich a profile batch</h2>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/enrich/profile</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">api.peoplepattern.com</span>
-<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Authoriation</span><span class="p">:</span> <span class="s">secretkey</span>
-
-<span class="p">[{</span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"Joe User"</span><span class="p">,</span><span class="w"> </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"juser"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my profile"</span><span class="p">,</span><span class="w"> </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston, USA"</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mary Brown"</span><span class="p">,</span><span class="w"> </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mbrown"</span><span class="p">,</span><span class="w"> </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is Mary's profile"</span><span class="p">}]</span><span class="w">
+<h3 id="enrich-a-single-profile">Enrich a single profile</h3>
+<pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/profile <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}'</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe User"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"juser"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my profile"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston, USA"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"peoplepattern"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"given-name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"family-name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe User"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1985</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"place"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston, Massachusetts"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"geo_name_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4930956</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"City"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"dma"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston, MA-Manchester, NH"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Massachusetts"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"state_abbreviation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"utc_offset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-18000"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"time_zone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"metro_area"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston-Cambridge-Newton, MA-NH"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"continent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NA"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"population"</span><span class="p">:</span><span class="w"> </span><span class="mi">617594</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"place_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"City"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"United States"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"country_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">42.35843</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">-71.05977</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"extended_demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8431624560581947</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"_meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current-models"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"model_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.11-pre4"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"predict_fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"name"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"username"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"description"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"location"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre>
+
+<p>When passing a single <a href="#profile-input">profile</a> to the
+enrich profile endpoint, the profile data structure is passed
+back to the client with a <code class="prettyprint">peoplepattern</code> field filled with
+<a href="#profile-enrichments">profile enrichments</a>.</p>
+
+<h2 id="enrich-a-batch-of-profiles">Enrich a batch of profiles</h2>
 <pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/profile <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
@@ -795,18 +835,127 @@ as above.
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
   -d <span class="s1">'[{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}, {"name": "Mary Brown", "username": "mbrown", "description": "This is Marys profile"}]'</span>
 </code></pre>
-
-<blockquote>
-<p>Response will look like:</p>
-</blockquote>
-<pre class="highlight shell"><code><span class="o">[{</span><span class="s2">"status"</span>:<span class="s2">"success"</span>,<span class="s2">"code"</span>:200,<span class="s2">"response"</span>:<span class="o">{</span><span class="s2">"account_type"</span>:<span class="s2">"person"</span>,<span class="s2">"spam"</span>:false,<span class="s2">"adult"</span>:false,<span class="s2">"vcard"</span>:<span class="o">{</span><span class="s2">"name"</span>:<span class="o">{</span><span class="s2">"given-name"</span>:<span class="s2">"Joe"</span>,<span class="s2">"family-name"</span>:<span class="s2">"User"</span>,<span class="s2">"fn"</span>:<span class="s2">"Joe User"</span><span class="o">}</span>,<span class="s2">"email"</span>:[]<span class="o">}</span>,<span class="s2">"demographics"</span>:<span class="o">{</span><span class="s2">"birthyear"</span>:1985,<span class="s2">"gender"</span>:<span class="s2">"male"</span>,<span class="s2">"race"</span>:<span class="s2">"white"</span><span class="o">}</span>,<span class="s2">"place"</span>:<span class="o">{</span><span class="s2">"city"</span>:true,<span class="s2">"geo_name_id"</span>:4930956,<span class="s2">"type"</span>:<span class="s2">"City"</span>,<span class="s2">"location"</span>:<span class="o">{</span><span class="s2">"dma"</span>:<span class="s2">"Boston, MA-Manchester, NH"</span>,<span class="s2">"city"</span>:<span class="s2">"Boston"</span>,<span class="s2">"state"</span>:<span class="s2">"Massachusetts"</span>,<span class="s2">"state_abbreviation"</span>:<span class="s2">"MA"</span>,<span class="s2">"utc_offset"</span>:<span class="s2">"-18000"</span>,<span class="s2">"time_zone"</span>:<span class="s2">"America/New_York"</span>,<span class="s2">"metro_area"</span>:<span class="s2">"Boston-Cambridge-Newton, MA-NH"</span>,<span class="s2">"continent"</span>:<span class="s2">"NA"</span>,<span class="s2">"language"</span>:<span class="s2">"en"</span>,<span class="s2">"population"</span>:617594,<span class="s2">"place_type"</span>:<span class="s2">"City"</span>,<span class="s2">"country"</span>:<span class="s2">"United States"</span>,<span class="s2">"country_code"</span>:<span class="s2">"US"</span>,<span class="s2">"coordinates"</span>:<span class="o">{</span><span class="s2">"longitude"</span>:42.35843,<span class="s2">"latitude"</span>:-71.05977<span class="o">}}}}]</span>
-</code></pre>
-<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json; charset=utf-8</span>
-<span class="na">X-Request-Id</span><span class="p">:</span> <span class="s">9372aa09-eb86-4366-889e-02a1a5107432</span>
-
-<span class="p">[{</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"success"</span><span class="p">,</span><span class="nt">"code"</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span><span class="nt">"response"</span><span class="p">:{</span><span class="nt">"account_type"</span><span class="p">:</span><span class="s2">"person"</span><span class="p">,</span><span class="nt">"spam"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">"adult"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">"vcard"</span><span class="p">:{</span><span class="nt">"name"</span><span class="p">:{</span><span class="nt">"given-name"</span><span class="p">:</span><span class="s2">"Joe"</span><span class="p">,</span><span class="nt">"family-name"</span><span class="p">:</span><span class="s2">"User"</span><span class="p">,</span><span class="nt">"fn"</span><span class="p">:</span><span class="s2">"Joe User"</span><span class="p">},</span><span class="nt">"email"</span><span class="p">:[]},</span><span class="nt">"demographics"</span><span class="p">:{</span><span class="nt">"birthyear"</span><span class="p">:</span><span class="mi">1985</span><span class="p">,</span><span class="nt">"gender"</span><span class="p">:</span><span class="s2">"male"</span><span class="p">,</span><span class="nt">"race"</span><span class="p">:</span><span class="s2">"white"</span><span class="p">},</span><span class="nt">"place"</span><span class="p">:{</span><span class="nt">"city"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">"geo_name_id"</span><span class="p">:</span><span class="mi">4930956</span><span class="p">,</span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"City"</span><span class="p">,</span><span class="nt">"location"</span><span class="p">:{</span><span class="nt">"dma"</span><span class="p">:</span><span class="s2">"Boston, MA-Manchester, NH"</span><span class="p">,</span><span class="nt">"city"</span><span class="p">:</span><span class="s2">"Boston"</span><span class="p">,</span><span class="nt">"state"</span><span class="p">:</span><span class="s2">"Massachusetts"</span><span class="p">,</span><span class="nt">"state_abbreviation"</span><span class="p">:</span><span class="s2">"MA"</span><span class="p">,</span><span class="nt">"utc_offset"</span><span class="p">:</span><span class="s2">"-18000"</span><span class="p">,</span><span class="nt">"time_zone"</span><span class="p">:</span><span class="s2">"America/New_York"</span><span class="p">,</span><span class="nt">"metro_area"</span><span class="p">:</span><span class="s2">"Boston-Cambridge-Newton, MA-NH"</span><span class="p">,</span><span class="nt">"continent"</span><span class="p">:</span><span class="s2">"NA"</span><span class="p">,</span><span class="nt">"language"</span><span class="p">:</span><span class="s2">"en"</span><span class="p">,</span><span class="nt">"population"</span><span class="p">:</span><span class="mi">617594</span><span class="p">,</span><span class="nt">"place_type"</span><span class="p">:</span><span class="s2">"City"</span><span class="p">,</span><span class="nt">"country"</span><span class="p">:</span><span class="s2">"United States"</span><span class="p">,</span><span class="nt">"country_code"</span><span class="p">:</span><span class="s2">"US"</span><span class="p">,</span><span class="nt">"coordinates"</span><span class="p">:{</span><span class="nt">"longitude"</span><span class="p">:</span><span class="mf">42.35843</span><span class="p">,</span><span class="nt">"latitude"</span><span class="p">:</span><span class="mf">-71.05977</span><span class="p">}}}}</span><span class="err">]</span><span class="w">
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe User"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"juser"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my profile"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston, USA"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"peoplepattern"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"given-name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"family-name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe User"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1985</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"place"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston, Massachusetts"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"geo_name_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4930956</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"City"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"dma"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston, MA-Manchester, NH"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Massachusetts"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"state_abbreviation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"utc_offset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-18000"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"time_zone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"metro_area"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston-Cambridge-Newton, MA-NH"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"continent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NA"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"population"</span><span class="p">:</span><span class="w"> </span><span class="mi">617594</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"place_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"City"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"United States"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"country_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">42.35843</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">-71.05977</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"extended_demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8431624560581947</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"_meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current-models"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"model_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.11-pre4"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"predict_fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"username"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"location"</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mary Brown"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mbrown"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is Mary's profile"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"peoplepattern"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"given-name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mary"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"family-name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Brown"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mary Brown"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1962</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"female"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"extended_demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9613207296903373</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"_meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current-models"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"model_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.11-pre4"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"predict_fields"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="s2">"name"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"username"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"description"</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
 </span></code></pre>
+
+<p>When passing a batch of profiles to the enrich profile endpoint,
+the client receives a batch of responses. Since each profile request
+may succeed or fail individually, the batch of responses included
+their own meta-data with respect to the response status.</p>
+
+<aside class="notice">
+As with the single-profile call, batches of Twitter API format &ldquo;users&rdquo;
+are also supported.
+</aside>
+
+<h3 id="error-sample">Error Sample</h3>
+
+<p>To see a comprehensive list of error status returned the the People Pattern Audience Intelligence API please see the <a href="#errors">Errors section</a>.<br>
+Here we have displayed what a same error response would look like from the Enrich API.</p>
 
 <blockquote>
 <p>Example invalid format call with output</p>
@@ -820,32 +969,34 @@ as above.
 
 <span class="o">[{</span><span class="s2">"status"</span>:<span class="s2">"error"</span>,<span class="s2">"code"</span>:400,<span class="s2">"error"</span>:<span class="o">{</span><span class="s2">"input"</span>:<span class="o">{}</span>,<span class="s2">"message"</span>:<span class="s2">"No valid fields provided for profile content"</span><span class="o">}}]</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/enrich/profile</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">api.peoplepattern.com</span>
-<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Authoriation</span><span class="p">:</span> <span class="s">secretkey</span>
 
-<span class="p">[{}]</span><span class="w">
-</span></code></pre>
-<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json; charset=utf-8</span>
-<span class="na">X-Request-Id</span><span class="p">:</span> <span class="s">9372aa09-eb86-4366-889e-02a1a5107432</span>
+<h2 id="post-enrich">Post Enrich</h2>
 
-<span class="p">[{</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"error"</span><span class="p">,</span><span class="nt">"code"</span><span class="p">:</span><span class="mi">400</span><span class="p">,</span><span class="nt">"error"</span><span class="p">:{</span><span class="nt">"input"</span><span class="p">:{},</span><span class="nt">"message"</span><span class="p">:</span><span class="s2">"No valid fields provided for profile content"</span><span class="p">}}]</span><span class="w">
-</span></code></pre>
+<p>When enriching a post the post data structure is passed back to the client along with the profile enrichments.</p>
 
-<p>When passing a batch of profiles to the enrich profile endpoint,
-the client receives a batch of responses. Since each profile request
-may succeed or fail individually, the batch of responses included
-their own meta-data with respect to the response status.</p>
+<h3 id="resource-uri">Resource URI</h3>
+
+<p><code class="prettyprint">/enrich/post</code></p>
+
+<h3 id="http-post">HTTP POST</h3>
+
+<p>To enrich a post, make an HTTP POST request to <a href="#resource-uri">Post Enrich endpoint</a>.<br>
+We use the HTTP POST method, since some clients do not allow you to
+send request bodies with HTTP GET requests.</p>
+
+<h4 id="post-parameters">POST Parameters</h4>
+
+<p>PARAMETER     | REQUIRED | DESCRIPTION
+&mdash;&mdash;&mdash;&mdash;&ndash;|&mdash;&mdash;&mdash;&mdash;&mdash;&ndash;
+<code class="prettyprint">body</code>        | Yes      | a <a href="#post-input">post object</a> or a array of post objects</p>
 
 <aside class="notice">
-As with the single-profile call, batches of Twitter API format &ldquo;users&rdquo;
-are also supported.
+Similar to the Twitter API&rsquo;s <a href="https://dev.twitter.com/overview/api/tweets">tweet</a>
+data structures which contain a &ldquo;text&rdquo; field, the Enrich API
+social media post enrichment call will work with the same tweet JSON
 </aside>
 
-<h2 id="enrich-a-social-media-post">Enrich a social media post</h2>
+<h3 id="enrich-a-single-post">Enrich a single post</h3>
 <pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/post <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
@@ -853,37 +1004,25 @@ are also supported.
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
   -d <span class="s1">'{"text":"Bowling tonight? or kung-fu?"}'</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/enrich/post</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">api.peoplepattern.com</span>
-<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Authoriation</span><span class="p">:</span> <span class="s">secretkey</span>
-
-<span class="p">{</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"Bowling tonight? or kung-fu?"</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<blockquote>
-<p>Response will look like:</p>
-</blockquote>
-<pre class="highlight shell"><code><span class="o">{</span><span class="s2">"text"</span>:<span class="s2">"Bowling tonight? or kung-fu?"</span>,<span class="s2">"peoplepattern"</span>:<span class="o">{</span><span class="s2">"interests"</span>:[<span class="s2">"leisure_sports"</span><span class="o">]</span>,<span class="s2">"languages"</span>:[<span class="s2">"en"</span><span class="o">]</span>,<span class="s2">"sentiment"</span>:<span class="s2">"neutral"</span>,<span class="s2">"interestingness"</span>:0.7085509373685894<span class="o">}}</span>
-</code></pre>
-<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json; charset=utf-8</span>
-<span class="na">X-Request-Id</span><span class="p">:</span> <span class="s">80990215-d2f5-4dbd-836c-9bb3f3613539</span>
-
-<span class="p">{</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"Bowling tonight? or kung-fu?"</span><span class="p">,</span><span class="nt">"peoplepattern"</span><span class="p">:{</span><span class="nt">"interests"</span><span class="p">:[</span><span class="s2">"leisure_sports"</span><span class="p">],</span><span class="nt">"languages"</span><span class="p">:[</span><span class="s2">"en"</span><span class="p">],</span><span class="nt">"sentiment"</span><span class="p">:</span><span class="s2">"neutral"</span><span class="p">,</span><span class="nt">"interestingness"</span><span class="p">:</span><span class="mf">0.7085509373685894</span><span class="p">}}</span><span class="w">
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bowling tonight? or kung-fu?"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"peoplepattern"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"leisure_sports"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"en"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"neutral"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7085509373685894</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
 </span></code></pre>
 
 <p>When passing a single <a href="#post-input">post</a> to the
 enrich post endpoint, the post data structure is passed
 back to the client with a <code class="prettyprint">peoplepattern</code> field filled with
 <a href="#post-enrichments">post enrichments</a>.</p>
-
-<aside class="notice">
-Since the Twitter API standard <a href="https://dev.twitter.com/overview/api/tweets">tweet</a>
-data structures do contain a &ldquo;text&rdquo; field, the Enrich API
-social media post enrichment call will work with tweet JSON
-</aside>
 
 <h2 id="enrich-a-post-batch">Enrich a post batch</h2>
 <pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/post <span class="se">\</span>
@@ -893,25 +1032,59 @@ social media post enrichment call will work with tweet JSON
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
   -d <span class="s1">'[{"text":"Bowling tonight? or kung-fu?"},{"text":"I love bowling with friends"},{"text":"But I also love eating at home with the family"}]'</span>
 </code></pre>
-<pre class="highlight http"><code><span class="nf">POST</span> <span class="nn">/enrich/post</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">api.peoplepattern.com</span>
-<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Authoriation</span><span class="p">:</span> <span class="s">secretkey</span>
-
-<span class="p">[{</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"Bowling tonight? or kung-fu?"</span><span class="p">},{</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"I love bowling with friends"</span><span class="p">},{</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"But I also love eating at home with the family"</span><span class="p">}]</span><span class="w">
-</span></code></pre>
-
-<blockquote>
-<p>Response will look like:</p>
-</blockquote>
-<pre class="highlight shell"><code><span class="o">[{</span><span class="s2">"status"</span>:<span class="s2">"success"</span>,<span class="s2">"code"</span>:200,<span class="s2">"result"</span>:<span class="o">{</span><span class="s2">"text"</span>:<span class="s2">"Bowling tonight? or kung-fu?"</span>,<span class="s2">"peoplepattern"</span>:<span class="o">{</span><span class="s2">"interests"</span>:[<span class="s2">"leisure_sports"</span><span class="o">]</span>,<span class="s2">"languages"</span>:[<span class="s2">"en"</span><span class="o">]</span>,<span class="s2">"sentiment"</span>:<span class="s2">"neutral"</span>,<span class="s2">"interestingness"</span>:0.7085509373685894<span class="o">}}}</span>,<span class="o">{</span><span class="s2">"status"</span>:<span class="s2">"success"</span>,<span class="s2">"code"</span>:200,<span class="s2">"result"</span>:<span class="o">{</span><span class="s2">"text"</span>:<span class="s2">"I love bowling with friends"</span>,<span class="s2">"peoplepattern"</span>:<span class="o">{</span><span class="s2">"interests"</span>:[<span class="s2">"leisure_sports"</span><span class="o">]</span>,<span class="s2">"languages"</span>:[<span class="s2">"en"</span><span class="o">]</span>,<span class="s2">"sentiment"</span>:<span class="s2">"positive"</span>,<span class="s2">"interestingness"</span>:0.5522605037296693<span class="o">}}}</span>,<span class="o">{</span><span class="s2">"status"</span>:<span class="s2">"success"</span>,<span class="s2">"code"</span>:200,<span class="s2">"result"</span>:<span class="o">{</span><span class="s2">"text"</span>:<span class="s2">"But I also love eating at home with the family"</span>,<span class="s2">"peoplepattern"</span>:<span class="o">{</span><span class="s2">"interests"</span>:[<span class="s2">"family"</span><span class="o">]</span>,<span class="s2">"languages"</span>:[<span class="s2">"en"</span><span class="o">]</span>,<span class="s2">"sentiment"</span>:<span class="s2">"positive"</span>,<span class="s2">"interestingness"</span>:0.5893891902193789<span class="o">}}}]</span>
-</code></pre>
-<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json; charset=utf-8</span>
-<span class="na">X-Request-Id</span><span class="p">:</span> <span class="s">80990215-d2f5-4dbd-836c-9bb3f3613539</span>
-
-<span class="p">[{</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"success"</span><span class="p">,</span><span class="nt">"code"</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span><span class="nt">"result"</span><span class="p">:{</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"Bowling tonight? or kung-fu?"</span><span class="p">,</span><span class="nt">"peoplepattern"</span><span class="p">:{</span><span class="nt">"interests"</span><span class="p">:[</span><span class="s2">"leisure_sports"</span><span class="p">],</span><span class="nt">"languages"</span><span class="p">:[</span><span class="s2">"en"</span><span class="p">],</span><span class="nt">"sentiment"</span><span class="p">:</span><span class="s2">"neutral"</span><span class="p">,</span><span class="nt">"interestingness"</span><span class="p">:</span><span class="mf">0.7085509373685894</span><span class="p">}}},{</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"success"</span><span class="p">,</span><span class="nt">"code"</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span><span class="nt">"result"</span><span class="p">:{</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"I love bowling with friends"</span><span class="p">,</span><span class="nt">"peoplepattern"</span><span class="p">:{</span><span class="nt">"interests"</span><span class="p">:[</span><span class="s2">"leisure_sports"</span><span class="p">],</span><span class="nt">"languages"</span><span class="p">:[</span><span class="s2">"en"</span><span class="p">],</span><span class="nt">"sentiment"</span><span class="p">:</span><span class="s2">"positive"</span><span class="p">,</span><span class="nt">"interestingness"</span><span class="p">:</span><span class="mf">0.5522605037296693</span><span class="p">}}},{</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"success"</span><span class="p">,</span><span class="nt">"code"</span><span class="p">:</span><span class="mi">200</span><span class="p">,</span><span class="nt">"result"</span><span class="p">:{</span><span class="nt">"text"</span><span class="p">:</span><span class="s2">"But I also love eating at home with the family"</span><span class="p">,</span><span class="nt">"peoplepattern"</span><span class="p">:{</span><span class="nt">"interests"</span><span class="p">:[</span><span class="s2">"family"</span><span class="p">],</span><span class="nt">"languages"</span><span class="p">:[</span><span class="s2">"en"</span><span class="p">],</span><span class="nt">"sentiment"</span><span class="p">:</span><span class="s2">"positive"</span><span class="p">,</span><span class="nt">"interestingness"</span><span class="p">:</span><span class="mf">0.5893891902193789</span><span class="p">}}}]</span><span class="w">
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bowling tonight? or kung-fu?"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"peoplepattern"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"leisure_sports"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"en"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"neutral"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7085509373685894</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"I love bowling with friends"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"peoplepattern"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"leisure_sports"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"en"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"positive"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5522605037296693</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"success"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"But I also love eating at home with the family"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"peoplepattern"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"family"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"en"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"positive"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5893891902193789</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
 </span></code></pre>
 
 <p>When passing a batch of posts to the enrich post endpoint,
@@ -923,6 +1096,24 @@ their own meta-data with respect to the response status.</p>
 As with the single-post call, batches of Twitter API format &ldquo;tweets&rdquo;
 are also supported.
 </aside>
+
+<h3 id="error-sample">Error Sample</h3>
+
+<p>To see a comprehensive list of error status returned the the People Pattern Audience Intelligence API please see the <a href="#errors">Errors section</a>.<br>
+Here we have displayed what a same error response would look like from the Enrich API.</p>
+
+<blockquote>
+<p>Example invalid format call with output</p>
+</blockquote>
+<pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/post <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'[{}]'</span>
+
+<span class="o">[{</span><span class="s2">"status"</span>:<span class="s2">"error"</span>,<span class="s2">"code"</span>:400,<span class="s2">"error"</span>:<span class="o">{</span><span class="s2">"input"</span>:<span class="o">{}</span>,<span class="s2">"message"</span>:<span class="s2">"No valid fields provided for profile content"</span><span class="o">}}]</span>
+</code></pre>
 
           <h1 id="lookup-api">Lookup API</h1>
 
