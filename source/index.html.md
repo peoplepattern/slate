@@ -2,13 +2,12 @@
 title: People Pattern Insights API
 
 language_tabs:
-  - http
-  - shell
+  - shell: cURL
+  - json: Output
 
 toc_footers:
   - "&#169; 2016 People Pattern Corporation"
   - <a href="http://peoplepattern.com">People Pattern Home</a>
-  - <a href="http://go.peoplepattern.com/demo">Sign up for a demo</a>
   - <a href="https://app.peoplepattern.com/signin">Log in</a>
 
 includes:
@@ -24,10 +23,10 @@ includes:
 search: true
 ---
 
-# People Pattern Insights API
+# People Pattern Audience Intelligence API
 
-The People Pattern API enables developers to use People Pattern
-audience intelligence and model predictions in your applications.
-We provide access to our Person Based Dataset (PDB) and machine
+The People Pattern Audience Intelligence API enables you to use People Pattern's
+audience intelligence and model predictions within your application.
+We provide access to our Portrait Database (Pdb) and machine
 learning-based models which we use in the
-[People Pattern](http://peoplepattern.com) dashboard application.
+[People Pattern](http://app.peoplepattern.com) application.

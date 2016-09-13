@@ -1,4 +1,4 @@
-### Overview
+## Overview
 
 The People Pattern API suite enables you to access content from
 our person-based dataset (PDB), and enrich your own text and person
@@ -14,7 +14,7 @@ functionality:
 - [Enrich API](#enrich-api) Enrich profile and text data you provide
   with our compiled predictive models
 
-### API Philosophy
+## API Philosophy
 
 Each of the APIs described above is stateless, in that we do not
 store any data provided by you (the client) for application
