@@ -91,7 +91,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;http&quot;,&quot;shell&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;,&quot;json&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -101,8 +101,8 @@
     <div class="tocify-wrapper">
       <img src="images/logo.png" />
         <div class="lang-selector">
-              <a href="#" data-language-name="http">http</a>
-              <a href="#" data-language-name="shell">shell</a>
+              <a href="#" data-language-name="shell">cURL</a>
+              <a href="#" data-language-name="json">Output</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -113,22 +113,21 @@
         <ul class="toc-footer">
             <li>&#169; 2016 People Pattern Corporation</li>
             <li><a href="http://peoplepattern.com">People Pattern Home</a></li>
-            <li><a href="http://go.peoplepattern.com/demo">Sign up for a demo</a></li>
             <li><a href="https://app.peoplepattern.com/signin">Log in</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="people-pattern-insights-api">People Pattern Insights API</h1>
+        <h1 id="people-pattern-audience-intelligence-api">People Pattern Audience Intelligence API</h1>
 
-<p>The People Pattern API enables developers to use People Pattern
-audience intelligence and model predictions in your applications.
-We provide access to our Person Based Dataset (PDB) and machine
+<p>The People Pattern Audience Intelligence API enables you to use People Pattern&rsquo;s
+audience intelligence and model predictions within your application.
+We provide access to our Portrait Database (Pdb) and machine
 learning-based models which we use in the
-<a href="http://peoplepattern.com">People Pattern</a> dashboard application.</p>
+<a href="http://app.peoplepattern.com">People Pattern</a> application.</p>
 
-          <h3 id="overview">Overview</h3>
+          <h2 id="overview">Overview</h2>
 
 <p>The People Pattern API suite enables you to access content from
 our person-based dataset (PDB), and enrich your own text and person
@@ -146,7 +145,7 @@ or search criteria</li>
 with our compiled predictive models</li>
 </ul>
 
-<h3 id="api-philosophy">API Philosophy</h3>
+<h2 id="api-philosophy">API Philosophy</h2>
 
 <p>Each of the APIs described above is stateless, in that we do not
 store any data provided by you (the client) for application
@@ -1230,8 +1229,8 @@ Batches of profiles can be retrived by submitting a list of ids
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="http">http</a>
-                <a href="#" data-language-name="shell">shell</a>
+                <a href="#" data-language-name="shell">cURL</a>
+                <a href="#" data-language-name="json">Output</a>
           </div>
       </div>
     </div>
