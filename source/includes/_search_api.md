@@ -23,7 +23,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 --------------|----------|-------------
 `queryString` | Yes      |  <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> formatted query
 `fields`      | No       | an array of [Pdb fields](#pdb-fields) to be returned for each discovered profile.  Not including this parameter will return all fields.
-`limit'       | No       | the maximum number of profiles to return in the result set
+`limit`       | No       | the maximum number of profiles to return in the result set
 
 ### Search for profiles
 
