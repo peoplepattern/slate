@@ -1,13 +1,13 @@
 # Lookup API
 
-The Lookup API provides access to our Portrait database (Pdb) which contains
+The Lookup API provides access to the Portrait database (Pdb) which contains
 hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.  
 This endpoint supports both HTTP POST and HTTP GET calls.
 
 
-## Portrait Lookup
+## Profile Lookup
 
-Retrieve one or more profiles from the Pdb by submitting their relevenat social profile identifiers.  If found, an enriched profile (referred to as a portrait) will be returned.
+Retrieve one or more profiles from the Pdb by submitting their relevant social profile identifiers.  If found, an enriched profile (referred to as a portrait) will be returned.
 
 Our currently supported services are
 

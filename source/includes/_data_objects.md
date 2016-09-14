@@ -145,6 +145,11 @@ field         | type            | description
 - `middle-eastern`
 - `no-prediction`
 
+#### Account Type values
+- `person`
+- `organiation`
+- `entertainment`
+
 <aside class="notice">
 Obviously, the values our predictive models use vastly oversimplify
 matters of racial and gender identity; the values chosen align roughly
@@ -157,7 +162,7 @@ better than other markets.
 </aside>
 
 
-### place
+### place/geo
 
 field           | type            | description
 ----------------|-----------------|------------
@@ -285,3 +290,16 @@ sentiment       | string          | "positive", "negative" or "neutral"
 - `toys_and_games`
 - `travel`
 - `tv`
+
+### Pdb fields
+
+field                       | description   
+----------------------------|--------
+`peoplepattern.race`        | race.  see [Race Values](#race-values)
+`peoplepattern.birthyear`   | year of birth
+`peoplepattern.account_type`| type of account.  see [Account Type Vaues](#account-type-values)
+`posts.devices`             | type of device used to commonly post with
+`posts.interests`           | top categories of interest for the user.  see [Interest topic values](#interests-topic-values)
+`posts.os`                  | type of operating system used to commonly post with
+`peoplepattern.gender`      | gender.  see [Gender values](#gender-values)
+`place.location.city`       | the identified city for the profile

@@ -1,62 +1,242 @@
 # Aggregate API
 
-## Retrieve aggregate insights
+The Aggregate API allows you to retrieve aggregate insights from the Portrait database (Pdb) which contains
+hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.  
+This endpoint supports both HTTP POST and HTTP GET calls.
 
-### GET pattern
+
+## Aggregate Profiles
+
+Get aggregate insights for a set of profiles by submitting their social profile identifiers to the Pdb.  
+Aggregate data is returned for both demographic and psychographic attributes.
+
+### Resource URI
+
+`/pdb/aggregate`
+
+### HTTP GET
+
+To retrieve aggregate insights for a set of profiles, make an HTTP GET request to [PDB Aggregate endpoint](#resource-uri) and submit one or more social profile identifiers. 
+
+#### GET PARAMETERS
+
+PARAMETER     | REQUIRED | DESCRIPTION
+--------------|----------|-------------
+`ids`         | Yes      | the social ids whose attributes will be aggregated, in the format "$service:$service_id" ie. "twitter:12345"
+`fields`      | No       | an array of [Pdb fields](#pdb-fields) to be aggregated and returned for each discovered profile
+
+### Aggregate profile attributes
 
 ```shell
-curl '/pdb/aggregate?type=profile&fields=posts.interests&ids=twitter:201892491'
+curl 'https://api-pdb-access.peoplepattern.com/aggregate?fields=peoplepattern.race,peoplepattern.birthyear,peoplepattern.account_type,posts.devices,posts.interests,posts.os,peoplepattern.gender,place.location.city&ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104' \
   -H "Authorization: secretkey" \
-  -H'Accept: application/json' 
+  -H "Accept: application/json" 
 ```
 
-```http
-GET /pdb/aggregate?type=profile&fields=posts.interests&ids=twitter:201892491 HTTP/1.1
-Host: api.peoplepattern.com
-Accept: application/json
-Content-type: application/json
-Authoriation: secretkey
+```json
+{
+  "posts.os": {
+    "de": 0.0013839364198635503,
+    "pt": 0.00975274939594874,
+    "blackberry": 0.017122722477892326,
+    "android": 0.303043739365118,
+    "ja": 0.03566702873107553,
+    "en": 0.10719063699523029,
+    "it": 0.0018890186195434076,
+    "fr": 0.00433679898354334,
+    "ios": 0.4897093384161427,
+    "windows": 0.000029898952595411925,
+    "es": 0.029368580303910118,
+    "mac": 0.0005055513391365339
+  },
+  "peoplepattern.account_type": {
+    "person": 1
+  },
+  "peoplepattern.gender": {
+    "male": 1
+  },
+  "posts.interests": {
+    "home_and_garden": 0.006479821830880409,
+    "tv": 0.017470695748115647,
+    "beauty": 0.017265940367377122,
+    "movies": 0.02177315693013945,
+    "leisure_sports": 0.009359929069074303,
+    "humor": 0.05750853899653545,
+    "music": 0.04453033527860939,
+    "charity": 0.015467887059796497,
+    "fitness": 0.016594441298240083,
+    "health_care": 0.022492142517216828,
+    "military": 0.012983604616798233,
+    "animals": 0.02020837619203906,
+    "dance": 0.012504671719420499,
+    "parenting": 0.023518926659109336,
+    "shopping": 0.01430083006408126,
+    "beverages": 0.019798850600224946,
+    "higher_education": 0.01997958349109464,
+    "crafts": 0.005390732786789505,
+    "nutrition": 0.008311260662030395,
+    "extreme_sports": 0.004636000996369334,
+    "science": 0.011792384132337875,
+    "toys_and_games": 0.004752356058075963,
+    "automotive": 0.016710738588036646,
+    "other_sports": 0.017730743716451315,
+    "politics": 0.03613494964024038,
+    "small_business": 0.010448134933390618,
+    "environmentalism": 0.010380695857038939,
+    "design": 0.00640181713543588,
+    "dating": 0.022347794419577065,
+    "cooking": 0.01538251367896448,
+    "computers": 0.012205600264598536,
+    "local_life": 0.014369243073016447,
+    "art": 0.012545077526130427,
+    "gaming": 0.018551145567494216,
+    "business": 0.02390683426779431,
+    "current_events": 0.024671038437982344,
+    "consumer_electronics": 0.018596074848357905,
+    "reading": 0.018290843933990206,
+    "food": 0.029962990997882917,
+    "outdoor_recreation": 0.0062732319153118625,
+    "religion": 0.04066377046253635,
+    "marketing": 0.010551156193984095,
+    "multimedia": 0.032531002646433584,
+    "major_sports": 0.05873100633715111,
+    "school_life": 0.0417529998414586,
+    "family": 0.04444678359440516,
+    "travel": 0.025538779610336484,
+    "finance": 0.02021575505944901,
+    "pop_culture": 0.00730116640439448,
+    "fashion": 0.016237643973800408
+  },
+  "posts.devices": {
+    "tablet": 0.03444261383528846,
+    "automated": 0.0034475751633945852,
+    "desktop": 0.040294415836302486,
+    "mobile": 0.9218153951650144
+  },
+  "place.location.city": {
+    "Austin": 1
+  },
+  "peoplepattern.birthyear": {
+    "1972": 0.3333333333333333,
+    "1975": 0.3333333333333333,
+    "1993": 0.3333333333333333
+  },
+  "peoplepattern.race": {
+    "white": 0.6666666666666666,
+    "east-asian": 0.3333333333333333
+  }
+}
 ```
 
-> Response will look like
+### HTTP POST
+
+To retrieve aggregate insights for a set of profiles, make an HTTP POST request to [PDB Aggregate endpoint](#resource-uri) and submit one or more social profile identifiers. 
+
+#### POST PARAMETERS
+
+PARAMETER     | REQUIRED | DESCRIPTION
+--------------|----------|-------------
+`body`        | Yes      | an array of [Pdb fields](#pdb-fields) to be aggregated and returned for each discovered profile and a second array of the social ids whose attributes will be aggregated, in the format "$service:$service_id" ie. "twitter:12345"
 
 ```shell
- {"posts.interests":{"home_and_garden":0.00632634510034411,"tv":0.017641091417461792,"beauty":0.01739964801038861,"movies":0.021844295292726947,"leisure_sports":0.009329955966575574,"humor":0.058345876185155875,"music":0.04485514027861094,"charity":0.015389966992934849,"fitness":0.0165814233367729,"health_care":0.021527699213594077,"military":0.013034320299285453,"animals":0.020148544771305524,"dance":0.012551060067223207,"parenting":0.023642682461784918,"shopping":0.01413827847825423,"beverages":0.01989591944350184,"higher_education":0.01992083188540363,"crafts":0.005263564354310484,"nutrition":0.008217999185114544,"extreme_sports":0.0046040907095506066,"science":0.011737067154455726,"toys_and_games":0.004699628710404084,"automotive":0.016683389361043143,"other_sports":0.01786744915770121,"politics":0.03622886489314473,"small_business":0.010401117767321753,"environmentalism":0.010210921567875668,"design":0.0062678792518393875,"dating":0.022562492611140666,"cooking":0.01541533277159928,"computers":0.012154950526783446,"local_life":0.01371711611672098,"art":0.012431124811468516,"gaming":0.018048887641435224,"business":0.02347847262822203,"current_events":0.02491274929978587,"consumer_electronics":0.018235434213545867,"reading":0.0182121319626697,"food":0.030091208884950964,"outdoor_recreation":0.006174227335769481,"religion":0.040720771316832355,"marketing":0.010582783498559166,"multimedia":0.032546506041154,"major_sports":0.059709128166831875,"school_life":0.04198742318776386,"family":0.04478017593705101,"travel":0.025614312842226965,"finance":0.020140523235578984,"pop_culture":0.007421613436708357,"fashion":0.0163075822191156}}
- ```
-
- ```http
-HTTP/1.1 200 OK
-Content-Type: application/json
-Content-Length: 1088
-
-{"posts.interests":{"home_and_garden":0.00632634510034411,"tv":0.017641091417461792,"beauty":0.01739964801038861,"movies":0.021844295292726947,"leisure_sports":0.009329955966575574,"humor":0.058345876185155875,"music":0.04485514027861094,"charity":0.015389966992934849,"fitness":0.0165814233367729,"health_care":0.021527699213594077,"military":0.013034320299285453,"animals":0.020148544771305524,"dance":0.012551060067223207,"parenting":0.023642682461784918,"shopping":0.01413827847825423,"beverages":0.01989591944350184,"higher_education":0.01992083188540363,"crafts":0.005263564354310484,"nutrition":0.008217999185114544,"extreme_sports":0.0046040907095506066,"science":0.011737067154455726,"toys_and_games":0.004699628710404084,"automotive":0.016683389361043143,"other_sports":0.01786744915770121,"politics":0.03622886489314473,"small_business":0.010401117767321753,"environmentalism":0.010210921567875668,"design":0.0062678792518393875,"dating":0.022562492611140666,"cooking":0.01541533277159928,"computers":0.012154950526783446,"local_life":0.01371711611672098,"art":0.012431124811468516,"gaming":0.018048887641435224,"business":0.02347847262822203,"current_events":0.02491274929978587,"consumer_electronics":0.018235434213545867,"reading":0.0182121319626697,"food":0.030091208884950964,"outdoor_recreation":0.006174227335769481,"religion":0.040720771316832355,"marketing":0.010582783498559166,"multimedia":0.032546506041154,"major_sports":0.059709128166831875,"school_life":0.04198742318776386,"family":0.04478017593705101,"travel":0.025614312842226965,"finance":0.020140523235578984,"pop_culture":0.007421613436708357,"fashion":0.0163075822191156}}
+curl 'https://api.peoplepattern.com/pdb/aggregate' \
+  -X POST \
+  -H "Authorization: secretkey" \
+  -H "Accept: application/json" \
+  -d '{{"fields":["peoplepattern.race","peoplepattern.birthyear","peoplepattern.account_type","posts.devices","posts.interests","posts.os","peoplepattern.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'
 ```
 
-This service enables you to get insights at an aggregate level based on an audience.  This service will, for example, return the age range for an entire audience, or the aggregate interests for the same audience.
-
-### Data model
-
-field | description
-------|------------
-enrichments.demographics.account_type| key / value pairs where key is an enumerated account_type, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.demographics.birthyear:| key / value pairs where key is a birthyear, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.demographics.race:| key / value pairs where key is an enumerated race, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.demographics.gender:| key / value pairs where key is an enumerated gender, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.psychographics.interests:| key / value pairs where key is an enumerated interest, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.psychographics.languages:| key / value pairs where key is an enumerated language, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.psychographics.sentiment:| key / value pairs where key is an enumerated sentiment, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.extended.marital_status| key / value pairs where key is an enumerated marital_status, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.extended.parental_status| key / value pairs where key is an enumerated parental_status, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.extended.political_affiliation| key / value pairs where key is an enumerated political_affiliation, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.extended.religion| key / value pairs where key is an enumerated religion, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.extended.sexual_orientation| key / value pairs where key is an enumerated sexual_orientation, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.place.dma| top dmas, expressed as a map, where key is a dma identifier, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.place.city| top cities, expressed as a map, where key is a city identifier, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.place.state:| top states, expressed as a map, where key is a state identifier, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.place.utc_offset| top utc_offsets, expressed as a map, where key is a utc_offset identifier, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.place.time_zone| top time_zones, expressed as a map, where key is a utc_offset identifier, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.place.metro_area| top metro_areas, expressed as a map, where key is a metro_area identifier, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.place.continent| top continents, expressed as a map, where key is a continent identifier, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.place.language| top languages, expressed as a map, where key is a ISO language identifier, and value is a percentage of population expressed as a double between 0 and 1
-enrichments.posts.hashtags| top hashtags, expressed as a map, where key is a hashtag, and value is a percentage of posts expressed as a double between 0 and 1
-enrichments.posts.mentions| top mentioned accounts, expressed as a map, where key is a profile id, and value is a percentage of posts expressed as a double between 0 and 1
+```json
+{
+  "posts.os": {
+    "de": 0.0013839364198635503,
+    "pt": 0.00975274939594874,
+    "blackberry": 0.017122722477892326,
+    "android": 0.303043739365118,
+    "ja": 0.03566702873107553,
+    "en": 0.10719063699523029,
+    "it": 0.0018890186195434076,
+    "fr": 0.00433679898354334,
+    "ios": 0.4897093384161427,
+    "windows": 0.000029898952595411925,
+    "es": 0.029368580303910118,
+    "mac": 0.0005055513391365339
+  },
+  "peoplepattern.account_type": {
+    "person": 1
+  },
+  "peoplepattern.gender": {
+    "male": 1
+  },
+  "posts.interests": {
+    "home_and_garden": 0.006479821830880409,
+    "tv": 0.017470695748115647,
+    "beauty": 0.017265940367377122,
+    "movies": 0.02177315693013945,
+    "leisure_sports": 0.009359929069074303,
+    "humor": 0.05750853899653545,
+    "music": 0.04453033527860939,
+    "charity": 0.015467887059796497,
+    "fitness": 0.016594441298240083,
+    "health_care": 0.022492142517216828,
+    "military": 0.012983604616798233,
+    "animals": 0.02020837619203906,
+    "dance": 0.012504671719420499,
+    "parenting": 0.023518926659109336,
+    "shopping": 0.01430083006408126,
+    "beverages": 0.019798850600224946,
+    "higher_education": 0.01997958349109464,
+    "crafts": 0.005390732786789505,
+    "nutrition": 0.008311260662030395,
+    "extreme_sports": 0.004636000996369334,
+    "science": 0.011792384132337875,
+    "toys_and_games": 0.004752356058075963,
+    "automotive": 0.016710738588036646,
+    "other_sports": 0.017730743716451315,
+    "politics": 0.03613494964024038,
+    "small_business": 0.010448134933390618,
+    "environmentalism": 0.010380695857038939,
+    "design": 0.00640181713543588,
+    "dating": 0.022347794419577065,
+    "cooking": 0.01538251367896448,
+    "computers": 0.012205600264598536,
+    "local_life": 0.014369243073016447,
+    "art": 0.012545077526130427,
+    "gaming": 0.018551145567494216,
+    "business": 0.02390683426779431,
+    "current_events": 0.024671038437982344,
+    "consumer_electronics": 0.018596074848357905,
+    "reading": 0.018290843933990206,
+    "food": 0.029962990997882917,
+    "outdoor_recreation": 0.0062732319153118625,
+    "religion": 0.04066377046253635,
+    "marketing": 0.010551156193984095,
+    "multimedia": 0.032531002646433584,
+    "major_sports": 0.05873100633715111,
+    "school_life": 0.0417529998414586,
+    "family": 0.04444678359440516,
+    "travel": 0.025538779610336484,
+    "finance": 0.02021575505944901,
+    "pop_culture": 0.00730116640439448,
+    "fashion": 0.016237643973800408
+  },
+  "posts.devices": {
+    "tablet": 0.03444261383528846,
+    "automated": 0.0034475751633945852,
+    "desktop": 0.040294415836302486,
+    "mobile": 0.9218153951650144
+  },
+  "place.location.city": {
+    "Austin": 1
+  },
+  "peoplepattern.birthyear": {
+    "1972": 0.3333333333333333,
+    "1975": 0.3333333333333333,
+    "1993": 0.3333333333333333
+  },
+  "peoplepattern.race": {
+    "white": 0.6666666666666666,
+    "east-asian": 0.3333333333333333
+  }
+}
+```
