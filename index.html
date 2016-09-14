@@ -436,6 +436,14 @@ consist of fields for account type, spam, adult content, vcard
 <li><code class="prettyprint">no-prediction</code></li>
 </ul>
 
+<h4 id="account-type-values">Account Type values</h4>
+
+<ul>
+<li><code class="prettyprint">person</code></li>
+<li><code class="prettyprint">organiation</code></li>
+<li><code class="prettyprint">entertainment</code></li>
+</ul>
+
 <aside class="notice">
 Obviously, the values our predictive models use vastly oversimplify
 matters of racial and gender identity; the values chosen align roughly
@@ -447,7 +455,7 @@ marketing analytics, and as such characterize US social media culture
 better than other markets.
 </aside>
 
-<h3 id="place">place</h3>
+<h3 id="place-geo">place/geo</h3>
 
 <table><thead>
 <tr>
@@ -710,6 +718,48 @@ predicted languages and predicted sentiment</p>
 <li><code class="prettyprint">travel</code></li>
 <li><code class="prettyprint">tv</code></li>
 </ul>
+
+<h3 id="pdb-fields">Pdb fields</h3>
+
+<table><thead>
+<tr>
+<th>field</th>
+<th>description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">peoplepattern.race</code></td>
+<td>race.  see <a href="#race-values">Race Values</a></td>
+</tr>
+<tr>
+<td><code class="prettyprint">peoplepattern.birthyear</code></td>
+<td>year of birth</td>
+</tr>
+<tr>
+<td><code class="prettyprint">peoplepattern.account_type</code></td>
+<td>type of account.  see <a href="#account-type-values">Account Type Vaues</a></td>
+</tr>
+<tr>
+<td><code class="prettyprint">posts.devices</code></td>
+<td>type of device used to commonly post with</td>
+</tr>
+<tr>
+<td><code class="prettyprint">posts.interests</code></td>
+<td>top categories of interest for the user.  see <a href="#interests-topic-values">Interest topic values</a></td>
+</tr>
+<tr>
+<td><code class="prettyprint">posts.os</code></td>
+<td>type of operating system used to commonly post with</td>
+</tr>
+<tr>
+<td><code class="prettyprint">peoplepattern.gender</code></td>
+<td>gender.  see <a href="#gender-values">Gender values</a></td>
+</tr>
+<tr>
+<td><code class="prettyprint">place.location.city</code></td>
+<td>the identified city for the profile</td>
+</tr>
+</tbody></table>
 
           <h1 id="enrich-api">Enrich API</h1>
 
@@ -1137,13 +1187,13 @@ Here we have displayed what a same error response would look like from the Enric
 
           <h1 id="lookup-api">Lookup API</h1>
 
-<p>The Lookup API provides access to our Portrait database (Pdb) which contains
+<p>The Lookup API provides access to the Portrait database (Pdb) which contains
 hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.<br>
 This endpoint supports both HTTP POST and HTTP GET calls.</p>
 
-<h2 id="portrait-lookup">Portrait Lookup</h2>
+<h2 id="profile-lookup">Profile Lookup</h2>
 
-<p>Retrieve one or more profiles from the Pdb by submitting their relevenat social profile identifiers.  If found, an enriched profile (referred to as a portrait) will be returned.</p>
+<p>Retrieve one or more profiles from the Pdb by submitting their relevant social profile identifiers.  If found, an enriched profile (referred to as a portrait) will be returned.</p>
 
 <p>Our currently supported services are</p>
 
@@ -1512,161 +1562,871 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 
           <h1 id="search-api">Search API</h1>
 
-<h2 id="search-the-portrait-database-pdb">Search the Portrait Database (Pdb)</h2>
+<p>The Search API allows you to search the Portrait database (Pdb) which contains
+hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.<br>
+This endpoint supports both HTTP POST and HTTP GET calls.</p>
 
-<h3 id="get-pattern">GET pattern</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'/pdb/search?queryString=joe'</span>
-  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
-  -H<span class="s1">'Accept: application/json'</span> 
-</code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/pdb/search?queryString=joe</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">api.peoplepattern.com</span>
-<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Authoriation</span><span class="p">:</span> <span class="s">secretkey</span>
-</code></pre>
+<h2 id="profile-search">Profile Search</h2>
 
-<blockquote>
-<p>Response will look like:</p>
-</blockquote>
-<pre class="highlight shell"><code><span class="o">[{</span><span class="s2">"</span><span class="nv">$schema</span><span class="s2">"</span>:<span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span>,<span class="s2">"twitter"</span>:<span class="o">{</span><span class="s2">"statuses_count"</span>:708,<span class="s2">"followers_count"</span>:48,<span class="s2">"friends_count"</span>:86,<span class="s2">"lang"</span>:<span class="s2">"en"</span>,<span class="s2">"listed_count"</span>:0,<span class="s2">"screen_name"</span>:<span class="s2">"jszulueta"</span>,<span class="s2">"favourites_count"</span>:3<span class="o">}</span>,<span class="s2">"enrichments"</span>:<span class="o">{</span><span class="s2">"psychographics"</span>:<span class="o">{</span><span class="s2">"languages"</span>:<span class="o">{</span><span class="s2">"android"</span>:5,<span class="s2">"ios"</span>:6<span class="o">}</span>,<span class="s2">"interests"</span>:<span class="o">{</span><span class="s2">"business"</span>:2,<span class="s2">"health_care"</span>:3,<span class="s2">"military"</span>:6,<span class="s2">"consumer_electronics"</span>:5,<span class="s2">"beverages"</span>:3,<span class="s2">"computers"</span>:2,<span class="s2">"other_sports"</span>:2,<span class="s2">"science"</span>:3,<span class="s2">"crafts"</span>:1,<span class="s2">"design"</span>:3,<span class="s2">"religion"</span>:3,<span class="s2">"shopping"</span>:4,<span class="s2">"food"</span>:6,<span class="s2">"local_life"</span>:11,<span class="s2">"travel"</span>:22,<span class="s2">"multimedia"</span>:52,<span class="s2">"family"</span>:2,<span class="s2">"beauty"</span>:1,<span class="s2">"environmentalism"</span>:2,<span class="s2">"humor"</span>:4<span class="o">}</span>,<span class="s2">"sentiment"</span>:<span class="o">{</span><span class="s2">"neutral"</span>:1,<span class="s2">"positive"</span>:126<span class="o">}</span>,<span class="s2">"mentions"</span>:[<span class="s2">"twitter:122302784"</span>,<span class="s2">"twitter:14120151"</span>,<span class="s2">"twitter:2166412230"</span>,<span class="s2">"twitter:960481315"</span>,<span class="s2">"twitter:71983360"</span>,<span class="s2">"twitter:106915372"</span>,<span class="s2">"twitter:14511951"</span>,<span class="s2">"twitter:15092616"</span>,<span class="s2">"twitter:2576461322"</span>,<span class="s2">"twitter:326380075"</span>,<span class="s2">"twitter:347258974"</span>,<span class="s2">"twitter:3746042353"</span>,<span class="s2">"twitter:871351657"</span><span class="o">]</span>,<span class="s2">"hashtags"</span>:[<span class="s2">"3d"</span>,<span class="s2">"fps"</span>,<span class="s2">"mobile"</span>,<span class="s2">"pg3d"</span>,<span class="s2">"pixelgun"</span>,<span class="s2">"pixelgun3d"</span>,<span class="s2">"shooter"</span>,<span class="s2">"HiddenRisks"</span>,<span class="s2">"TheSMStoreMakati3DS"</span>,<span class="s2">"WaltDisney"</span>,<span class="s2">"gifersation"</span><span class="o">]}</span>,<span class="s2">"demographics"</span>:<span class="o">{</span><span class="s2">"race"</span>:<span class="s2">"white"</span>,<span class="s2">"birthyear"</span>:1999,<span class="s2">"gender"</span>:<span class="s2">"female"</span><span class="o">}</span>,<span class="s2">"account_type"</span>:<span class="s2">"person"</span>,<span class="s2">"version"</span>:<span class="s2">"0.10"</span>,<span class="s2">"vcard"</span>:<span class="o">{</span><span class="s2">"name"</span>:<span class="o">{</span><span class="s2">"fn"</span>:<span class="s2">"Joe Zulueta"</span><span class="o">}}</span>,<span class="s2">"interestingness"</span>:0.8452886615186165<span class="o">}</span>,<span class="s2">"screenName"</span>:<span class="s2">"jszulueta"</span>,<span class="s2">"objectType"</span>:<span class="s2">"profile"</span>,<span class="s2">"id"</span>:<span class="s2">"twitter:130573602"</span>,<span class="s2">"displayScreenName"</span>:<span class="s2">"jszulueta"</span>,<span class="s2">"provider"</span>:<span class="o">{</span><span class="s2">"id"</span>:<span class="s2">"twitter"</span><span class="o">}</span>,<span class="s2">"published"</span>:<span class="s2">"2010-04-07T17:56:08.000Z"</span>,<span class="s2">"displayName"</span>:<span class="s2">"★ joe"</span>,<span class="s2">"image"</span>:<span class="o">{</span><span class="s2">"url"</span>:<span class="s2">"http://pbs.twimg.com/profile_images/491912407841644544/7dD2PrDr_normal.jpeg"</span><span class="o">}</span>,<span class="s2">"summary"</span>:<span class="s2">"joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe"</span>,<span class="s2">"indexedAt"</span>:<span class="s2">"2015-11-03T23:31:29.870Z"</span>,<span class="s2">"location"</span>:<span class="s2">"Manila"</span><span class="o">}]</span>
-</code></pre>
-<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Content-Length</span><span class="p">:</span> <span class="s">1088</span>
+<p>Search the Pdb by defining a search string using specific demographic and psychographic criteria.  This will return 0 or more profiles tha match the submitted criteria.  The search syntax is based on <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> </p>
 
-<span class="p">[{</span><span class="nt">"$schema"</span><span class="p">:</span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="nt">"twitter"</span><span class="p">:{</span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="mi">708</span><span class="p">,</span><span class="nt">"followers_count"</span><span class="p">:</span><span class="mi">48</span><span class="p">,</span><span class="nt">"friends_count"</span><span class="p">:</span><span class="mi">86</span><span class="p">,</span><span class="nt">"lang"</span><span class="p">:</span><span class="s2">"en"</span><span class="p">,</span><span class="nt">"listed_count"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="nt">"screen_name"</span><span class="p">:</span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="mi">3</span><span class="p">},</span><span class="nt">"enrichments"</span><span class="p">:{</span><span class="nt">"psychographics"</span><span class="p">:{</span><span class="nt">"languages"</span><span class="p">:{</span><span class="nt">"android"</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="nt">"ios"</span><span class="p">:</span><span class="mi">6</span><span class="p">},</span><span class="nt">"interests"</span><span class="p">:{</span><span class="nt">"business"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"health_care"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"military"</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="nt">"beverages"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"computers"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"other_sports"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"science"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"crafts"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">"design"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"religion"</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="nt">"shopping"</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span><span class="nt">"food"</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="nt">"local_life"</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="nt">"travel"</span><span class="p">:</span><span class="mi">22</span><span class="p">,</span><span class="nt">"multimedia"</span><span class="p">:</span><span class="mi">52</span><span class="p">,</span><span class="nt">"family"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"beauty"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">"environmentalism"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">"humor"</span><span class="p">:</span><span class="mi">4</span><span class="p">},</span><span class="nt">"sentiment"</span><span class="p">:{</span><span class="nt">"neutral"</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">"positive"</span><span class="p">:</span><span class="mi">126</span><span class="p">},</span><span class="nt">"mentions"</span><span class="p">:[</span><span class="s2">"twitter:122302784"</span><span class="p">,</span><span class="s2">"twitter:14120151"</span><span class="p">,</span><span class="s2">"twitter:2166412230"</span><span class="p">,</span><span class="s2">"twitter:960481315"</span><span class="p">,</span><span class="s2">"twitter:71983360"</span><span class="p">,</span><span class="s2">"twitter:106915372"</span><span class="p">,</span><span class="s2">"twitter:14511951"</span><span class="p">,</span><span class="s2">"twitter:15092616"</span><span class="p">,</span><span class="s2">"twitter:2576461322"</span><span class="p">,</span><span class="s2">"twitter:326380075"</span><span class="p">,</span><span class="s2">"twitter:347258974"</span><span class="p">,</span><span class="s2">"twitter:3746042353"</span><span class="p">,</span><span class="s2">"twitter:871351657"</span><span class="p">],</span><span class="nt">"hashtags"</span><span class="p">:[</span><span class="s2">"3d"</span><span class="p">,</span><span class="s2">"fps"</span><span class="p">,</span><span class="s2">"mobile"</span><span class="p">,</span><span class="s2">"pg3d"</span><span class="p">,</span><span class="s2">"pixelgun"</span><span class="p">,</span><span class="s2">"pixelgun3d"</span><span class="p">,</span><span class="s2">"shooter"</span><span class="p">,</span><span class="s2">"HiddenRisks"</span><span class="p">,</span><span class="s2">"TheSMStoreMakati3DS"</span><span class="p">,</span><span class="s2">"WaltDisney"</span><span class="p">,</span><span class="s2">"gifersation"</span><span class="p">]},</span><span class="nt">"demographics"</span><span class="p">:{</span><span class="nt">"race"</span><span class="p">:</span><span class="s2">"white"</span><span class="p">,</span><span class="nt">"birthyear"</span><span class="p">:</span><span class="mi">1999</span><span class="p">,</span><span class="nt">"gender"</span><span class="p">:</span><span class="s2">"female"</span><span class="p">},</span><span class="nt">"account_type"</span><span class="p">:</span><span class="s2">"person"</span><span class="p">,</span><span class="nt">"version"</span><span class="p">:</span><span class="s2">"0.10"</span><span class="p">,</span><span class="nt">"vcard"</span><span class="p">:{</span><span class="nt">"name"</span><span class="p">:{</span><span class="nt">"fn"</span><span class="p">:</span><span class="s2">"Joe Zulueta"</span><span class="p">}},</span><span class="nt">"interestingness"</span><span class="p">:</span><span class="mf">0.8452886615186165</span><span class="p">},</span><span class="nt">"screenName"</span><span class="p">:</span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="nt">"objectType"</span><span class="p">:</span><span class="s2">"profile"</span><span class="p">,</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"twitter:130573602"</span><span class="p">,</span><span class="nt">"displayScreenName"</span><span class="p">:</span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="nt">"provider"</span><span class="p">:{</span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"twitter"</span><span class="p">},</span><span class="nt">"published"</span><span class="p">:</span><span class="s2">"2010-04-07T17:56:08.000Z"</span><span class="p">,</span><span class="nt">"displayName"</span><span class="p">:</span><span class="s2">"★ joe"</span><span class="p">,</span><span class="nt">"image"</span><span class="p">:{</span><span class="nt">"url"</span><span class="p">:</span><span class="s2">"http://pbs.twimg.com/profile_images/491912407841644544/7dD2PrDr_normal.jpeg"</span><span class="p">},</span><span class="nt">"summary"</span><span class="p">:</span><span class="s2">"joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe"</span><span class="p">,</span><span class="nt">"indexedAt"</span><span class="p">:</span><span class="s2">"2015-11-03T23:31:29.870Z"</span><span class="p">,</span><span class="nt">"location"</span><span class="p">:</span><span class="s2">"Manila"</span><span class="p">}]</span><span class="w">
-</span></code></pre>
+<h3 id="resource-uri">Resource URI</h3>
 
-<p>Search the Pdb by defining a search string using specific demographic and psychographic criteria.  The search syntax is based on <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a></p>
+<p><code class="prettyprint">/pdb/search</code></p>
 
-          <h1 id="aggregate-api">Aggregate API</h1>
+<h3 id="http-get">HTTP GET</h3>
 
-<h2 id="retrieve-aggregate-insights">Retrieve aggregate insights</h2>
+<p>To search for a profile, make an HTTP GET request to <a href="#resource-uri">PDB Search endpoint</a> and submit a <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> formatted query using the <a href="#pdb-fields">Pdb fields</a>.  </p>
 
-<h3 id="get-pattern">GET pattern</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'/pdb/aggregate?type=profile&amp;fields=posts.interests&amp;ids=twitter:201892491'</span>
-  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
-  -H<span class="s1">'Accept: application/json'</span> 
-</code></pre>
-<pre class="highlight http"><code><span class="nf">GET</span> <span class="nn">/pdb/aggregate?type=profile&amp;fields=posts.interests&amp;ids=twitter:201892491</span> <span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span>
-<span class="na">Host</span><span class="p">:</span> <span class="s">api.peoplepattern.com</span>
-<span class="na">Accept</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Content-type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Authoriation</span><span class="p">:</span> <span class="s">secretkey</span>
-</code></pre>
-
-<blockquote>
-<p>Response will look like</p>
-</blockquote>
-<pre class="highlight shell"><code> <span class="o">{</span><span class="s2">"posts.interests"</span>:<span class="o">{</span><span class="s2">"home_and_garden"</span>:0.00632634510034411,<span class="s2">"tv"</span>:0.017641091417461792,<span class="s2">"beauty"</span>:0.01739964801038861,<span class="s2">"movies"</span>:0.021844295292726947,<span class="s2">"leisure_sports"</span>:0.009329955966575574,<span class="s2">"humor"</span>:0.058345876185155875,<span class="s2">"music"</span>:0.04485514027861094,<span class="s2">"charity"</span>:0.015389966992934849,<span class="s2">"fitness"</span>:0.0165814233367729,<span class="s2">"health_care"</span>:0.021527699213594077,<span class="s2">"military"</span>:0.013034320299285453,<span class="s2">"animals"</span>:0.020148544771305524,<span class="s2">"dance"</span>:0.012551060067223207,<span class="s2">"parenting"</span>:0.023642682461784918,<span class="s2">"shopping"</span>:0.01413827847825423,<span class="s2">"beverages"</span>:0.01989591944350184,<span class="s2">"higher_education"</span>:0.01992083188540363,<span class="s2">"crafts"</span>:0.005263564354310484,<span class="s2">"nutrition"</span>:0.008217999185114544,<span class="s2">"extreme_sports"</span>:0.0046040907095506066,<span class="s2">"science"</span>:0.011737067154455726,<span class="s2">"toys_and_games"</span>:0.004699628710404084,<span class="s2">"automotive"</span>:0.016683389361043143,<span class="s2">"other_sports"</span>:0.01786744915770121,<span class="s2">"politics"</span>:0.03622886489314473,<span class="s2">"small_business"</span>:0.010401117767321753,<span class="s2">"environmentalism"</span>:0.010210921567875668,<span class="s2">"design"</span>:0.0062678792518393875,<span class="s2">"dating"</span>:0.022562492611140666,<span class="s2">"cooking"</span>:0.01541533277159928,<span class="s2">"computers"</span>:0.012154950526783446,<span class="s2">"local_life"</span>:0.01371711611672098,<span class="s2">"art"</span>:0.012431124811468516,<span class="s2">"gaming"</span>:0.018048887641435224,<span class="s2">"business"</span>:0.02347847262822203,<span class="s2">"current_events"</span>:0.02491274929978587,<span class="s2">"consumer_electronics"</span>:0.018235434213545867,<span class="s2">"reading"</span>:0.0182121319626697,<span class="s2">"food"</span>:0.030091208884950964,<span class="s2">"outdoor_recreation"</span>:0.006174227335769481,<span class="s2">"religion"</span>:0.040720771316832355,<span class="s2">"marketing"</span>:0.010582783498559166,<span class="s2">"multimedia"</span>:0.032546506041154,<span class="s2">"major_sports"</span>:0.059709128166831875,<span class="s2">"school_life"</span>:0.04198742318776386,<span class="s2">"family"</span>:0.04478017593705101,<span class="s2">"travel"</span>:0.025614312842226965,<span class="s2">"finance"</span>:0.020140523235578984,<span class="s2">"pop_culture"</span>:0.007421613436708357,<span class="s2">"fashion"</span>:0.0163075822191156<span class="o">}}</span>
-</code></pre>
-<pre class="highlight http"><code><span class="k">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
-<span class="na">Content-Type</span><span class="p">:</span> <span class="s">application/json</span>
-<span class="na">Content-Length</span><span class="p">:</span> <span class="s">1088</span>
-
-<span class="p">{</span><span class="nt">"posts.interests"</span><span class="p">:{</span><span class="nt">"home_and_garden"</span><span class="p">:</span><span class="mf">0.00632634510034411</span><span class="p">,</span><span class="nt">"tv"</span><span class="p">:</span><span class="mf">0.017641091417461792</span><span class="p">,</span><span class="nt">"beauty"</span><span class="p">:</span><span class="mf">0.01739964801038861</span><span class="p">,</span><span class="nt">"movies"</span><span class="p">:</span><span class="mf">0.021844295292726947</span><span class="p">,</span><span class="nt">"leisure_sports"</span><span class="p">:</span><span class="mf">0.009329955966575574</span><span class="p">,</span><span class="nt">"humor"</span><span class="p">:</span><span class="mf">0.058345876185155875</span><span class="p">,</span><span class="nt">"music"</span><span class="p">:</span><span class="mf">0.04485514027861094</span><span class="p">,</span><span class="nt">"charity"</span><span class="p">:</span><span class="mf">0.015389966992934849</span><span class="p">,</span><span class="nt">"fitness"</span><span class="p">:</span><span class="mf">0.0165814233367729</span><span class="p">,</span><span class="nt">"health_care"</span><span class="p">:</span><span class="mf">0.021527699213594077</span><span class="p">,</span><span class="nt">"military"</span><span class="p">:</span><span class="mf">0.013034320299285453</span><span class="p">,</span><span class="nt">"animals"</span><span class="p">:</span><span class="mf">0.020148544771305524</span><span class="p">,</span><span class="nt">"dance"</span><span class="p">:</span><span class="mf">0.012551060067223207</span><span class="p">,</span><span class="nt">"parenting"</span><span class="p">:</span><span class="mf">0.023642682461784918</span><span class="p">,</span><span class="nt">"shopping"</span><span class="p">:</span><span class="mf">0.01413827847825423</span><span class="p">,</span><span class="nt">"beverages"</span><span class="p">:</span><span class="mf">0.01989591944350184</span><span class="p">,</span><span class="nt">"higher_education"</span><span class="p">:</span><span class="mf">0.01992083188540363</span><span class="p">,</span><span class="nt">"crafts"</span><span class="p">:</span><span class="mf">0.005263564354310484</span><span class="p">,</span><span class="nt">"nutrition"</span><span class="p">:</span><span class="mf">0.008217999185114544</span><span class="p">,</span><span class="nt">"extreme_sports"</span><span class="p">:</span><span class="mf">0.0046040907095506066</span><span class="p">,</span><span class="nt">"science"</span><span class="p">:</span><span class="mf">0.011737067154455726</span><span class="p">,</span><span class="nt">"toys_and_games"</span><span class="p">:</span><span class="mf">0.004699628710404084</span><span class="p">,</span><span class="nt">"automotive"</span><span class="p">:</span><span class="mf">0.016683389361043143</span><span class="p">,</span><span class="nt">"other_sports"</span><span class="p">:</span><span class="mf">0.01786744915770121</span><span class="p">,</span><span class="nt">"politics"</span><span class="p">:</span><span class="mf">0.03622886489314473</span><span class="p">,</span><span class="nt">"small_business"</span><span class="p">:</span><span class="mf">0.010401117767321753</span><span class="p">,</span><span class="nt">"environmentalism"</span><span class="p">:</span><span class="mf">0.010210921567875668</span><span class="p">,</span><span class="nt">"design"</span><span class="p">:</span><span class="mf">0.0062678792518393875</span><span class="p">,</span><span class="nt">"dating"</span><span class="p">:</span><span class="mf">0.022562492611140666</span><span class="p">,</span><span class="nt">"cooking"</span><span class="p">:</span><span class="mf">0.01541533277159928</span><span class="p">,</span><span class="nt">"computers"</span><span class="p">:</span><span class="mf">0.012154950526783446</span><span class="p">,</span><span class="nt">"local_life"</span><span class="p">:</span><span class="mf">0.01371711611672098</span><span class="p">,</span><span class="nt">"art"</span><span class="p">:</span><span class="mf">0.012431124811468516</span><span class="p">,</span><span class="nt">"gaming"</span><span class="p">:</span><span class="mf">0.018048887641435224</span><span class="p">,</span><span class="nt">"business"</span><span class="p">:</span><span class="mf">0.02347847262822203</span><span class="p">,</span><span class="nt">"current_events"</span><span class="p">:</span><span class="mf">0.02491274929978587</span><span class="p">,</span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="mf">0.018235434213545867</span><span class="p">,</span><span class="nt">"reading"</span><span class="p">:</span><span class="mf">0.0182121319626697</span><span class="p">,</span><span class="nt">"food"</span><span class="p">:</span><span class="mf">0.030091208884950964</span><span class="p">,</span><span class="nt">"outdoor_recreation"</span><span class="p">:</span><span class="mf">0.006174227335769481</span><span class="p">,</span><span class="nt">"religion"</span><span class="p">:</span><span class="mf">0.040720771316832355</span><span class="p">,</span><span class="nt">"marketing"</span><span class="p">:</span><span class="mf">0.010582783498559166</span><span class="p">,</span><span class="nt">"multimedia"</span><span class="p">:</span><span class="mf">0.032546506041154</span><span class="p">,</span><span class="nt">"major_sports"</span><span class="p">:</span><span class="mf">0.059709128166831875</span><span class="p">,</span><span class="nt">"school_life"</span><span class="p">:</span><span class="mf">0.04198742318776386</span><span class="p">,</span><span class="nt">"family"</span><span class="p">:</span><span class="mf">0.04478017593705101</span><span class="p">,</span><span class="nt">"travel"</span><span class="p">:</span><span class="mf">0.025614312842226965</span><span class="p">,</span><span class="nt">"finance"</span><span class="p">:</span><span class="mf">0.020140523235578984</span><span class="p">,</span><span class="nt">"pop_culture"</span><span class="p">:</span><span class="mf">0.007421613436708357</span><span class="p">,</span><span class="nt">"fashion"</span><span class="p">:</span><span class="mf">0.0163075822191156</span><span class="p">}}</span><span class="w">
-</span></code></pre>
-
-<p>This service enables you to get insights at an aggregate level based on an audience.  This service will, for example, return the age range for an entire audience, or the aggregate interests for the same audience.</p>
-
-<h3 id="data-model">Data model</h3>
+<h4 id="get-parameters">GET PARAMETERS</h4>
 
 <table><thead>
 <tr>
-<th>field</th>
-<th>description</th>
+<th>PARAMETER</th>
+<th>REQUIRED</th>
+<th>DESCRIPTION</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>enrichments.demographics.account_type</td>
-<td>key / value pairs where key is an enumerated account_type, and value is a percentage of population expressed as a double between 0 and 1</td>
+<td><code class="prettyprint">queryString</code></td>
+<td>Yes</td>
+<td><a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> formatted query</td>
 </tr>
 <tr>
-<td>enrichments.demographics.birthyear:</td>
-<td>key / value pairs where key is a birthyear, and value is a percentage of population expressed as a double between 0 and 1</td>
+<td><code class="prettyprint">fields</code></td>
+<td>No</td>
+<td>an array of <a href="#pdb-fields">Pdb fields</a> to be returned for each discovered profile.  Not including this parameter will return all fields.</td>
 </tr>
 <tr>
-<td>enrichments.demographics.race:</td>
-<td>key / value pairs where key is an enumerated race, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.demographics.gender:</td>
-<td>key / value pairs where key is an enumerated gender, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.psychographics.interests:</td>
-<td>key / value pairs where key is an enumerated interest, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.psychographics.languages:</td>
-<td>key / value pairs where key is an enumerated language, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.psychographics.sentiment:</td>
-<td>key / value pairs where key is an enumerated sentiment, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.extended.marital_status</td>
-<td>key / value pairs where key is an enumerated marital_status, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.extended.parental_status</td>
-<td>key / value pairs where key is an enumerated parental_status, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.extended.political_affiliation</td>
-<td>key / value pairs where key is an enumerated political_affiliation, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.extended.religion</td>
-<td>key / value pairs where key is an enumerated religion, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.extended.sexual_orientation</td>
-<td>key / value pairs where key is an enumerated sexual_orientation, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.place.dma</td>
-<td>top dmas, expressed as a map, where key is a dma identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.place.city</td>
-<td>top cities, expressed as a map, where key is a city identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.place.state:</td>
-<td>top states, expressed as a map, where key is a state identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.place.utc_offset</td>
-<td>top utc_offsets, expressed as a map, where key is a utc_offset identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.place.time_zone</td>
-<td>top time_zones, expressed as a map, where key is a utc_offset identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.place.metro_area</td>
-<td>top metro_areas, expressed as a map, where key is a metro_area identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.place.continent</td>
-<td>top continents, expressed as a map, where key is a continent identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.place.language</td>
-<td>top languages, expressed as a map, where key is a ISO language identifier, and value is a percentage of population expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.posts.hashtags</td>
-<td>top hashtags, expressed as a map, where key is a hashtag, and value is a percentage of posts expressed as a double between 0 and 1</td>
-</tr>
-<tr>
-<td>enrichments.posts.mentions</td>
-<td>top mentioned accounts, expressed as a map, where key is a profile id, and value is a percentage of posts expressed as a double between 0 and 1</td>
+<td>`limit&rsquo;</td>
+<td>No</td>
+<td>the maximum number of profiles to return in the result set</td>
 </tr>
 </tbody></table>
+
+<h3 id="search-for-profiles">Search for profiles</h3>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/search?queryString=joe&amp;limit=5'</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> 
+</code></pre>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"female"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1997</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jordyn Derham"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8605606982400245</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">11112</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">654</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">620</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heyjordynnn"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">8279</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jordyn Derham"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"screenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heyjordynnn"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/640008864969162752/gRLm24sx_normal.jpg"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:449475865"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"displayScreenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heyjordynnn"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"osu18 joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"indexedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T04:32:02.907Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2011-12-29T04:47:04.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">708</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">86</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"psychographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"military"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"other_sports"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"crafts"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"design"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"religion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"shopping"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"local_life"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"beauty"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"environmentalism"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"humor"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"neutral"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"positive"</span><span class="p">:</span><span class="w"> </span><span class="mi">126</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"mentions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"twitter:122302784"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:14120151"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:2166412230"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:960481315"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:71983360"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:106915372"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:14511951"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:15092616"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:2576461322"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:326380075"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:347258974"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:3746042353"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:871351657"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"hashtags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"3d"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"fps"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"pg3d"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"pixelgun"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"pixelgun3d"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"shooter"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"HiddenRisks"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"TheSMStoreMakati3DS"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"WaltDisney"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"gifersation"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1999</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"female"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Zulueta"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8452886615186165</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"screenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:130573602"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"displayScreenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2010-04-07T17:56:08.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"★ joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/491912407841644544/7dD2PrDr_normal.jpeg"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"indexedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-03T23:31:29.870Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Manila"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"I is a joe joe. wuff wuff"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1995</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Joe"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.978578480952993</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.8-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hugh_jass0426"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">109</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">360</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://abs.twimg.com/sticky/default_profile_images/default_profile_5_normal.png"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-20T18:33:19.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:4548839657"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1982</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe-joe Joe"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8500681794764976</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.8-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">981</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Most_Hated_Joe"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">112</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe-JOE"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/1314498826/ATBJjsRa_normal.jpg"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2009-10-24T21:57:52.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ALL OVA KEEP UP "</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:84947631"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1996</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe-joe Joe"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8505434921767472</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JOEJOE4924"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JOE-JOE"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"screenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JOEJOE4924"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://abs.twimg.com/sticky/default_profile_images/default_profile_1_normal.png"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:493616250"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"displayScreenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JOEJOE4924"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"indexedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T04:50:14.461Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-02-16T00:25:39.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<p>The search results will include all enrichments and predictions for each profile returned.  Due to availability of data to base predicitions, the enriched set of fields may not be the same across all Pdb profiles.</p>
+
+<h3 id="http-post">HTTP POST</h3>
+
+<p>To search for a profile, make an HTTP POST request to <a href="#resource-uri">PDB Search endpoint</a> and submit a <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> formatted query using the <a href="#pdb-fields">Pdb fields</a>.  </p>
+
+<h4 id="post-parameters">POST PARAMETERS</h4>
+
+<table><thead>
+<tr>
+<th>PARAMETER</th>
+<th>REQUIRED</th>
+<th>DESCRIPTION</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">body</code></td>
+<td>Yes</td>
+<td>{fields: [an array of <a href="#pdb-fields">Pdb fields</a> to be returned for each profile that matches the search], limit: the maximum number of profiles to return in the result set as an integer, queryString: a <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> formatted query as a String }</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/search'</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"queryString":"john", "limit":"5"}'</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"female"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1997</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jordyn Derham"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8605606982400245</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">11112</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">654</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">620</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heyjordynnn"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">8279</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jordyn Derham"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"screenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heyjordynnn"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/640008864969162752/gRLm24sx_normal.jpg"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:449475865"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"displayScreenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"heyjordynnn"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"osu18 joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"indexedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T04:32:02.907Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2011-12-29T04:47:04.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">708</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">48</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">86</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"psychographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"military"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"other_sports"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"crafts"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"design"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"religion"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"shopping"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"local_life"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="w"> </span><span class="mi">52</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"beauty"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"environmentalism"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"humor"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"neutral"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"positive"</span><span class="p">:</span><span class="w"> </span><span class="mi">126</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"mentions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"twitter:122302784"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:14120151"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:2166412230"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:960481315"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:71983360"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:106915372"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:14511951"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:15092616"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:2576461322"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:326380075"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:347258974"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:3746042353"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"twitter:871351657"</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"hashtags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"3d"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"fps"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"mobile"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"pg3d"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"pixelgun"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"pixelgun3d"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"shooter"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"HiddenRisks"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"TheSMStoreMakati3DS"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"WaltDisney"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"gifersation"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1999</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"female"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Zulueta"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8452886615186165</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"screenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:130573602"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"displayScreenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jszulueta"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2010-04-07T17:56:08.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"★ joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/491912407841644544/7dD2PrDr_normal.jpeg"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"indexedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-03T23:31:29.870Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Manila"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"I is a joe joe. wuff wuff"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1995</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Joe"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.978578480952993</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.8-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hugh_jass0426"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">109</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">360</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Joe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://abs.twimg.com/sticky/default_profile_images/default_profile_5_normal.png"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-20T18:33:19.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:4548839657"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1982</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe-joe Joe"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8500681794764976</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.8-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">981</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Most_Hated_Joe"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">82</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">112</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe-JOE"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/1314498826/ATBJjsRa_normal.jpg"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2009-10-24T21:57:52.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ALL OVA KEEP UP "</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:84947631"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1996</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe-joe Joe"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8505434921767472</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JOEJOE4924"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"displayName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JOE-JOE"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"screenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JOEJOE4924"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://abs.twimg.com/sticky/default_profile_images/default_profile_1_normal.png"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"objectType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:493616250"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"displayScreenName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JOEJOE4924"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"indexedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-11-04T04:50:14.461Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-02-16T00:25:39.000Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+          <h1 id="aggregate-api">Aggregate API</h1>
+
+<p>The Aggregate API allows you to retrieve aggregate insights from the Portrait database (Pdb) which contains
+hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.<br>
+This endpoint supports both HTTP POST and HTTP GET calls.</p>
+
+<h2 id="aggregate-profiles">Aggregate Profiles</h2>
+
+<p>Get aggregate insights for a set of profiles by submitting their social profile identifiers to the Pdb.<br>
+Aggregate data is returned for both demographic and psychographic attributes.</p>
+
+<h3 id="resource-uri">Resource URI</h3>
+
+<p><code class="prettyprint">/pdb/aggregate</code></p>
+
+<h3 id="http-get">HTTP GET</h3>
+
+<p>To retrieve aggregate insights for a set of profiles, make an HTTP GET request to <a href="#resource-uri">PDB Aggregate endpoint</a> and submit one or more social profile identifiers. </p>
+
+<h4 id="get-parameters">GET PARAMETERS</h4>
+
+<table><thead>
+<tr>
+<th>PARAMETER</th>
+<th>REQUIRED</th>
+<th>DESCRIPTION</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">ids</code></td>
+<td>Yes</td>
+<td>the social ids whose attributes will be aggregated, in the format &ldquo;$service:$service_id&rdquo; ie. &ldquo;twitter:12345&rdquo;</td>
+</tr>
+<tr>
+<td><code class="prettyprint">fields</code></td>
+<td>No</td>
+<td>an array of <a href="#pdb-fields">Pdb fields</a> to be aggregated and returned for each discovered profile</td>
+</tr>
+</tbody></table>
+
+<h3 id="aggregate-profile-attributes">Aggregate profile attributes</h3>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/aggregate?fields=peoplepattern.race,peoplepattern.birthyear,peoplepattern.account_type,posts.devices,posts.interests,posts.os,peoplepattern.gender,place.location.city&amp;ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104'</span> <span class="se">\</span>
+  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> 
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"posts.os"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"de"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0013839364198635503</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"pt"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00975274939594874</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017122722477892326</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.303043739365118</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"ja"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03566702873107553</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"en"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.10719063699523029</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"it"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0018890186195434076</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"fr"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00433679898354334</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.4897093384161427</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.000029898952595411925</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"es"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.029368580303910118</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0005055513391365339</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"peoplepattern.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"peoplepattern.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"posts.interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"home_and_garden"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.006479821830880409</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"tv"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017470695748115647</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"beauty"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017265940367377122</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"movies"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02177315693013945</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"leisure_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.009359929069074303</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"humor"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05750853899653545</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"music"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04453033527860939</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"charity"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.015467887059796497</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"fitness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.016594441298240083</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.022492142517216828</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"military"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.012983604616798233</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"animals"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02020837619203906</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dance"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.012504671719420499</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"parenting"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023518926659109336</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"shopping"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01430083006408126</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.019798850600224946</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01997958349109464</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"crafts"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.005390732786789505</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"nutrition"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.008311260662030395</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"extreme_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004636000996369334</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.011792384132337875</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"toys_and_games"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004752356058075963</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"automotive"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.016710738588036646</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"other_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017730743716451315</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"politics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03613494964024038</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"small_business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.010448134933390618</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"environmentalism"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.010380695857038939</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"design"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00640181713543588</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dating"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.022347794419577065</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"cooking"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01538251367896448</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.012205600264598536</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"local_life"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.014369243073016447</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"art"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.012545077526130427</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"gaming"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018551145567494216</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02390683426779431</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024671038437982344</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018596074848357905</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018290843933990206</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.029962990997882917</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"outdoor_recreation"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0062732319153118625</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"religion"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04066377046253635</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"marketing"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.010551156193984095</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.032531002646433584</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05873100633715111</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"school_life"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0417529998414586</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04444678359440516</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.025538779610336484</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"finance"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02021575505944901</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"pop_culture"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00730116640439448</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"fashion"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.016237643973800408</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"posts.devices"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03444261383528846</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0034475751633945852</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.040294415836302486</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9218153951650144</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"place.location.city"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"Austin"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"peoplepattern.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"1972"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"1975"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"1993"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"peoplepattern.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6666666666666666</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="http-post">HTTP POST</h3>
+
+<p>To retrieve aggregate insights for a set of profiles, make an HTTP POST request to <a href="#resource-uri">PDB Aggregate endpoint</a> and submit one or more social profile identifiers. </p>
+
+<h4 id="post-parameters">POST PARAMETERS</h4>
+
+<table><thead>
+<tr>
+<th>PARAMETER</th>
+<th>REQUIRED</th>
+<th>DESCRIPTION</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">body</code></td>
+<td>Yes</td>
+<td>an array of <a href="#pdb-fields">Pdb fields</a> to be aggregated and returned for each discovered profile and a second array of the social ids whose attributes will be aggregated, in the format &ldquo;$service:$service_id&rdquo; ie. &ldquo;twitter:12345&rdquo;</td>
+</tr>
+</tbody></table>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/aggregate'</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{{"fields":["peoplepattern.race","peoplepattern.birthyear","peoplepattern.account_type","posts.devices","posts.interests","posts.os","peoplepattern.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"posts.os"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"de"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0013839364198635503</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"pt"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00975274939594874</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017122722477892326</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.303043739365118</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"ja"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03566702873107553</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"en"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.10719063699523029</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"it"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0018890186195434076</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"fr"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00433679898354334</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.4897093384161427</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.000029898952595411925</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"es"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.029368580303910118</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0005055513391365339</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"peoplepattern.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"peoplepattern.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"posts.interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"home_and_garden"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.006479821830880409</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"tv"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017470695748115647</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"beauty"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017265940367377122</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"movies"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02177315693013945</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"leisure_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.009359929069074303</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"humor"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05750853899653545</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"music"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04453033527860939</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"charity"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.015467887059796497</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"fitness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.016594441298240083</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.022492142517216828</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"military"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.012983604616798233</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"animals"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02020837619203906</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dance"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.012504671719420499</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"parenting"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023518926659109336</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"shopping"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01430083006408126</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.019798850600224946</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01997958349109464</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"crafts"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.005390732786789505</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"nutrition"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.008311260662030395</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"extreme_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004636000996369334</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.011792384132337875</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"toys_and_games"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004752356058075963</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"automotive"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.016710738588036646</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"other_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017730743716451315</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"politics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03613494964024038</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"small_business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.010448134933390618</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"environmentalism"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.010380695857038939</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"design"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00640181713543588</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"dating"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.022347794419577065</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"cooking"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01538251367896448</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.012205600264598536</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"local_life"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.014369243073016447</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"art"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.012545077526130427</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"gaming"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018551145567494216</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02390683426779431</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024671038437982344</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018596074848357905</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018290843933990206</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.029962990997882917</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"outdoor_recreation"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0062732319153118625</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"religion"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04066377046253635</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"marketing"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.010551156193984095</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.032531002646433584</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05873100633715111</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"school_life"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0417529998414586</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04444678359440516</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.025538779610336484</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"finance"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02021575505944901</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"pop_culture"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.00730116640439448</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"fashion"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.016237643973800408</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"posts.devices"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03444261383528846</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0034475751633945852</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.040294415836302486</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9218153951650144</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"place.location.city"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"Austin"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"peoplepattern.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"1972"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"1975"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"1993"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"peoplepattern.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6666666666666666</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
           <h1 id="errors">Errors</h1>
 
