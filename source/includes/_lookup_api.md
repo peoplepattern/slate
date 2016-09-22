@@ -32,7 +32,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Lookup a single profile
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.comlookup?id=twitter:14132201' \
+curl 'https://partner-pdb-access.peoplepattern.com/lookup?id=twitter:14132201' \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" 
 ```
