@@ -1235,7 +1235,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </tbody></table>
 
 <h3 id="lookup-a-single-profile">Lookup a single profile</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/lookup?id=twitter:14132201'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.comlookup?id=twitter:14132201'</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
@@ -1370,7 +1370,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 <p>When looking up a profile the response will include the submitted social platform identifier, if a profile is not found in the Pdb it is left out of the response.</p>
 
 <h3 id="lookup-a-batch-of-profiles">Lookup a batch of profiles</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/lookup?id=twitter:14132201,twitter:119837224&amp;fields=displayName'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup?id=twitter:14132201,twitter:119837224&amp;fields=displayName'</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
@@ -1407,7 +1407,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </tbody></table>
 
 <h3 id="lookup-a-single-profile">Lookup a single profile</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/lookup \
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" \
@@ -1544,7 +1544,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 <p>When looking up a profile the response will include the submitted social platform identifier, if a profile is not found in the Pdb it is left out of the response.</p>
 
 <h3 id="lookup-a-batch-of-profiles">Lookup a batch of profiles</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/lookup?'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup?'</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
@@ -1608,7 +1608,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </tbody></table>
 
 <h3 id="search-for-profiles">Search for profiles</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/search?queryString=joe&amp;limit=5'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/search?queryString=joe&amp;limit=5'</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
@@ -1900,7 +1900,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 <td>{fields: [an array of <a href="#pdb-fields">Pdb fields</a> to be returned for each profile that matches the search], limit: the maximum number of profiles to return in the result set as an integer, queryString: a <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> formatted query as a String }</td>
 </tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/search'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/search'</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
@@ -2214,7 +2214,7 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 </tbody></table>
 
 <h3 id="aggregate-profile-attributes">Aggregate profile attributes</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/aggregate?fields=peoplepattern.race,peoplepattern.birthyear,peoplepattern.account_type,posts.devices,posts.interests,posts.os,peoplepattern.gender,place.location.city&amp;ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/aggregate?fields=peoplepattern.race,peoplepattern.birthyear,peoplepattern.account_type,posts.devices,posts.interests,posts.os,peoplepattern.gender,place.location.city&amp;ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104'</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
@@ -2331,7 +2331,7 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 <td>an array of <a href="#pdb-fields">Pdb fields</a> to be aggregated and returned for each discovered profile and a second array of the social ids whose attributes will be aggregated, in the format &ldquo;$service:$service_id&rdquo; ie. &ldquo;twitter:12345&rdquo;</td>
 </tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/aggregate'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/aggregate'</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
