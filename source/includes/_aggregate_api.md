@@ -12,7 +12,7 @@ Aggregate data is returned for both demographic and psychographic attributes.
 
 ### Resource URI
 
-`/pdb/aggregate`
+`/aggregate`
 
 ### HTTP GET
 
@@ -139,7 +139,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 `body`        | Yes      | an array of [Pdb fields](#pdb-fields) to be aggregated and returned for each discovered profile and a second array of the social ids whose attributes will be aggregated, in the format "$service:$service_id" ie. "twitter:12345"
 
 ```shell
-curl 'https://api.peoplepattern.com/pdb/aggregate' \
+curl 'https://api-pdb-access.peoplepattern.com/aggregate' \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" \

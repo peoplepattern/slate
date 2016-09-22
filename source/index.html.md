@@ -9,6 +9,7 @@ toc_footers:
   - "&#169; 2016 People Pattern Corporation"
   - <a href="http://peoplepattern.com">People Pattern Home</a>
   - <a href="https://app.peoplepattern.com/signin">Log in</a>
+  - <a href="https://www.peoplepattern.com/privacy.html">Privacy Policy</a>
 
 includes:
   - introduction

@@ -2,7 +2,9 @@
 
 All URLs referenced in the documentation have the following base:
 
-`https://api.peoplepattern.com`
+Enrich: `https://enrich.peoplepattern.com`
+
+Lookup, Search, Aggregate: `https://api-pdb-access.peoplepattern.com`
 
 The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.
 

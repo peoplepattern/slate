@@ -16,7 +16,7 @@ Our currently supported services are
 
 ### Resource URI
 
-`/pdb/lookup`
+`/lookup`
 
 ### HTTP GET
 
@@ -32,7 +32,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Lookup a single profile
 
 ```shell
-curl 'https://api.peoplepattern.com/pdb/lookup?id=twitter:14132201' \
+curl 'https://api-pdb-access.peoplepattern.com/lookup?id=twitter:14132201' \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" 
 ```
@@ -171,7 +171,7 @@ When looking up a profile the response will include the submitted social platfor
 ### Lookup a batch of profiles
 
 ```shell
-curl 'https://api.peoplepattern.com/pdb/lookup?id=twitter:14132201,twitter:119837224&fields=displayName' \
+curl 'https://api-pdb-access.peoplepattern.com/lookup?id=twitter:14132201,twitter:119837224&fields=displayName' \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" 
 ```
@@ -203,7 +203,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Lookup a single profile
 
 ```shell
-curl 'https://api.peoplepattern.com/pdb/lookup \
+curl 'https://api-pdb-access.peoplepattern.com/lookup \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" \
@@ -344,7 +344,7 @@ When looking up a profile the response will include the submitted social platfor
 ### Lookup a batch of profiles
 
 ```shell
-curl 'https://api.peoplepattern.com/pdb/lookup?' \
+curl 'https://api-pdb-access.peoplepattern.com/lookup?' \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" \

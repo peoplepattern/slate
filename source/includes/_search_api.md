@@ -11,7 +11,7 @@ Search the Pdb by defining a search string using specific demographic and psycho
 
 ### Resource URI
 
-`/pdb/search`
+`/search`
 
 ### HTTP GET
 
@@ -28,7 +28,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Search for profiles
 
 ```shell
-curl 'https://api.peoplepattern.com/pdb/search?queryString=joe&limit=5' \
+curl 'https://api-pdb-access.peoplepattern.com/search?queryString=joe&limit=5' \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" 
 ```
@@ -314,7 +314,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 `body`        | Yes      | {fields:	[an array of [Pdb fields](#pdb-fields) to be returned for each profile that matches the search], limit: the maximum number of profiles to return in the result set as an integer, queryString: a <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> formatted query as a String }
 
 ```shell
-curl 'https://api.peoplepattern.com/pdb/search' \
+curl 'https://api-pdb-access.peoplepattern.com/search' \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" \

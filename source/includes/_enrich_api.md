@@ -15,7 +15,7 @@ When enriching a profile the profile data structure is passed back to the client
 
 ### Resource URI enrich-profile
 
-`/enrich/profile`
+`/profile`
 
 ### HTTP POST
 To enrich a profile, make an HTTP POST request to [Profile Enrich endpoint](#resource-uri-enrich-profile).  
@@ -40,7 +40,7 @@ as above.
 ### Enrich a single profile
 
 ```shell
-curl https://api.peoplepattern.com/enrich/profile \
+curl https://enrich.peoplepattern.com/profile \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
@@ -120,7 +120,7 @@ back to the client with a `peoplepattern` field filled with
 ### Enrich a batch of profiles
 
 ```shell
-curl https://api.peoplepattern.com/enrich/profile \
+curl https://enrich.peoplepattern.com/profile \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
@@ -254,7 +254,7 @@ Here we have displayed what a same error response would look like from the Enric
 > Example invalid format call with output
 
 ```shell
-curl https://api.peoplepattern.com/enrich/profile \
+curl https://enrich.peoplepattern.com/profile \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
@@ -270,7 +270,7 @@ When enriching a post the post data structure is passed back to the client along
 
 ### Resource URI enrich-post
 
-`/enrich/post`
+`/post`
 
 ### HTTP POST
 To enrich a post, make an HTTP POST request to [Post Enrich endpoint](#resource-uri-enrich-post).  
@@ -292,7 +292,7 @@ social media post enrichment call will work with the same tweet JSON
 ### Enrich a single post
 
 ```shell
-curl https://api.peoplepattern.com/enrich/post \
+curl https://enrich.peoplepattern.com/post \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
@@ -325,7 +325,7 @@ back to the client with a `peoplepattern` field filled with
 ### Enrich a batch of posts
 
 ```shell
-curl https://api.peoplepattern.com/enrich/post \
+curl https://enrich.peoplepattern.com/post \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
@@ -407,7 +407,7 @@ Here we have displayed what a same error response would look like from the Enric
 > Example invalid format call with output
 
 ```shell
-curl https://api.peoplepattern.com/enrich/post \
+curl https://enrich.peoplepattern.com/post \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
