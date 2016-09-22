@@ -114,6 +114,7 @@
             <li>&#169; 2016 People Pattern Corporation</li>
             <li><a href="http://peoplepattern.com">People Pattern Home</a></li>
             <li><a href="https://app.peoplepattern.com/signin">Log in</a></li>
+            <li><a href="https://www.peoplepattern.com/privacy.html">Privacy Policy</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -143,7 +144,9 @@ Pdb itself. For the <a href="#enrich-api">Enrich API</a>, the resource
 
 <p>All URLs referenced in the documentation have the following base:</p>
 
-<p><code class="prettyprint">https://api.peoplepattern.com</code></p>
+<p>Enrich: <code class="prettyprint">https://enrich.peoplepattern.com</code></p>
+
+<p>Lookup, Search, Aggregate: <code class="prettyprint">https://api-pdb-access.peoplepattern.com</code></p>
 
 <p>The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.</p>
 
@@ -778,7 +781,7 @@ be used as a reference id.</p>
 
 <h3 id="resource-uri-enrich-profile">Resource URI enrich-profile</h3>
 
-<p><code class="prettyprint">/enrich/profile</code></p>
+<p><code class="prettyprint">/profile</code></p>
 
 <h3 id="http-post">HTTP POST</h3>
 
@@ -812,7 +815,7 @@ as above.
 </aside>
 
 <h3 id="enrich-a-single-profile">Enrich a single profile</h3>
-<pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/profile <span class="se">\</span>
+<pre class="highlight shell"><code>curl https://enrich.peoplepattern.com/profile <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
@@ -888,7 +891,7 @@ back to the client with a <code class="prettyprint">peoplepattern</code> field f
 <a href="#profile-enrichments">profile enrichments</a>.</p>
 
 <h3 id="enrich-a-batch-of-profiles">Enrich a batch of profiles</h3>
-<pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/profile <span class="se">\</span>
+<pre class="highlight shell"><code>curl https://enrich.peoplepattern.com/profile <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
@@ -1020,7 +1023,7 @@ Here we have displayed what a same error response would look like from the Enric
 <blockquote>
 <p>Example invalid format call with output</p>
 </blockquote>
-<pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/profile <span class="se">\</span>
+<pre class="highlight shell"><code>curl https://enrich.peoplepattern.com/profile <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
@@ -1036,7 +1039,7 @@ Here we have displayed what a same error response would look like from the Enric
 
 <h3 id="resource-uri-enrich-post">Resource URI enrich-post</h3>
 
-<p><code class="prettyprint">/enrich/post</code></p>
+<p><code class="prettyprint">/post</code></p>
 
 <h3 id="http-post">HTTP POST</h3>
 
@@ -1067,7 +1070,7 @@ social media post enrichment call will work with the same tweet JSON
 </aside>
 
 <h3 id="enrich-a-single-post">Enrich a single post</h3>
-<pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/post <span class="se">\</span>
+<pre class="highlight shell"><code>curl https://enrich.peoplepattern.com/post <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
@@ -1095,7 +1098,7 @@ back to the client with a <code class="prettyprint">peoplepattern</code> field f
 <a href="#post-enrichments">post enrichments</a>.</p>
 
 <h3 id="enrich-a-batch-of-posts">Enrich a batch of posts</h3>
-<pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/post <span class="se">\</span>
+<pre class="highlight shell"><code>curl https://enrich.peoplepattern.com/post <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
@@ -1175,7 +1178,7 @@ Here we have displayed what a same error response would look like from the Enric
 <blockquote>
 <p>Example invalid format call with output</p>
 </blockquote>
-<pre class="highlight shell"><code>curl https://api.peoplepattern.com/enrich/post <span class="se">\</span>
+<pre class="highlight shell"><code>curl https://enrich.peoplepattern.com/post <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
@@ -1204,7 +1207,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 
 <h3 id="resource-uri">Resource URI</h3>
 
-<p><code class="prettyprint">/pdb/lookup</code></p>
+<p><code class="prettyprint">/lookup</code></p>
 
 <h3 id="http-get">HTTP GET</h3>
 
@@ -1232,7 +1235,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </tbody></table>
 
 <h3 id="lookup-a-single-profile">Lookup a single profile</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/lookup?id=twitter:14132201'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/lookup?id=twitter:14132201'</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
@@ -1367,7 +1370,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 <p>When looking up a profile the response will include the submitted social platform identifier, if a profile is not found in the Pdb it is left out of the response.</p>
 
 <h3 id="lookup-a-batch-of-profiles">Lookup a batch of profiles</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/lookup?id=twitter:14132201,twitter:119837224&amp;fields=displayName'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/lookup?id=twitter:14132201,twitter:119837224&amp;fields=displayName'</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
@@ -1404,7 +1407,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </tbody></table>
 
 <h3 id="lookup-a-single-profile">Lookup a single profile</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/lookup \
+<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/lookup \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" \
@@ -1541,7 +1544,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 <p>When looking up a profile the response will include the submitted social platform identifier, if a profile is not found in the Pdb it is left out of the response.</p>
 
 <h3 id="lookup-a-batch-of-profiles">Lookup a batch of profiles</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/lookup?'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/lookup?'</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
@@ -1572,7 +1575,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 
 <h3 id="resource-uri">Resource URI</h3>
 
-<p><code class="prettyprint">/pdb/search</code></p>
+<p><code class="prettyprint">/search</code></p>
 
 <h3 id="http-get">HTTP GET</h3>
 
@@ -1605,7 +1608,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </tbody></table>
 
 <h3 id="search-for-profiles">Search for profiles</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/search?queryString=joe&amp;limit=5'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/search?queryString=joe&amp;limit=5'</span> <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
@@ -1897,7 +1900,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 <td>{fields: [an array of <a href="#pdb-fields">Pdb fields</a> to be returned for each profile that matches the search], limit: the maximum number of profiles to return in the result set as an integer, queryString: a <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> formatted query as a String }</td>
 </tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/search'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/search'</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
@@ -2183,7 +2186,7 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 
 <h3 id="resource-uri">Resource URI</h3>
 
-<p><code class="prettyprint">/pdb/aggregate</code></p>
+<p><code class="prettyprint">/aggregate</code></p>
 
 <h3 id="http-get">HTTP GET</h3>
 
@@ -2328,7 +2331,7 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 <td>an array of <a href="#pdb-fields">Pdb fields</a> to be aggregated and returned for each discovered profile and a second array of the social ids whose attributes will be aggregated, in the format &ldquo;$service:$service_id&rdquo; ie. &ldquo;twitter:12345&rdquo;</td>
 </tr>
 </tbody></table>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/pdb/aggregate'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api-pdb-access.peoplepattern.com/aggregate'</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
