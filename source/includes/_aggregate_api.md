@@ -28,8 +28,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Aggregate profile attributes
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/aggregate?fields=peoplepattern.race,peoplepattern.birthyear,peoplepattern.account_type,posts.devices,posts.interests,posts.os,peoplepattern.gender,place.location.city&ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104' \
-  -H "Authorization: secretkey" \
+curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=peoplepattern.race,peoplepattern.birthyear,peoplepattern.account_type,posts.devices,posts.interests,posts.os,peoplepattern.gender,place.location.city&ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104' \
   -H "Accept: application/json" 
 ```
 
