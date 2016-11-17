@@ -32,8 +32,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Lookup a single profile
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/lookup?id=twitter:14132201' \
-  -H "Authorization: secretkey" \
+curl 'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:14132201' \
   -H "Accept: application/json" 
 ```
 
@@ -171,8 +170,7 @@ When looking up a profile the response will include the submitted social platfor
 ### Lookup a batch of profiles
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/lookup?id=twitter:14132201,twitter:119837224&fields=displayName' \
-  -H "Authorization: secretkey" \
+curl 'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:14132201,twitter:119837224&fields=displayName' \
   -H "Accept: application/json" 
 ```
 
@@ -203,9 +201,8 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Lookup a single profile
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/lookup \
+curl 'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN& \
   -X POST \
-  -H "Authorization: secretkey" \
   -H "Accept: application/json" \
   -d '{"ids": ["twitter:14132201"]}'
 ```
@@ -344,9 +341,8 @@ When looking up a profile the response will include the submitted social platfor
 ### Lookup a batch of profiles
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/lookup?' \
+curl 'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN' \
   -X POST \
-  -H "Authorization: secretkey" \
   -H "Accept: application/json" \
   -d '{"fields": ["displayName"],"ids": ["twitter:14132201","twitter:119837224"]}'
 
