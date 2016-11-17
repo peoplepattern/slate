@@ -40,7 +40,7 @@ as above.
 ### Enrich a single profile
 
 ```shell
-curl https://api.peoplepattern.com/profile?access_token=$MY_TOKEN& \
+curl 'https://api.peoplepattern.com/profile?access_token=$MY_TOKEN' \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
@@ -119,7 +119,7 @@ back to the client with a `peoplepattern` field filled with
 ### Enrich a batch of profiles
 
 ```shell
-curl https://eapi.peoplepattern.com/profile?access_token=$MY_TOKEN \
+curl 'https://eapi.peoplepattern.com/profile?access_token=$MY_TOKEN' \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
@@ -252,7 +252,7 @@ Here we have displayed what a same error response would look like from the Enric
 > Example invalid format call with output
 
 ```shell
-curl https://api.peoplepattern.com/profile?access_token=$MY_TOKEN \
+curl 'https://api.peoplepattern.com/profile?access_token=$MY_TOKEN' \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
@@ -289,7 +289,7 @@ social media post enrichment call will work with the same tweet JSON
 ### Enrich a single post
 
 ```shell
-curl https://api.peoplepattern.com/post?access_token=$MY_TOKEN \
+curl 'https://api.peoplepattern.com/post?access_token=$MY_TOKEN' \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
@@ -321,7 +321,7 @@ back to the client with a `peoplepattern` field filled with
 ### Enrich a batch of posts
 
 ```shell
-curl https://api.peoplepattern.com/post?access_token=$MY_TOKEN \
+curl 'https://api.peoplepattern.com/post?access_token=$MY_TOKEN' \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
@@ -402,7 +402,7 @@ Here we have displayed what a same error response would look like from the Enric
 > Example invalid format call with output
 
 ```shell
-curl https://api.peoplepattern.com/post?access_token=$MY_TOKEN \
+curl 'https://api.peoplepattern.com/post?access_token=$MY_TOKEN' \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
