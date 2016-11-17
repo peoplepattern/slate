@@ -2201,8 +2201,7 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 </tbody></table>
 
 <h3 id="aggregate-profile-attributes">Aggregate profile attributes</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/aggregate?fields=peoplepattern.race,peoplepattern.birthyear,peoplepattern.account_type,posts.devices,posts.interests,posts.os,peoplepattern.gender,place.location.city&amp;ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104'</span> <span class="se">\</span>
-  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&amp;fields=peoplepattern.race,peoplepattern.birthyear,peoplepattern.account_type,posts.devices,posts.interests,posts.os,peoplepattern.gender,place.location.city&amp;ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104'</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
