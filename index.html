@@ -144,9 +144,7 @@ Pdb itself. For the <a href="#enrich-api">Enrich API</a>, the resource
 
 <p>All URLs referenced in the documentation have the following base:</p>
 
-<p>Enrich: <code class="prettyprint">https://enrich.peoplepattern.com</code></p>
-
-<p>Lookup, Search, Aggregate: <code class="prettyprint">https://partner-pdb-access.peoplepattern.com</code></p>
+<p><code class="prettyprint">https://api.peoplepattern.com</code></p>
 
 <p>The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.</p>
 
@@ -159,23 +157,23 @@ Pdb itself. For the <a href="#enrich-api">Enrich API</a>, the resource
 <blockquote>
 <p>To authorize, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl https://api.peoplepattern.com/... <span class="se">\</span>
-  -H <span class="s2">"Authorization: securitytoken"</span>
+<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the access token as a url parameter with each request</span>
+curl https://api.peoplepattern.com/lookup?access_token<span class="o">=</span><span class="nv">$MY_TOKEN</span>
+
 </code></pre>
 
 <blockquote>
-<p>Make sure to replace <code class="prettyprint">securitytoken</code> with your API security token.</p>
+<p>Make sure to replace <code class="prettyprint">$MY_TOKEN</code> with your API access token.</p>
 </blockquote>
 
-<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  The People Pattern API expected for the API security token to be included in all API requests to the server in a header that looks like the following:</p>
+<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  The People Pattern API expects for the API security token to be included in all API requests to the server as a url parameter that looks like the following:</p>
 
-<p><code class="prettyprint">Authorization: securitytoken</code></p>
+<p><code class="prettyprint">access_token=$MY_TOKEN</code></p>
 
 <p>You can find your security token <a href="https://app.peoplepattern.com/edit">on your account page</a>.</p>
 
 <aside class="notice">
-You must replace <code>securitytoken</code> with your personal API security token.
+You must replace <code>$MY_TOKEN</code> with your personal API security token.
 </aside>
 
           <h1 id="data-objects">Data objects</h1>
@@ -1235,8 +1233,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </tbody></table>
 
 <h3 id="lookup-a-single-profile">Lookup a single profile</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup?id=twitter:14132201'</span> <span class="se">\</span>
-  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN&amp;id=twitter:14132201'</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
@@ -1370,8 +1367,7 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 <p>When looking up a profile the response will include the submitted social platform identifier, if a profile is not found in the Pdb it is left out of the response.</p>
 
 <h3 id="lookup-a-batch-of-profiles">Lookup a batch of profiles</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup?id=twitter:14132201,twitter:119837224&amp;fields=displayName'</span> <span class="se">\</span>
-  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN&amp;id=twitter:14132201,twitter:119837224&amp;fields=displayName'</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> 
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
@@ -1407,9 +1403,8 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </tbody></table>
 
 <h3 id="lookup-a-single-profile">Lookup a single profile</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup \
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN&amp; \
   -X POST \
-  -H "Authorization: secretkey" \
   -H "Accept: application/json" \
   -d '</span><span class="o">{</span><span class="s2">"ids"</span>: <span class="o">[</span><span class="s2">"twitter:14132201"</span><span class="o">]}</span><span class="s1">'
 </span></code></pre>
@@ -1544,9 +1539,8 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 <p>When looking up a profile the response will include the submitted social platform identifier, if a profile is not found in the Pdb it is left out of the response.</p>
 
 <h3 id="lookup-a-batch-of-profiles">Lookup a batch of profiles</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup?'</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl <span class="s1">'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN'</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
-  -H <span class="s2">"Authorization: secretkey"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
   -d <span class="s1">'{"fields": ["displayName"],"ids": ["twitter:14132201","twitter:119837224"]}'</span>
 
