@@ -40,9 +40,8 @@ as above.
 ### Enrich a single profile
 
 ```shell
-curl https://enrich.peoplepattern.com/profile \
+curl https://api.peoplepattern.com/profile?access_token=$MY_TOKEN& \
   -X POST \
-  -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}'
@@ -120,9 +119,8 @@ back to the client with a `peoplepattern` field filled with
 ### Enrich a batch of profiles
 
 ```shell
-curl https://enrich.peoplepattern.com/profile \
+curl https://eapi.peoplepattern.com/profile?access_token=$MY_TOKEN \
   -X POST \
-  -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '[{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}, {"name": "Mary Brown", "username": "mbrown", "description": "This is Marys profile"}]'
@@ -254,9 +252,8 @@ Here we have displayed what a same error response would look like from the Enric
 > Example invalid format call with output
 
 ```shell
-curl https://enrich.peoplepattern.com/profile \
+curl https://api.peoplepattern.com/profile?access_token=$MY_TOKEN \
   -X POST \
-  -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '[{}]'
@@ -292,9 +289,8 @@ social media post enrichment call will work with the same tweet JSON
 ### Enrich a single post
 
 ```shell
-curl https://enrich.peoplepattern.com/post \
+curl https://api.peoplepattern.com/post?access_token=$MY_TOKEN \
   -X POST \
-  -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"text":"Bowling tonight? or kung-fu?"}'
@@ -325,9 +321,8 @@ back to the client with a `peoplepattern` field filled with
 ### Enrich a batch of posts
 
 ```shell
-curl https://enrich.peoplepattern.com/post \
+curl https://api.peoplepattern.com/post?access_token=$MY_TOKEN \
   -X POST \
-  -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '[{"text":"Bowling tonight? or kung-fu?"},{"text":"I love bowling with friends"},{"text":"But I also love eating at home with the family"}]'
@@ -407,9 +402,8 @@ Here we have displayed what a same error response would look like from the Enric
 > Example invalid format call with output
 
 ```shell
-curl https://enrich.peoplepattern.com/post \
+curl https://api.peoplepattern.com/post?access_token=$MY_TOKEN \
   -X POST \
-  -H "Authorization: secretkey" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '[{}]'

@@ -32,7 +32,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Lookup a single profile
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:14132201' \
+curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:14132201' \
   -H "Accept: application/json" 
 ```
 
@@ -201,7 +201,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Lookup a single profile
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN& \
+curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN \
   -X POST \
   -H "Accept: application/json" \
   -d '{"ids": ["twitter:14132201"]}'
@@ -341,7 +341,7 @@ When looking up a profile the response will include the submitted social platfor
 ### Lookup a batch of profiles
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/lookup?access_token=$MY_TOKEN' \
+curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN' \
   -X POST \
   -H "Accept: application/json" \
   -d '{"fields": ["displayName"],"ids": ["twitter:14132201","twitter:119837224"]}'

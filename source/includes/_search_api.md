@@ -28,8 +28,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Search for profiles
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/search?queryString=joe&limit=5' \
-  -H "Authorization: secretkey" \
+curl 'https://api.peoplepattern.com/search?access_token=$MY_TOKEN&queryString=joe&limit=5' \
   -H "Accept: application/json" 
 ```
 
@@ -314,7 +313,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 `body`        | Yes      | {fields:	[an array of [Pdb fields](#pdb-fields) to be returned for each profile that matches the search], limit: the maximum number of profiles to return in the result set as an integer, queryString: a <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> formatted query as a String }
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/search' \
+curl 'https://api.peoplepattern.com/search?access_token=$MY_TOKEN&' \
   -X POST \
   -H "Authorization: secretkey" \
   -H "Accept: application/json" \

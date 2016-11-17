@@ -139,9 +139,8 @@ PARAMETER     | REQUIRED | DESCRIPTION
 `body`        | Yes      | an array of [Pdb fields](#pdb-fields) to be aggregated and returned for each discovered profile and a second array of the social ids whose attributes will be aggregated, in the format "$service:$service_id" ie. "twitter:12345"
 
 ```shell
-curl 'https://partner-pdb-access.peoplepattern.com/aggregate' \
+curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&' \
   -X POST \
-  -H "Authorization: secretkey" \
   -H "Accept: application/json" \
   -d '{{"fields":["peoplepattern.race","peoplepattern.birthyear","peoplepattern.account_type","posts.devices","posts.interests","posts.os","peoplepattern.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'
 ```
