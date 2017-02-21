@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>People Pattern Insights API</title>
+    <title>People Pattern Execute API</title>
 
     <style>
       .highlight table td { padding: 5px; }
@@ -111,7 +111,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li>&#169; 2016 People Pattern Corporation</li>
+            <li>&#169; 2017 People Pattern Corporation</li>
             <li><a href="http://peoplepattern.com">People Pattern Home</a></li>
             <li><a href="https://app.peoplepattern.com/signin">Log in</a></li>
             <li><a href="https://www.peoplepattern.com/privacy.html">Privacy Policy</a></li>
@@ -124,7 +124,7 @@
 
 <p>The People Pattern Audience Intelligence API provides access People Pattern&rsquo;s
 audience intelligence and model predictions as well as our Portrait Database (Pdb).
-You can query the Pdb directly to retrieve portraits with psychographic and demographic attributes pre-appended, 
+You can query the Pdb directly to retrieve portraits with psychographic and demographic attributes pre-appended,
 or you can submit profile and post data to the API and get it enriched.  These are the same services and machine
 learning-based models which we use in the
 <a href="http://app.peoplepattern.com">People Pattern</a> application.</p>
@@ -148,9 +148,12 @@ Pdb itself. For the <a href="#enrich-api">Enrich API</a>, the resource
 
 <p>The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.</p>
 
-<p>All calls require a Content-Type header</p>
+<p>All calls require a Content-Type header. If you&rsquo;re POSTing .json files, use:</p>
 
 <p><code class="prettyprint">Content-type: application/json</code></p>
+
+<p>For .conf, use:
+<code class="prettyprint">Content-type: application/hocon</code></p>
 
 <h2 id="authentication">Authentication</h2>
 
@@ -166,7 +169,7 @@ curl https://api.peoplepattern.com/lookup?access_token<span class="o">=</span><s
 <p>Make sure to replace <code class="prettyprint">$MY_TOKEN</code> with your API access token.</p>
 </blockquote>
 
-<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  The People Pattern API expects for the API security token to be included in all API requests to the server as a url parameter that looks like the following:</p>
+<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  The People Pattern API expects the API security token to be included in all API requests to the server as a url parameter that looks like the following:</p>
 
 <p><code class="prettyprint">access_token=$MY_TOKEN</code></p>
 
@@ -761,6 +764,330 @@ predicted languages and predicted sentiment</p>
 <td>the identified city for the profile</td>
 </tr>
 </tbody></table>
+
+          <h1 id="execute-api">Execute API</h1>
+
+<p>There are three endpoints used to interact with the services provided in the Execute API. They are:</p>
+
+<ul>
+<li><p><code class="prettyprint">https://api.peoplepattern.com/execute/{service_type}</code></p></li>
+<li><p><code class="prettyprint">https://api.peoplepattern.com/status?execution={job_hash}</code></p></li>
+<li><p><code class="prettyprint">https://api.peoplepattern.com/resources/{job_hash}</code></p></li>
+</ul>
+
+<p>The basic workflow is this:</p>
+
+<ol>
+<li><p>Kick off a job using the <code class="prettyprint">/execute</code> endpoint.</p></li>
+<li><p>Using the job hash that the above step returns, periodically check the status of your job using the <code class="prettyprint">/status</code> endpoint.</p></li>
+<li><p>When the status endpoint reports that your job has finished, retrieve the resulting JSON using the <code class="prettyprint">/resources</code> endpoint.</p></li>
+</ol>
+
+<h3 id="execute">Execute</h3>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/execute/{service_type}?access_token=$MY_TOKEN'</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: {application/json} OR {application/hocon}"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{POST_BODY}'</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"SUBMITTED"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p><code class="prettyprint">/execute/{service_type}</code></p>
+
+<p>This is the endpoint used to kick off jobs. To start a job, send an HTTP POST request to this endpoint, specifying one of the service_type values enumerated below, and following the relevant POST body schema described below. You&rsquo;ll need the following headers in your HTTP request:</p>
+
+<p><code class="prettyprint">Accept: application/json</code></p>
+
+<p>If the body of your POST request is a JSON file:</p>
+
+<p><code class="prettyprint">Content-Type: application/json</code></p>
+
+<p>Or, if the body of your POST request is a CONF file:</p>
+
+<p><code class="prettyprint">Content-Type: application/hocon</code></p>
+
+<h3 id="status">Status</h3>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/status/?execution={job_hash}?access_token=$MY_TOKEN'</span> <span class="se">\</span>
+  -X GET <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"RUNNING"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"FINISHED"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p><code class="prettyprint">/status?execution={job_hash}</code></p>
+
+<p>This is the endpoint used to check the status of jobs you&rsquo;ve already started. To check job status, send an HTTP GET request to this endpoint, specifying your job hash from the <code class="prettyprint">/execute</code> endpoint as a URL parameter, and using the <code class="prettyprint">Accept: application/json</code> header.</p>
+
+<h3 id="result">Result</h3>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/resources/{job_hash}?access_token=$MY_TOKEN'</span> <span class="se">\</span>
+  -X GET <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>
+</code></pre>
+
+<p><code class="prettyprint">/resources/{job_hash}</code></p>
+
+<p>This is the endpoint used to retrieve the results of a job after the <code class="prettyprint">/status</code> endpoint indicates that it has finished executing. To retrieve these results, send an HTTP GET request to this endpoint, specifying your job hash, and using the <code class="prettyprint">Accept: application/json</code> header. Note that calling this endpoint for a job which has not yet finished will result in an empty response body. The content of an appropriate response will depend on which kind of job is being executed, but will always be in JSON form.</p>
+
+<h3 id="error-handling">Error Handling</h3>
+
+<p>We use the standard set of HTTP error response codes. Malformed requests, or ones using the wrong headers, will usually receive a <code class="prettyprint">400 Bad Request</code> response. Requests which are not accompanied by a legitimate authentication token will receive a <code class="prettyprint">401 Unauthorized</code> response.  </p>
+
+<h2 id="follower-breakdown">Follower Breakdown</h2>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN'</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
+</code></pre>
+
+<h3 id="resource-uri-follower-breakdown">Resource URI follower-breakdown</h3>
+
+<p><code class="prettyprint">/FollowerBreakdown</code></p>
+
+<h3 id="http-post">HTTP POST</h3>
+
+<p>To get a follower breakdown for one or more users, make an HTTP POST request to the <a href="#resource-uri-follower-breakdown">Follower Breakdown endpoint</a>.</p>
+
+<p>The body of the POST request may be in either JSON or CONF form. If JSON, it should look like this:
+<code class="prettyprint">
+{
+  &quot;ids&quot;:[&quot;twitter:116679527&quot;,
+        &quot;twitter:118710202&quot;,
+        &quot;twitter:119772680&quot;]
+}
+</code></p>
+
+<p>If CONF, it should look like this:
+<code class="prettyprint">
+ids = [
+  &quot;twitter:116679527&quot;
+  &quot;twitter:118710202&quot;
+  &quot;twitter:119772680&quot;
+]
+</code></p>
+
+<h2 id="external-influencers">External Influencers</h2>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY_TOKEN'</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
+</code></pre>
+
+<h3 id="resource-uri-external-influencers">Resource URI external-influencers</h3>
+
+<p><code class="prettyprint">/ExternalInfluencers</code></p>
+
+<h3 id="http-post">HTTP POST</h3>
+
+<p>To get an Exernal Influencers report for one or more users, make an HTTP POST request to the <a href="#resource-uri-external-influencers">External Influencers endpoint</a>.</p>
+
+<p>The body of the POST request may be in either JSON or CONF form. If JSON, it should look like this:
+<code class="prettyprint">
+{
+  &quot;ids&quot;:[&quot;twitter:116679527&quot;,
+        &quot;twitter:118710202&quot;,
+        &quot;twitter:119772680&quot;]
+}
+</code></p>
+
+<p>If CONF, it should look like this:
+<code class="prettyprint">
+ids = [
+  &quot;twitter:116679527&quot;
+  &quot;twitter:118710202&quot;
+  &quot;twitter:119772680&quot;
+]
+</code></p>
+
+<h2 id="analyze-public-profiles">Analyze Public Profiles</h2>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$MY_TOKEN'</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"job":"AnalyzePublicProfiles","ids":["twitter:116679528","twitter:118710202", "twitter:119772680"]}'</span>
+</code></pre>
+
+<h3 id="resource-uri-analyze-public-profiles">Resource URI analyze-public-profiles</h3>
+
+<p><code class="prettyprint">AnalyzePublicProfiles</code></p>
+
+<h3 id="http-post">HTTP POST</h3>
+
+<p>To get an Analyze Public Profiles report for one or more users, make an HTTP POST request to the <a href="#resource-uri-analyze-public-profiles">Analyze Public Profiles endpoint</a>.</p>
+
+<p>The body of the POST request may be in either JSON or CONF form. If JSON, it should look like this:
+<code class="prettyprint">
+{&quot;job&quot;:&quot;AnalyzePublicProfiles&quot;,&quot;ids&quot;:[&quot;twitter:116679528&quot;,&quot;twitter:118710202&quot;, &quot;twitter:119772680&quot;]}
+</code></p>
+
+<p>If CONF, it should look like this:
+<code class="prettyprint">
+job = &quot;AnalyzePublicProfiles&quot;
+ids = [
+ &quot;twitter:42232950&quot;
+]
+</code></p>
+
+          <h1 id="stitching-api">Stitching API</h1>
+
+<p>The Stitching API exposes a model which attempts to match an individual&rsquo;s name, location, and/or email address to a Twitter account.</p>
+
+<p>You should provide as much information to the API as you can. Providing just one of the accepted fields (name, location, email address) will be unlikely to produce satisfactory results &ndash; endeavor to provide at least two of the three fields, and ideally provide all three.</p>
+
+<h2 id="querying-the-api">Querying the API</h2>
+<pre class="highlight shell"><code>curl -H <span class="s1">'Content-type: application/json'</span> -s -u <span class="nv">$APIAUTH</span> <span class="se">\</span>
+https://stitching.peoplepattern.com/stitch <span class="se">\</span>
+-d <span class="s1">'{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}}'</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"handle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eponvert"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"service_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"61546029"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:61546029"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"_score"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>The relevant endpoint is located at <code class="prettyprint">https://stitching.peoplepattern.com/stitch</code>. To query the API, send an HTTP POST request to that endpoint. The appropriate headers and default body schema can be seen in the example request in the sidebar.</p>
+
+<h3 id="batch-requests">Batch Requests</h3>
+<pre class="highlight shell"><code><span class="gp">&gt; </span>This is what the POST body should look like. Information on
+<span class="gp">&gt; </span>how to make a basic call to the API can be found above.
+<span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"query"</span>: <span class="o">{</span>
+      <span class="s2">"name"</span>: <span class="s2">"Elias Ponvert"</span>,
+      <span class="s2">"location"</span>: <span class="s2">"Austin Texas"</span>
+    <span class="o">}</span>
+  <span class="o">}</span>,
+  <span class="o">{</span>
+    <span class="s2">"query"</span>: <span class="o">{</span>
+      <span class="s2">"name"</span>: <span class="s2">"Jason Balridge"</span>,
+      <span class="s2">"location"</span>: <span class="s2">"Austin Texas"</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"handle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eponvert"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nt">"service_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"61546029"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:61546029"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"_score"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"handle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jasonbaldridge"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="nt">"service_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"119837224"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:119837224"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"_score"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<p>You can also send batch requests to the API. To do so, POST an array of query JSON objects rather than just a single one. An example POST body / response pair can be seen in the sidebar.</p>
+
+<aside class="warning">
+This API does not currently paginate responses, so as a precaution you should avoid sending arrays of more than 10 queries at a time.
+</aside>
+
+<h3 id="requesting-additional-fields">Requesting Additional Fields</h3>
+<pre class="highlight shell"><code><span class="o">{</span>
+  <span class="s2">"query"</span>: <span class="o">{</span>
+    <span class="s2">"name"</span>: <span class="s2">"Elias Ponvert"</span>,
+    <span class="s2">"location"</span>: <span class="s2">"Austin Texas"</span>
+  <span class="o">}</span>,
+  <span class="s2">"fields"</span>: <span class="o">[</span><span class="s2">"name"</span>, <span class="s2">"twitter"</span>, <span class="s2">"peoplepattern"</span><span class="o">]</span>
+<span class="o">}</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"peoplepattern"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1979</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9938160676130328</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"ageQuantiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="mi">29</span><span class="p">,</span><span class="w">
+            </span><span class="mf">29.25</span><span class="p">,</span><span class="w">
+            </span><span class="mf">29.5</span><span class="p">,</span><span class="w">
+            </span><span class="mf">29.75</span><span class="p">,</span><span class="w">
+            </span><span class="mi">30</span><span class="p">,</span><span class="w">
+            </span><span class="mf">30.25</span><span class="p">,</span><span class="w">
+            </span><span class="mf">30.5</span><span class="p">,</span><span class="w">
+            </span><span class="mf">31.303387682248616</span><span class="p">,</span><span class="w">
+            </span><span class="mf">32.860457271189546</span><span class="w">
+          </span><span class="p">],</span><span class="w">
+          </span><span class="nt">"numAgeQuantiles"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"age"</span><span class="p">:</span><span class="w"> </span><span class="mi">37</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"elias ponvert"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1233</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"27"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eponvert"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">857</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">417</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"_score"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>You can request that the response you receive be annotated with additional fields for each match found. Those additional fields are:</p>
+
+<p><code class="prettyprint">&quot;name&quot;</code>: Requesting this field simply appends the matched user&rsquo;s &ldquo;name&rdquo; field from Twitter to the response.</p>
+
+<p><code class="prettyprint">&quot;twitter&quot;</code>: Requesting this field appends other basic information about the Twitter account such as number of followers, number of tweets, whether the user is &ldquo;Verified&rdquo;, etc.</p>
+
+<p><code class="prettyprint">&quot;peoplepattern&quot;</code>: Requesting this field appends some basic predictions from our other models to the response. This includes predictions of account type, some demographic information, and an &ldquo;interestingness&rdquo; score.</p>
+
+<p>An example POST body / response pair can be seen in the sidebar to the right.</p>
 
           <h1 id="enrich-api">Enrich API</h1>
 
