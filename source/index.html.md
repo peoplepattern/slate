@@ -1,12 +1,12 @@
 ---
-title: People Pattern Insights API
+title: People Pattern Execute API
 
 language_tabs:
   - shell: cURL
   - json: Output
 
 toc_footers:
-  - "&#169; 2016 People Pattern Corporation"
+  - "&#169; 2017 People Pattern Corporation"
   - <a href="http://peoplepattern.com">People Pattern Home</a>
   - <a href="https://app.peoplepattern.com/signin">Log in</a>
   - <a href="https://www.peoplepattern.com/privacy.html">Privacy Policy</a>
@@ -14,6 +14,8 @@ toc_footers:
 includes:
   - introduction
   - data_objects
+  - execute_api
+  - stitching_api
   - enrich_api
   - lookup_api
   - search_api
@@ -27,7 +29,7 @@ search: true
 
 The People Pattern Audience Intelligence API provides access People Pattern's
 audience intelligence and model predictions as well as our Portrait Database (Pdb).
-You can query the Pdb directly to retrieve portraits with psychographic and demographic attributes pre-appended, 
+You can query the Pdb directly to retrieve portraits with psychographic and demographic attributes pre-appended,
 or you can submit profile and post data to the API and get it enriched.  These are the same services and machine
 learning-based models which we use in the
 [People Pattern](http://app.peoplepattern.com) application.

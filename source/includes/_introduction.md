@@ -6,9 +6,12 @@ All URLs referenced in the documentation have the following base:
 
 The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.
 
-All calls require a Content-Type header
+All calls require a Content-Type header. If you're POSTing .json files, use:
 
 `Content-type: application/json`
+
+For .conf, use:
+`Content-type: application/hocon`
 
 ## Authentication
 
@@ -22,7 +25,7 @@ curl https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN
 
 > Make sure to replace `$MY_TOKEN` with your API access token.
 
-HTTP requests to the API are protected with [Token Based authentication](https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/).  The People Pattern API expects for the API security token to be included in all API requests to the server as a url parameter that looks like the following:
+HTTP requests to the API are protected with [Token Based authentication](https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/).  The People Pattern API expects the API security token to be included in all API requests to the server as a url parameter that looks like the following:
 
 `access_token=$MY_TOKEN`
 
