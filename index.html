@@ -767,13 +767,17 @@ predicted languages and predicted sentiment</p>
 
           <h1 id="execute-api">Execute API</h1>
 
+<p>The Execute API allows for programmatic, real-time access to some of People Pattern’s most computationally heavy analytics processes.</p>
+
 <p>There are three endpoints used to interact with the services provided in the Execute API. They are:</p>
 
 <ul>
-<li><p><code class="prettyprint">https://api.peoplepattern.com/execute/{service_type}</code></p></li>
-<li><p><code class="prettyprint">https://api.peoplepattern.com/status?execution={job_hash}</code></p></li>
-<li><p><code class="prettyprint">https://api.peoplepattern.com/resources/{job_hash}</code></p></li>
+<li><p><code class="prettyprint">/execute/{service_type}</code></p></li>
+<li><p><code class="prettyprint">/status?execution={job_hash}</code></p></li>
+<li><p><code class="prettyprint">/resources/{job_hash}</code></p></li>
 </ul>
+
+<h2 id="workflow">Workflow</h2>
 
 <p>The basic workflow is this:</p>
 
@@ -833,11 +837,9 @@ predicted languages and predicted sentiment</p>
 
 <p>This is the endpoint used to retrieve the results of a job after the <code class="prettyprint">/status</code> endpoint indicates that it has finished executing. To retrieve these results, send an HTTP GET request to this endpoint, specifying your job hash, and using the <code class="prettyprint">Accept: application/json</code> header. Note that calling this endpoint for a job which has not yet finished will result in an empty response body. The content of an appropriate response will depend on which kind of job is being executed, but will always be in JSON form.</p>
 
-<h3 id="error-handling">Error Handling</h3>
+<h2 id="jobs">Jobs</h2>
 
-<p>We use the standard set of HTTP error response codes. Malformed requests, or ones using the wrong headers, will usually receive a <code class="prettyprint">400 Bad Request</code> response. Requests which are not accompanied by a legitimate authentication token will receive a <code class="prettyprint">401 Unauthorized</code> response.  </p>
-
-<h2 id="follower-breakdown">Follower Breakdown</h2>
+<h3 id="follower-breakdown">Follower Breakdown</h3>
 <pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN'</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
@@ -845,11 +847,11 @@ predicted languages and predicted sentiment</p>
   -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
 </code></pre>
 
-<h3 id="resource-uri-follower-breakdown">Resource URI follower-breakdown</h3>
+<h4 id="resource-uri">Resource URI</h4>
 
 <p><code class="prettyprint">/FollowerBreakdown</code></p>
 
-<h3 id="http-post">HTTP POST</h3>
+<h4 id="http-post">HTTP POST</h4>
 
 <p>To get a follower breakdown for one or more users, make an HTTP POST request to the <a href="#resource-uri-follower-breakdown">Follower Breakdown endpoint</a>.</p>
 
@@ -871,7 +873,7 @@ ids = [
 ]
 </code></p>
 
-<h2 id="external-influencers">External Influencers</h2>
+<h3 id="external-influencers">External Influencers</h3>
 <pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY_TOKEN'</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
@@ -879,11 +881,11 @@ ids = [
   -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
 </code></pre>
 
-<h3 id="resource-uri-external-influencers">Resource URI external-influencers</h3>
+<h4 id="resource-uri-external-influencers">Resource URI external-influencers</h4>
 
 <p><code class="prettyprint">/ExternalInfluencers</code></p>
 
-<h3 id="http-post">HTTP POST</h3>
+<h4 id="http-post">HTTP POST</h4>
 
 <p>To get an Exernal Influencers report for one or more users, make an HTTP POST request to the <a href="#resource-uri-external-influencers">External Influencers endpoint</a>.</p>
 
@@ -905,7 +907,7 @@ ids = [
 ]
 </code></p>
 
-<h2 id="analyze-public-profiles">Analyze Public Profiles</h2>
+<h3 id="analyze-public-profiles">Analyze Public Profiles</h3>
 <pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$MY_TOKEN'</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
@@ -913,11 +915,11 @@ ids = [
   -d <span class="s1">'{"job":"AnalyzePublicProfiles","ids":["twitter:116679528","twitter:118710202", "twitter:119772680"]}'</span>
 </code></pre>
 
-<h3 id="resource-uri-analyze-public-profiles">Resource URI analyze-public-profiles</h3>
+<h4 id="resource-uri-analyze-public-profiles">Resource URI analyze-public-profiles</h4>
 
 <p><code class="prettyprint">AnalyzePublicProfiles</code></p>
 
-<h3 id="http-post">HTTP POST</h3>
+<h4 id="http-post">HTTP POST</h4>
 
 <p>To get an Analyze Public Profiles report for one or more users, make an HTTP POST request to the <a href="#resource-uri-analyze-public-profiles">Analyze Public Profiles endpoint</a>.</p>
 
