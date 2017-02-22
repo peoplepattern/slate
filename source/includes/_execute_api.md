@@ -77,6 +77,8 @@ This is the endpoint used to retrieve the results of a job after the `/status` e
 
 ## Jobs
 
+The jobs listed here represent the current set of reports or analysis the supported by the execute API.
+
 ### Follower Breakdown
 ```shell
 curl 'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN' \
