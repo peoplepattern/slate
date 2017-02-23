@@ -306,16 +306,6 @@ field                       | description
 
 ## Stitch (input)
 
-> Example stitch request as JSON
-
-```json
-{
-  "name":"Joe User",
-  "email": "juser@email.com",
-  "location": "Boston, USA"
-}
-```
-
 Persons are objects containing any of the following fields. These are
 provided to the stitch [Stitching API](#stitching-api) endpoints
 
