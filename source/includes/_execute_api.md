@@ -47,7 +47,7 @@ Or, if the body of your POST request is a CONF file:
 `Content-Type: application/hocon`
 
 <aside class="notice">
-For examples of the POST_BODY see the different [Jobs](#jobs) currently available for the Execute API.
+For examples of the POST_BODY see the different Jobs currently available for the Execute API.
 </aside>
 
 ### Status
