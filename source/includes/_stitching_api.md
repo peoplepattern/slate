@@ -1,16 +1,39 @@
 # Stitching API
 
-The Stitching API exposes a model which attempts to match an individual's name, location, and/or email address to a Twitter account.
+The Stitching API exposes a model which attempts to match an individual's name, location, and/or email address to a Twitter account.  People Pattern’s stitching algorithms process, identify, score and match social profiles to individuals, adding dimensions of customer attributes previously unattainable
 
-You should provide as much information to the API as you can. Providing just one of the accepted fields (name, location, email address) will be unlikely to produce satisfactory results -- endeavor to provide at least two of the three fields, and ideally provide all three.
+<aside class="success">
+Providing more information to the API will increase the likelihood of better matches and increased match rates. Providing just one of the accepted fields (name, location, email address) will be unlikely to produce satisfactory results.
+</aside>
 
-## Querying the API
+## Stitch a single record
+
+When stitching a person record the original person record is passed back along with an array of possible matches.
+
+### Resource URI stitch
+
+`/stitch`
+
+### HTTP POST
+To stitch a person record to a social profile, make an HTTP POST request to [Stitching endpoint](#resource-uri-stitch).
+The appropriate headers and default body schema can be seen in the example request in the sidebar.
+
+#### POST PARAMETERS
+
+PARAMETER     | REQUIRED | DESCRIPTION
+--------------|----------|------------
+`body`        | Yes      | a [person record](#stitch-input) or an array of person objects
+
+### Stitch a single person record
 
 ```shell
-curl -H 'Content-type: application/json' -s -u $APIAUTH \
-https://stitching.peoplepattern.com/stitch \
--d '{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}}'
+curl 'https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN' \
+  -X POST \
+  -H "Content-type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}}'
 ```
+
 ```json
 {
   "hits": {
@@ -30,27 +53,20 @@ https://stitching.peoplepattern.com/stitch \
 }
 ```
 
-The relevant endpoint is located at `https://stitching.peoplepattern.com/stitch`. To query the API, send an HTTP POST request to that endpoint. The appropriate headers and default body schema can be seen in the example request in the sidebar.
+Each match will contain a score indicating the confidence of that match.  When passing a single [person record](#stitch-input) to the
+stitch endpoint, the array of results are passed
+back to the client with a score indicating the confidence of each match.
 
-### Batch Requests
+### Stitch a batch of records
+
 ```shell
-> This is what the POST body should look like. Information on
-> how to make a basic call to the API can be found above.
-[
-  {
-    "query": {
-      "name": "Elias Ponvert",
-      "location": "Austin Texas"
-    }
-  },
-  {
-    "query": {
-      "name": "Jason Balridge",
-      "location": "Austin Texas"
-    }
-  }
-]
+curl 'https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN' \
+  -X POST \
+  -H "Content-type: application/json" \
+  -H "Accept: application/json" \
+  -d '[{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}},{"query":{"name":"Jason Baldridge","location":"Austin, Texas"}}]'
 ```
+
 ```json
 [
   {
@@ -88,23 +104,22 @@ The relevant endpoint is located at `https://stitching.peoplepattern.com/stitch`
 ]
 ```
 
-You can also send batch requests to the API. To do so, POST an array of query JSON objects rather than just a single one. An example POST body / response pair can be seen in the sidebar.
+When passing a batch of person records to the stitch endpoint, POST an array of query JSON objects rather than just a single one.
 
 <aside class="warning">
 This API does not currently paginate responses, so as a precaution you should avoid sending arrays of more than 10 queries at a time.
 </aside>
 
-### Requesting Additional Fields
+## Requesting Additional Fields
 
 ```shell
-{
-  "query": {
-    "name": "Elias Ponvert",
-    "location": "Austin Texas"
-  },
-  "fields": ["name", "twitter", "peoplepattern"]
-}
+curl 'https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN' \
+  -X POST \
+  -H "Content-type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"query":{"name":"Elias Ponvert","location":"Austin, Texas"},"fields":["name", "twitter", "peoplepattern"]}'
 ```
+
 ```json
 {
   "hits": {
@@ -158,5 +173,3 @@ You can request that the response you receive be annotated with additional field
 `"twitter"`: Requesting this field appends other basic information about the Twitter account such as number of followers, number of tweets, whether the user is "Verified", etc.
 
 `"peoplepattern"`: Requesting this field appends some basic predictions from our other models to the response. This includes predictions of account type, some demographic information, and an "interestingness" score.
-
-An example POST body / response pair can be seen in the sidebar to the right.

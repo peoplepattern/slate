@@ -303,3 +303,26 @@ field                       | description
 `posts.os`                  | type of operating system used to commonly post with
 `peoplepattern.gender`      | gender.  see [Gender values](#gender-values)
 `place.location.city`       | the identified city for the profile
+
+## Stitch (input)
+
+> Example stitch request as JSON
+
+```json
+{
+  "name":"Joe User",
+  "email": "juser@email.com",
+  "location": "Boston, USA"
+}
+```
+
+Persons are objects containing any of the following fields. These are
+provided to the stitch [Stitching API](#stitching-api) endpoints
+
+field         | type            | description
+--------------|-----------------|------------
+`name`        | string          | the first and last name of the person
+`email`       | string          | the person's email address, typically the same one used for the social account(s)
+`location`    | string          | the text representation of the person's location
+
+All fields are optional, but a person object containing *none* of these fields is considered a bad request, and the more fields submitted increase the quality of matches returned.
