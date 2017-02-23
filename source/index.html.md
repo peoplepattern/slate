@@ -1,5 +1,5 @@
 ---
-title: People Pattern Execute API
+title: People Pattern Audience Intelligence API
 
 language_tabs:
   - shell: cURL
