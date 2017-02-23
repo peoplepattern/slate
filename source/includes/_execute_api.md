@@ -95,9 +95,10 @@ curl 'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_T
 #### HTTP POST
 To get a follower breakdown for one or more users, make an HTTP POST request to the [Follower Breakdown endpoint](#resource-uri-follower-breakdown).
 
-The body of the POST request may be in either JSON or CONF form. If JSON, it should look like this:
+The body of the POST request may be in either JSON or CONF form. 
+If JSON, it should look like this:
 
-```
+```shell
 {
   "ids":["twitter:116679527",
         "twitter:118710202",
@@ -107,7 +108,7 @@ The body of the POST request may be in either JSON or CONF form. If JSON, it sho
 
 If CONF, it should look like this:
 
-```
+```shell
 ids = [
   "twitter:116679527"
   "twitter:118710202"
@@ -130,9 +131,10 @@ curl 'https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY
 #### HTTP POST
 To get an Exernal Influencers report for one or more users, make an HTTP POST request to the [External Influencers endpoint](#resource-uri-external-influencers).
 
-The body of the POST request may be in either JSON or CONF form. If JSON, it should look like this:
+The body of the POST request may be in either JSON or CONF form. 
+If JSON, it should look like this:
 
-```
+```shell
 {
   "ids":["twitter:116679527",
         "twitter:118710202",
@@ -142,7 +144,7 @@ The body of the POST request may be in either JSON or CONF form. If JSON, it sho
 
 If CONF, it should look like this:
 
-```
+```shell
 ids = [
   "twitter:116679527"
   "twitter:118710202"
@@ -165,9 +167,10 @@ curl 'https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$
 #### HTTP POST
 To get an Analyze Public Profiles report for one or more users, make an HTTP POST request to the [Analyze Public Profiles endpoint](#resource-uri-analyze-public-profiles).
 
-The body of the POST request may be in either JSON or CONF form. If JSON, it should look like this:
+The body of the POST request may be in either JSON or CONF form. 
+If JSON, it should look like this:
 
-```
+```shell
 {
   "job":"AnalyzePublicProfiles",
   "ids":
@@ -179,7 +182,7 @@ The body of the POST request may be in either JSON or CONF form. If JSON, it sho
 
 If CONF, it should look like this:
 
-```
+```shell
 job = "AnalyzePublicProfiles"
 ids = [
  "twitter:42232950"
