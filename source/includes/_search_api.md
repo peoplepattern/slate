@@ -2,8 +2,17 @@
 
 The Search API allows you to search the Portrait database (Pdb) which contains
 hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.  
-This endpoint supports both HTTP POST and HTTP GET calls.
 
+Search supports the following services:
+
+- `foursquare`
+- `googleplus`
+- `instagram`
+- `tumblr`
+- `twitter`
+- `youtube`
+
+This endpoint supports both HTTP POST and HTTP GET calls.
 
 ## Profile Search
 

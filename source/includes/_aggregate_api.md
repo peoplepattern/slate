@@ -1,7 +1,17 @@
 # Aggregate API
 
 The Aggregate API allows you to retrieve aggregate insights from the Portrait database (Pdb) which contains
-hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.  
+hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.
+
+Aggregate supports the following services:
+
+- `foursquare`
+- `googleplus`
+- `instagram`
+- `tumblr`
+- `twitter`
+- `youtube`
+
 This endpoint supports both HTTP POST and HTTP GET calls.
 
 
@@ -35,17 +45,10 @@ curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=enri
 ```json
 {
   "posts.os": {
-    "de": 0.0013839364198635503,
-    "pt": 0.00975274939594874,
     "blackberry": 0.017122722477892326,
     "android": 0.303043739365118,
-    "ja": 0.03566702873107553,
-    "en": 0.10719063699523029,
-    "it": 0.0018890186195434076,
-    "fr": 0.00433679898354334,
     "ios": 0.4897093384161427,
     "windows": 0.000029898952595411925,
-    "es": 0.029368580303910118,
     "mac": 0.0005055513391365339
   },
   "enrichments.account_type": {
@@ -147,17 +150,10 @@ curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&' \
 ```json
 {
   "posts.os": {
-    "de": 0.0013839364198635503,
-    "pt": 0.00975274939594874,
     "blackberry": 0.017122722477892326,
     "android": 0.303043739365118,
-    "ja": 0.03566702873107553,
-    "en": 0.10719063699523029,
-    "it": 0.0018890186195434076,
-    "fr": 0.00433679898354334,
     "ios": 0.4897093384161427,
     "windows": 0.000029898952595411925,
-    "es": 0.029368580303910118,
     "mac": 0.0005055513391365339
   },
   "enrichments.account_type": {

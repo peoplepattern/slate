@@ -2,6 +2,10 @@
 
 The Execute API allows for programmatic, real-time access to some of People Pattern’s most computationally heavy analytics processes.
 
+Execute supports the following services:
+
+- `twitter`
+
 The following endpoints are used to interact with the Execute API.
 
 * `/estimate/{job_type}`

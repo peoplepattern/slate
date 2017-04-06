@@ -9,10 +9,14 @@ This endpoint supports both HTTP POST and HTTP GET calls.
 
 Retrieve one or more profiles from the Pdb by submitting their relevant social profile identifiers.  If found, an enriched profile (referred to as a portrait) will be returned.
 
-Our currently supported services are
+Lookup supports the following services:
 
-- `twitter`
+- `foursquare`
+- `googleplus`
 - `instagram`
+- `tumblr`
+- `twitter`
+- `youtube`
 
 ### Resource URI
 

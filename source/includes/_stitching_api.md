@@ -2,6 +2,10 @@
 
 The Stitching API exposes a model which attempts to match an individual's name, location, and/or email address to a Twitter account.  People Pattern’s stitching algorithms process, identify, score and match social profiles to individuals, adding dimensions of customer attributes previously unattainable
 
+Stitching supports the following services:
+
+- `twitter`
+
 <aside class="success">
 Providing more information to the API will increase the likelihood of better matches and increased match rates. Providing just one of the accepted fields (name, location, email address) will be unlikely to produce satisfactory results.
 </aside>
