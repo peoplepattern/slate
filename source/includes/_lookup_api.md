@@ -33,12 +33,12 @@ PARAMETER     | REQUIRED | DESCRIPTION
 
 ```shell
 curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:14132201' \
-  -H "Accept: application/json" 
+  -H "Accept: application/json"
 ```
 
 ```json
 {
-  "$schema": "http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json",
+  "$schema": "http://apidocs.peoplepattern.com/pdb-profile.json",
   "twitter": {
     "statuses_count": 1995,
     "followers_count": 2162,
@@ -49,43 +49,81 @@ curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:141
     "favourites_count": 375
   },
   "enrichments": {
+    "account_type": "person",
+    "version": "0.10",
+    "vcard": {
+      "name": {
+        "fn": "Kenneth Cho"
+      }
+    },
+    "interestingness": 0.977957927320845,
+    "demographics": {
+      "race": "east-asian",
+      "birthyear": 1972,
+      "gender": "male"
+    },
     "psychographics": {
       "interests": {
-        "business": 36,
-        "small_business": 23,
-        "major_sports": 36,
-        "leisure_sports": 4,
-        "consumer_electronics": 45,
-        "charity": 3,
-        "beverages": 39,
-        "computers": 25,
-        "current_events": 4,
-        "other_sports": 39,
-        "science": 21,
-        "tv": 3,
-        "finance": 5,
-        "design": 5,
-        "school_life": 6,
-        "shopping": 36,
-        "food": 66,
-        "marketing": 49,
-        "travel": 3,
-        "parenting": 4,
-        "family": 3,
-        "reading": 5,
-        "art": 39,
-        "politics": 6,
-        "beauty": 3,
-        "environmentalism": 5,
-        "higher_education": 6
+        "home_and_garden": 0.006479821830880409,
+        "tv": 0.017470695748115647,
+        "beauty": 0.017265940367377122,
+        "movies": 0.02177315693013945,
+        "leisure_sports": 0.009359929069074303,
+        "humor": 0.05750853899653545,
+        "music": 0.04453033527860939,
+        "charity": 0.015467887059796497,
+        "fitness": 0.016594441298240083,
+        "health_care": 0.022492142517216828,
+        "military": 0.012983604616798233,
+        "animals": 0.02020837619203906,
+        "dance": 0.012504671719420499,
+        "parenting": 0.023518926659109336,
+        "shopping": 0.01430083006408126,
+        "beverages": 0.019798850600224946,
+        "higher_education": 0.01997958349109464,
+        "crafts": 0.005390732786789505,
+        "nutrition": 0.008311260662030395,
+        "extreme_sports": 0.004636000996369334,
+        "science": 0.011792384132337875,
+        "toys_and_games": 0.004752356058075963,
+        "automotive": 0.016710738588036646,
+        "other_sports": 0.017730743716451315,
+        "politics": 0.03613494964024038,
+        "small_business": 0.010448134933390618,
+        "environmentalism": 0.010380695857038939,
+        "design": 0.00640181713543588,
+        "dating": 0.022347794419577065,
+        "cooking": 0.01538251367896448,
+        "computers": 0.012205600264598536,
+        "local_life": 0.014369243073016447,
+        "art": 0.012545077526130427,
+        "gaming": 0.018551145567494216,
+        "business": 0.02390683426779431,
+        "current_events": 0.024671038437982344,
+        "consumer_electronics": 0.018596074848357905,
+        "reading": 0.018290843933990206,
+        "food": 0.029962990997882917,
+        "outdoor_recreation": 0.0062732319153118625,
+        "religion": 0.04066377046253635,
+        "marketing": 0.010551156193984095,
+        "multimedia": 0.032531002646433584,
+        "major_sports": 0.05873100633715111,
+        "school_life": 0.0417529998414586,
+        "family": 0.04444678359440516,
+        "travel": 0.025538779610336484,
+        "finance": 0.02021575505944901,
+        "pop_culture": 0.00730116640439448,
+        "fashion": 0.016237643973800408
       },
       "languages": {
-        "en": 193,
-        "it": 6,
-        "fr": 6,
-        "pt": 3
-      },
-      "mentions": [
+        "en": 0.95,
+        "it": 0.01,
+        "fr": 0.01,
+        "pt": 0.02
+      }
+    },
+    "posts": {
+      "top_mentions": [
         "twitter:1115726696",
         "twitter:14132201",
         "twitter:119837224",
@@ -107,7 +145,7 @@ curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:141
         "twitter:153229750",
         "twitter:1536791610"
       ],
-      "hashtags": [
+      "top_hashtags": [
         "CannesLions",
         "PPinCannes",
         "Branding",
@@ -129,23 +167,10 @@ curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:141
         "BigData",
         "BroLove"
       ]
-    },
-    "demographics": {
-      "race": "east-asian",
-      "birthyear": 1972,
-      "gender": "male"
-    },
-    "account_type": "person",
-    "version": "0.10",
-    "vcard": {
-      "name": {
-        "fn": "Kenneth Cho"
-      }
-    },
-    "interestingness": 0.977957927320845
+    }
   },
-  "screenName": "chonuff",
-  "objectType": "profile",
+  "handle": "chonuff",
+  "type": "profile",
   "createdAt": "2016-03-16T18:03:20.429Z",
   "id": "twitter:14132201",
   "displayScreenName": "chonuff",
@@ -154,7 +179,7 @@ curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:141
     "id": "twitter"
   },
   "published": "2016-03-16T18:03:20.429Z",
-  "displayName": "Kenneth Cho",
+  "name": "Kenneth Cho",
   "image": {
     "url": "https://pbs.twimg.com/profile_images/531528884588511232/VB-ZMgWI_normal.jpeg"
   },
@@ -171,16 +196,16 @@ When looking up a profile the response will include the submitted social platfor
 
 ```shell
 curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:14132201,twitter:119837224&fields=displayName' \
-  -H "Accept: application/json" 
+  -H "Accept: application/json"
 ```
 
 ```json
 {
   "twitter:14132201": {
-    "displayName": "Kenneth Cho"
+    "name": "Kenneth Cho"
   },
   "twitter:119837224": {
-    "displayName": "Jason Baldridge"
+    "name": "Jason Baldridge"
   }
 }
 ```
@@ -209,7 +234,7 @@ curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN \
 
 ```json
 {
-  "$schema": "http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.3.7-PP-SNAPSHOT/pdb-pojo/pdb-profile.json",
+  "$schema": "http://apidocs.peoplepattern.com/pdb-profile.json",
   "twitter": {
     "statuses_count": 1995,
     "followers_count": 2162,
@@ -220,43 +245,81 @@ curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN \
     "favourites_count": 375
   },
   "enrichments": {
+    "account_type": "person",
+    "version": "0.10",
+    "vcard": {
+      "name": {
+        "fn": "Kenneth Cho"
+      }
+    },
+    "interestingness": 0.977957927320845,
+    "demographics": {
+      "race": "east-asian",
+      "birthyear": 1972,
+      "gender": "male"
+    },
     "psychographics": {
       "interests": {
-        "business": 36,
-        "small_business": 23,
-        "major_sports": 36,
-        "leisure_sports": 4,
-        "consumer_electronics": 45,
-        "charity": 3,
-        "beverages": 39,
-        "computers": 25,
-        "current_events": 4,
-        "other_sports": 39,
-        "science": 21,
-        "tv": 3,
-        "finance": 5,
-        "design": 5,
-        "school_life": 6,
-        "shopping": 36,
-        "food": 66,
-        "marketing": 49,
-        "travel": 3,
-        "parenting": 4,
-        "family": 3,
-        "reading": 5,
-        "art": 39,
-        "politics": 6,
-        "beauty": 3,
-        "environmentalism": 5,
-        "higher_education": 6
+        "home_and_garden": 0.006479821830880409,
+        "tv": 0.017470695748115647,
+        "beauty": 0.017265940367377122,
+        "movies": 0.02177315693013945,
+        "leisure_sports": 0.009359929069074303,
+        "humor": 0.05750853899653545,
+        "music": 0.04453033527860939,
+        "charity": 0.015467887059796497,
+        "fitness": 0.016594441298240083,
+        "health_care": 0.022492142517216828,
+        "military": 0.012983604616798233,
+        "animals": 0.02020837619203906,
+        "dance": 0.012504671719420499,
+        "parenting": 0.023518926659109336,
+        "shopping": 0.01430083006408126,
+        "beverages": 0.019798850600224946,
+        "higher_education": 0.01997958349109464,
+        "crafts": 0.005390732786789505,
+        "nutrition": 0.008311260662030395,
+        "extreme_sports": 0.004636000996369334,
+        "science": 0.011792384132337875,
+        "toys_and_games": 0.004752356058075963,
+        "automotive": 0.016710738588036646,
+        "other_sports": 0.017730743716451315,
+        "politics": 0.03613494964024038,
+        "small_business": 0.010448134933390618,
+        "environmentalism": 0.010380695857038939,
+        "design": 0.00640181713543588,
+        "dating": 0.022347794419577065,
+        "cooking": 0.01538251367896448,
+        "computers": 0.012205600264598536,
+        "local_life": 0.014369243073016447,
+        "art": 0.012545077526130427,
+        "gaming": 0.018551145567494216,
+        "business": 0.02390683426779431,
+        "current_events": 0.024671038437982344,
+        "consumer_electronics": 0.018596074848357905,
+        "reading": 0.018290843933990206,
+        "food": 0.029962990997882917,
+        "outdoor_recreation": 0.0062732319153118625,
+        "religion": 0.04066377046253635,
+        "marketing": 0.010551156193984095,
+        "multimedia": 0.032531002646433584,
+        "major_sports": 0.05873100633715111,
+        "school_life": 0.0417529998414586,
+        "family": 0.04444678359440516,
+        "travel": 0.025538779610336484,
+        "finance": 0.02021575505944901,
+        "pop_culture": 0.00730116640439448,
+        "fashion": 0.016237643973800408
       },
       "languages": {
-        "en": 193,
-        "it": 6,
-        "fr": 6,
-        "pt": 3
-      },
-      "mentions": [
+        "en": 0.95,
+        "it": 0.01,
+        "fr": 0.01,
+        "pt": 0.02
+      }
+    },
+    "posts": {
+      "top_mentions": [
         "twitter:1115726696",
         "twitter:14132201",
         "twitter:119837224",
@@ -278,7 +341,7 @@ curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN \
         "twitter:153229750",
         "twitter:1536791610"
       ],
-      "hashtags": [
+      "top_hashtags": [
         "CannesLions",
         "PPinCannes",
         "Branding",
@@ -300,23 +363,10 @@ curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN \
         "BigData",
         "BroLove"
       ]
-    },
-    "demographics": {
-      "race": "east-asian",
-      "birthyear": 1972,
-      "gender": "male"
-    },
-    "account_type": "person",
-    "version": "0.10",
-    "vcard": {
-      "name": {
-        "fn": "Kenneth Cho"
-      }
-    },
-    "interestingness": 0.977957927320845
+    }
   },
-  "screenName": "chonuff",
-  "objectType": "profile",
+  "handle": "chonuff",
+  "type": "profile",
   "createdAt": "2016-03-16T18:03:20.429Z",
   "id": "twitter:14132201",
   "displayScreenName": "chonuff",
@@ -325,7 +375,7 @@ curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN \
     "id": "twitter"
   },
   "published": "2016-03-16T18:03:20.429Z",
-  "displayName": "Kenneth Cho",
+  "name": "Kenneth Cho",
   "image": {
     "url": "https://pbs.twimg.com/profile_images/531528884588511232/VB-ZMgWI_normal.jpeg"
   },
@@ -351,10 +401,10 @@ curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN' \
 ```json
 {
   "twitter:14132201": {
-    "displayName": "Kenneth Cho"
+    "name": "Kenneth Cho"
   },
   "twitter:119837224": {
-    "displayName": "Jason Baldridge"
+    "name": "Jason Baldridge"
   }
 }
 ```

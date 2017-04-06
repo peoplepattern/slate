@@ -120,6 +120,7 @@ curl 'https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN' \
   -d '{"query":{"name":"Elias Ponvert","location":"Austin, Texas"},"fields":["name", "twitter", "peoplepattern"]}'
 ```
 
+TODO: rerun this, response format out of date
 ```json
 {
   "hits": {

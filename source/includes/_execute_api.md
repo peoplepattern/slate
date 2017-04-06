@@ -2,27 +2,54 @@
 
 The Execute API allows for programmatic, real-time access to some of People Pattern’s most computationally heavy analytics processes.
 
-There are three endpoints used to interact with the services provided in the Execute API. They are:
+The following endpoints are used to interact with the Execute API.
 
-* `/execute/{service_type}`
+* `/estimate/{job_type}`
+
+* `/execute/{job_type}`
 
 * `/status?execution={job_hash}`
 
-* `/resources/{job_hash}`
+* `/stop?execution={job_hash}`
+
+* `/resources/{job_hash}/result.json`
 
 ## Workflow
 
 The basic workflow is this:
 
-1. Kick off a job using the `/execute` endpoint.
+1. Validate a job request using the `/estimate` endpoint.
 
-2. Using the job hash that the above step returns, periodically check the status of your job using the `/status` endpoint.
+2. Kick off a job using the `/execute` endpoint.
 
-3. When the status endpoint reports that your job has finished, retrieve the resulting JSON using the `/resources` endpoint.
+3. Using the job hash that the above step returns, periodically check the status of your job using the `/status` endpoint.
+
+4. When the status endpoint reports that your job has finished, retrieve the resulting JSON using the `/resources` endpoint.
+
+### Estimate
+```shell
+curl 'https://api.peoplepattern.com/estimate/{job_type}?access_token=$MY_TOKEN' \
+  -X POST \
+  -H "Content-type: {application/json} OR {application/hocon}" \
+  -H "Accept: application/json" \
+  -d '{POST_BODY}'
+```
+```json
+{"runMs":300000,"waitMs":300000}
+```
+```json
+{"errors":["Invalid job type"]}
+```
+```json
+{"errors":["Maximum of 1000 ids may be provided"]}
+```
+```json
+{"runMs":300000,"waitMs":300000,"warnings":["At least 50 ids must be provided"]}
+```
 
 ### Execute
 ```shell
-curl 'https://api.peoplepattern.com/execute/{service_type}?access_token=$MY_TOKEN' \
+curl 'https://api.peoplepattern.com/execute/{job_type}?access_token=$MY_TOKEN' \
   -X POST \
   -H "Content-type: {application/json} OR {application/hocon}" \
   -H "Accept: application/json" \
@@ -32,7 +59,7 @@ curl 'https://api.peoplepattern.com/execute/{service_type}?access_token=$MY_TOKE
 {"execution":"{job_hash}","status":"SUBMITTED"}
 ```
 
-`/execute/{service_type}`
+`/execute/{job_type}`
 
 This is the endpoint used to kick off jobs. To start a job, send an HTTP POST request to this endpoint, specifying one of the service_type values enumerated below. You'll need the following headers in your HTTP request:
 
@@ -52,7 +79,7 @@ For examples of the POST_BODY see the different Jobs currently available for the
 
 ### Status
 ```shell
-curl 'https://api.peoplepattern.com/status/?execution={job_hash}?access_token=$MY_TOKEN' \
+curl 'https://api.peoplepattern.com/status?execution={job_hash}?access_token=$MY_TOKEN' \
   -X GET \
   -H "Content-type: application/json" \
   -H "Accept: application/json"
@@ -83,23 +110,58 @@ This is the endpoint used to retrieve the results of a job after the `/status` e
 
 The jobs listed here represent the current set of reports or analysis the supported by the execute API.
 
-### Follower Breakdown
+### Analyze Public Profiles
 ```shell
-curl 'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN' \
+curl 'https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$MY_TOKEN' \
+  -X POST \
+  -H "Content-type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"ids":["twitter:116679528","twitter:118710202", "twitter:119772680"]}'
+```
+#### Resource URI analyze-public-profiles
+
+`/AnalyzePublicProfiles`
+
+#### HTTP POST
+To run the Analyze Public Profiles stream for one or more users, make an HTTP POST request to the [Analyze Public Profiles endpoint](#resource-uri-analyze-public-profiles).
+
+The body of the POST request may be in either JSON or CONF form.
+
+>If JSON, it should look like this:
+
+```shell
+{
+  "ids":
+    ["twitter:116679528",
+    "twitter:118710202",
+    "twitter:119772680"]
+}
+```
+
+>If CONF, it should look like this:
+
+```shell
+ids = [
+ "twitter:42232950"
+]
+```
+
+### Audience Influencers
+```shell
+curl 'https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=$MY_TOKEN' \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
 ```
+#### Resource URI audience-influencers
 
-#### Resource URI
-
-`/FollowerBreakdown`
+`/AudienceInfluencers`
 
 #### HTTP POST
-To get a follower breakdown for one or more users, make an HTTP POST request to the [Follower Breakdown endpoint](#resource-uri-follower-breakdown).
+To get an Audience Influencers report for one or more users, make an HTTP POST request to the [Audience Influencers endpoint](#resource-uri-audience-influencers).
 
-The body of the POST request may be in either JSON or CONF form. 
+The body of the POST request may be in either JSON or CONF form.
 
 >If JSON, it should look like this:
 
@@ -136,7 +198,7 @@ curl 'https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY
 #### HTTP POST
 To get an Exernal Influencers report for one or more users, make an HTTP POST request to the [External Influencers endpoint](#resource-uri-external-influencers).
 
-The body of the POST request may be in either JSON or CONF form. 
+The body of the POST request may be in either JSON or CONF form.
 
 >If JSON, it should look like this:
 
@@ -158,40 +220,40 @@ ids = [
 ]
 ```
 
-### Analyze Public Profiles
+### Follower Breakdown
 ```shell
-curl 'https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$MY_TOKEN' \
+curl 'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN' \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
-  -d '{"job":"AnalyzePublicProfiles","ids":["twitter:116679528","twitter:118710202", "twitter:119772680"]}'
+  -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
 ```
-#### Resource URI analyze-public-profiles
 
-`/AnalyzePublicProfiles`
+#### Resource URI
+
+`/FollowerBreakdown`
 
 #### HTTP POST
-To get an Analyze Public Profiles report for one or more users, make an HTTP POST request to the [Analyze Public Profiles endpoint](#resource-uri-analyze-public-profiles).
+To get a follower breakdown for one or more users, make an HTTP POST request to the [Follower Breakdown endpoint](#resource-uri-follower-breakdown).
 
-The body of the POST request may be in either JSON or CONF form. 
+The body of the POST request may be in either JSON or CONF form.
 
 >If JSON, it should look like this:
 
 ```shell
 {
-  "job":"AnalyzePublicProfiles",
-  "ids":
-    ["twitter:116679528",
-    "twitter:118710202", 
-    "twitter:119772680"]
+  "ids":["twitter:116679527",
+        "twitter:118710202",
+        "twitter:119772680"]
 }
 ```
 
 >If CONF, it should look like this:
 
 ```shell
-job = "AnalyzePublicProfiles"
 ids = [
- "twitter:42232950"
+  "twitter:116679527"
+  "twitter:118710202"
+  "twitter:119772680"
 ]
 ```

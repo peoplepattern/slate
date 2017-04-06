@@ -16,7 +16,7 @@ Aggregate data is returned for both demographic and psychographic attributes.
 
 ### HTTP GET
 
-To retrieve aggregate insights for a set of profiles, make an HTTP GET request to [PDB Aggregate endpoint](#resource-uri) and submit one or more social profile identifiers. 
+To retrieve aggregate insights for a set of profiles, make an HTTP GET request to [PDB Aggregate endpoint](#resource-uri) and submit one or more social profile identifiers.
 
 #### GET PARAMETERS
 
@@ -28,8 +28,8 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Aggregate profile attributes
 
 ```shell
-curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=peoplepattern.race,peoplepattern.birthyear,peoplepattern.account_type,posts.devices,posts.interests,posts.os,peoplepattern.gender,place.location.city&ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104' \
-  -H "Accept: application/json" 
+curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices,posts.top_interests,posts.os,enrichments.demographics.gender,place.location.city&ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104' \
+  -H "Accept: application/json"
 ```
 
 ```json
@@ -48,13 +48,13 @@ curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=peop
     "es": 0.029368580303910118,
     "mac": 0.0005055513391365339
   },
-  "peoplepattern.account_type": {
+  "enrichments.account_type": {
     "person": 1
   },
-  "peoplepattern.gender": {
+  "enrichments.demographics.gender": {
     "male": 1
   },
-  "posts.interests": {
+  "posts.top_interests": {
     "home_and_garden": 0.006479821830880409,
     "tv": 0.017470695748115647,
     "beauty": 0.017265940367377122,
@@ -115,12 +115,12 @@ curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=peop
   "place.location.city": {
     "Austin": 1
   },
-  "peoplepattern.birthyear": {
+  "enrichments.demographics.birthyear": {
     "1972": 0.3333333333333333,
     "1975": 0.3333333333333333,
     "1993": 0.3333333333333333
   },
-  "peoplepattern.race": {
+  "enrichments.demographics.race": {
     "white": 0.6666666666666666,
     "east-asian": 0.3333333333333333
   }
@@ -129,7 +129,7 @@ curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=peop
 
 ### HTTP POST
 
-To retrieve aggregate insights for a set of profiles, make an HTTP POST request to [PDB Aggregate endpoint](#resource-uri) and submit one or more social profile identifiers. 
+To retrieve aggregate insights for a set of profiles, make an HTTP POST request to [PDB Aggregate endpoint](#resource-uri) and submit one or more social profile identifiers.
 
 #### POST PARAMETERS
 
@@ -141,7 +141,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&' \
   -X POST \
   -H "Accept: application/json" \
-  -d '{{"fields":["peoplepattern.race","peoplepattern.birthyear","peoplepattern.account_type","posts.devices","posts.interests","posts.os","peoplepattern.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'
+  -d '{{"fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices","enrichments.psychographics.interests","posts.os","enrichments.demographics.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'
 ```
 
 ```json
@@ -160,13 +160,13 @@ curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&' \
     "es": 0.029368580303910118,
     "mac": 0.0005055513391365339
   },
-  "peoplepattern.account_type": {
+  "enrichments.account_type": {
     "person": 1
   },
-  "peoplepattern.gender": {
+  "enrichments.demographics.gender": {
     "male": 1
   },
-  "posts.interests": {
+  "enrichments.psychographics.interests": {
     "home_and_garden": 0.006479821830880409,
     "tv": 0.017470695748115647,
     "beauty": 0.017265940367377122,
@@ -227,12 +227,12 @@ curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&' \
   "place.location.city": {
     "Austin": 1
   },
-  "peoplepattern.birthyear": {
+  "enrichments.demographics.birthyear": {
     "1972": 0.3333333333333333,
     "1975": 0.3333333333333333,
     "1993": 0.3333333333333333
   },
-  "peoplepattern.race": {
+  "enrichments.demographics.race": {
     "white": 0.6666666666666666,
     "east-asian": 0.3333333333333333
   }

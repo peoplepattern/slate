@@ -1,8 +1,8 @@
 # Enrich API
 
-The Enrich API provides access to our audience intelligence 
-and machine-learned based models used to extract personal attributes, 
-like demographics and location information from profile and post data. 
+The Enrich API provides access to our audience intelligence
+and machine-learned based models used to extract personal attributes,
+like demographics and location information from profile and post data.
 
 This API takes as input a serialized as JSON object, and echoes that
 content back in the response along with predicted enrichments. This
@@ -46,6 +46,8 @@ curl 'https://api.peoplepattern.com/profile?access_token=$MY_TOKEN' \
   -H "Accept: application/json" \
   -d '{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}'
 ```
+
+TODO: rerun this, response format out of date
 
 ```json
 {
