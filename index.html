@@ -153,11 +153,11 @@ Pdb itself. For the <a href="#enrich-api">Enrich API</a>, the resource
 
 <p>If you&rsquo;re POSTing json, use:</p>
 
-<p><code class="prettyprint">Content-type: application/json</code></p>
+<p><code class="prettyprint">Content-Type: application/json</code></p>
 
 <p>If you&rsquo;re POSTing hocon, use:</p>
 
-<p><code class="prettyprint">Content-type: application/hocon</code></p>
+<p><code class="prettyprint">Content-Type: application/hocon</code></p>
 
 <h2 id="authentication">Authentication</h2>
 
@@ -183,12 +183,15 @@ curl https://api.peoplepattern.com/lookup?access_token<span class="o">=</span><s
 You must replace <code>$MY_TOKEN</code> with your personal API security token.
 </aside>
 
-          <h1 id="data-objects">Data objects</h1>
+          <h1 id="profiles">Profiles</h1>
+
+<p>Profiles are the primary units of information in the PDB.</p>
 
 <h2 id="json-schema">JSON Schema</h2>
 
-<p>Most objects returned by the People Pattern Insights API suite
-have JSON schema available</p>
+<p>Most requests, responses, and objects have JSON schemas available.</p>
+
+<p>Those types and their schema URLs are introduced throughout the documentation like this:</p>
 
 <table><thead>
 <tr>
@@ -197,46 +200,132 @@ have JSON schema available</p>
 </tr>
 </thead><tbody>
 <tr>
-<td>PDB profile</td>
-<td><a href="#">http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile.json</a></td>
-</tr>
-<tr>
-<td>profile enrichments</td>
-<td><a href="#">http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-enrichments.json</a></td>
-</tr>
-<tr>
-<td>post enrichments</td>
-<td><a href="#">http://apidocs.peoplepattern.com/pdb-pojo/pdb-post-enrichments.json</a></td>
-</tr>
-<tr>
-<td>profile demographics</td>
-<td><a href="#">http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-demographics.json</a></td>
-</tr>
-<tr>
-<td>profile psychographics</td>
-<td><a href="#">http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-psychographics.json</a></td>
-</tr>
-<tr>
-<td>extended demographics</td>
-<td><a href="#">http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-extended.json</a></td>
+<td>PDB Profile</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/pdb-profile.json">http://apidocs.peoplepattern.com/schemata/pdb-profile.json</a></td>
 </tr>
 </tbody></table>
 
-<h2 id="profile-input">Profile (input)</h2>
+<p>PDB Profiles are loosely based on the Activity Streams format, with modest structural changes and many enhancements.</p>
 
-<blockquote>
-<p>Example profile request as JSON</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"Joe User"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"juser"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"my profile"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston, USA"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
+<h1 id="enrichments">Enrichments</h1>
 
-<p>Profiles are objects containing any of the following fields. These are
-provided to the profile <a href="#enrich-api">Enrich API</a> endpoints</p>
+<p>The structured enrichments appended to profiles include normalized names, aggregated posts, geolocations, demographics, and psychographic attributes.</p>
+
+<h2 id="json-schemas">JSON Schemas</h2>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>PDB Profile Enrichments</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/pdb-profile-enrichments.json">http://apidocs.peoplepattern.com/schemata/pdb-profile-enrichments.json</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="enrichments">enrichments</h3>
+
+<table><thead>
+<tr>
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">account_type</code></td>
+<td>enum</td>
+<td>predicted account type of the profile. see <a href="#account-type-values">Account Type Vaues</a></td>
+</tr>
+<tr>
+<td><code class="prettyprint">adult</code></td>
+<td>boolean</td>
+<td>flag for extreme posting of adult content.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">influence</code></td>
+<td>number</td>
+<td>calculated influencer score (0-100) of the profile.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">interestingness</code></td>
+<td>number</td>
+<td>calculated interestingness score [0-1] of the profile.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">spam</code></td>
+<td>boolean</td>
+<td>flag for extreme posting of spam content.</td>
+</tr>
+</tbody></table>
+
+<h4 id="account-type-values">Account Type values</h4>
+
+<ul>
+<li><code class="prettyprint">person</code></li>
+<li><code class="prettyprint">organization</code></li>
+<li><code class="prettyprint">entertainment</code></li>
+</ul>
+
+<h3 id="enrichments-demographics">enrichments.demographics</h3>
+
+<table><thead>
+<tr>
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">birthyear</code></td>
+<td>number</td>
+<td>predicted or stated birth year of the profile.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">gender</code></td>
+<td>string</td>
+<td>predicted gender of the profile. see <a href="#gender-values">Gender values</a></td>
+</tr>
+<tr>
+<td><code class="prettyprint">race</code></td>
+<td>string</td>
+<td>predicted racial identify of the profile. see <a href="#race-values">Race Values</a></td>
+</tr>
+</tbody></table>
+
+<h4 id="gender-values">Gender values</h4>
+
+<ul>
+<li><code class="prettyprint">male</code></li>
+<li><code class="prettyprint">female</code></li>
+</ul>
+
+<h4 id="race-values">Race values</h4>
+
+<ul>
+<li><code class="prettyprint">white</code></li>
+<li><code class="prettyprint">black</code></li>
+<li><code class="prettyprint">east-asian</code></li>
+<li><code class="prettyprint">south-asian</code></li>
+<li><code class="prettyprint">hispanic</code></li>
+<li><code class="prettyprint">middle-eastern</code></li>
+<li><code class="prettyprint">no-prediction</code></li>
+</ul>
+
+<aside class="notice">
+Obviously, the values our predictive models use vastly oversimplify
+matters of racial and gender identity; the values chosen align roughly
+with demographic categories useful for marketing and public relations
+use cases, and should not be taken as anything more than that. With
+respect to the racial identity categories, our set of values is a
+variation of the US Census categories commonly used in media and
+marketing analytics, and as such characterize US social media culture
+better than other markets.
+</aside>
+
+<h3 id="enrichments-vcard">enrichments.vcard</h3>
 
 <table><thead>
 <tr>
@@ -247,130 +336,7 @@ provided to the profile <a href="#enrich-api">Enrich API</a> endpoints</p>
 </thead><tbody>
 <tr>
 <td><code class="prettyprint">name</code></td>
-<td>string</td>
-<td>the &ldquo;display name&rdquo; or provided profile name</td>
-</tr>
-<tr>
-<td><code class="prettyprint">handle</code></td>
-<td>string</td>
-<td>the screen name of the social profile</td>
-</tr>
-<tr>
-<td><code class="prettyprint">summary</code></td>
-<td>string</td>
-<td>the description or summary provided with the profile</td>
-</tr>
-<tr>
-<td><code class="prettyprint">location</code></td>
-<td>string</td>
-<td>the text representation of the profile location, which often is provided with the social profile</td>
-</tr>
-</tbody></table>
-
-<p>All fields are optional, but a profile containing <em>none</em> of these
-fields is considered a bad request.</p>
-
-<h3 id="enriched-profile">Enriched profile</h3>
-
-<p>An enriched profile consists of a profile data structure &ndash;
-all or any of the fields provided in an <a href="#profile-input">input profile</a>,
-plus other optional data the client may have provided to the Enrich
-API &ndash; together with a &ldquo;peoplepattern&rdquo; field containing
-<a href="#profile-enrichments">profile enrichments</a>.</p>
-
-<table><thead>
-<tr>
-<th>field</th>
-<th>type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code class="prettyprint">name</code></td>
-<td>string</td>
-</tr>
-<tr>
-<td><code class="prettyprint">handle</code></td>
-<td>string</td>
-</tr>
-<tr>
-<td><code class="prettyprint">summary</code></td>
-<td>string</td>
-</tr>
-<tr>
-<td><code class="prettyprint">location</code></td>
-<td>string</td>
-</tr>
-<tr>
-<td><code class="prettyprint">enrichments</code></td>
-<td><a href="#profile-enrichments">profile enrichments</a></td>
-</tr>
-</tbody></table>
-
-<h2 id="profile-enrichments">Profile enrichments</h2>
-
-<blockquote>
-<p>Example enrichments as JSON</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"given-name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"family-name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe User"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1985</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nt">"place"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"geo_name_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4930956</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"City"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"dma"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston, MA-Manchester, NH"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"city"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"state"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Massachusetts"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"state_abbreviation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"MA"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"utc_offset"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-18000"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"time_zone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"America/New_York"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"metro_area"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Boston-Cambridge-Newton, MA-NH"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"continent"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NA"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"population"</span><span class="p">:</span><span class="w"> </span><span class="mi">617594</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"place_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"City"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"country"</span><span class="p">:</span><span class="w"> </span><span class="s2">"United States"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"country_code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"US"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"coordinates"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">42.35843</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="mf">-71.05977</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<p>The structured enrichments appended to profile data by the API
-consist of fields for account type, spam, adult content, vcard
-(normalized name), demographics, and normalized location.</p>
-
-<h3 id="vcard">vcard</h3>
-
-<table><thead>
-<tr>
-<th>field</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code class="prettyprint">name</code></td>
-<td><a href="#vcard-name">vcard.name</a></td>
+<td><a href="#vcard-name">enrichments.vcard.name</a></td>
 <td>name</td>
 </tr>
 <tr>
@@ -385,7 +351,7 @@ consist of fields for account type, spam, adult content, vcard
 </tr>
 </tbody></table>
 
-<h3 id="vcard-name">vcard.name</h3>
+<h4 id="enrichments-vcard-name">enrichments.vcard.name</h4>
 
 <table><thead>
 <tr>
@@ -411,71 +377,7 @@ consist of fields for account type, spam, adult content, vcard
 </tr>
 </tbody></table>
 
-<h3 id="demographics">demographics</h3>
-
-<table><thead>
-<tr>
-<th>field</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code class="prettyprint">birthyear</code></td>
-<td>number</td>
-<td>predicted or stated birth year of the profile</td>
-</tr>
-<tr>
-<td><code class="prettyprint">gender</code></td>
-<td>string</td>
-<td>predicted gender of the profile</td>
-</tr>
-<tr>
-<td><code class="prettyprint">race</code></td>
-<td>string</td>
-<td>predicted racial identify of the profile</td>
-</tr>
-</tbody></table>
-
-<h4 id="gender-values">Gender values</h4>
-
-<ul>
-<li><code class="prettyprint">male</code></li>
-<li><code class="prettyprint">female</code></li>
-</ul>
-
-<h4 id="race-values">Race values</h4>
-
-<ul>
-<li><code class="prettyprint">white</code></li>
-<li><code class="prettyprint">black</code></li>
-<li><code class="prettyprint">east-asian</code></li>
-<li><code class="prettyprint">south-asian</code></li>
-<li><code class="prettyprint">hispanic</code></li>
-<li><code class="prettyprint">middle-eastern</code></li>
-<li><code class="prettyprint">no-prediction</code></li>
-</ul>
-
-<h4 id="account-type-values">Account Type values</h4>
-
-<ul>
-<li><code class="prettyprint">person</code></li>
-<li><code class="prettyprint">organization</code></li>
-<li><code class="prettyprint">entertainment</code></li>
-</ul>
-
-<aside class="notice">
-Obviously, the values our predictive models use vastly oversimplify
-matters of racial and gender identity; the values chosen align roughly
-with demographic categories useful for marketing and public relations
-use cases, and should not be taken as anything more than that. With
-respect to the racial identity categories, our set of values is a
-variation of the US Census categories commonly used in media and
-marketing analytics, and as such characterize US social media culture
-better than other markets.
-</aside>
-
-<h3 id="place-geo">place/geo</h3>
+<h3 id="enrichments-place">enrichments.place</h3>
 
 <table><thead>
 <tr>
@@ -521,7 +423,7 @@ better than other markets.
 </tr>
 </tbody></table>
 
-<h3 id="location">location</h3>
+<h3 id="enrichments-place-location">enrichments.place.location</h3>
 
 <table><thead>
 <tr>
@@ -602,7 +504,7 @@ better than other markets.
 </tr>
 </tbody></table>
 
-<h3 id="coordinates">coordinates</h3>
+<h3 id="enrichments-place-location-coordinates">enrichments.place.location.coordinates</h3>
 
 <table><thead>
 <tr>
@@ -620,45 +522,7 @@ better than other markets.
 </tr>
 </tbody></table>
 
-<h2 id="post-input">Post (input)</h2>
-
-<p>A social media post or other text may be passed to the Enrich API
-as a JSON object with a string-valued <code class="prettyprint">text</code> field</p>
-
-<table><thead>
-<tr>
-<th>field</th>
-<th>type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>text</td>
-<td>string</td>
-</tr>
-</tbody></table>
-
-<p>JSON objects containing other fields may be used, and other
-fields are provided back to the client in
-<a href="#enriched-post">enriched post output</a></p>
-
-<h2 id="post-enrichments">Post enrichments</h2>
-
-<blockquote>
-<p>Sample post enrichments as JSON</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="s2">"science"</span><span class="w">
-  </span><span class="p">],</span><span class="w">
-  </span><span class="nt">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="s2">"en"</span><span class="w">
-  </span><span class="p">],</span><span class="w">
-  </span><span class="nt">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"neutral"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<p>Post enrichments consist of a set of predicted interest topics,
-predicted languages and predicted sentiment</p>
+<h3 id="posts">posts</h3>
 
 <table><thead>
 <tr>
@@ -668,23 +532,38 @@ predicted languages and predicted sentiment</p>
 </tr>
 </thead><tbody>
 <tr>
-<td>interests</td>
-<td>array of string</td>
-<td><a href="#interest-topic-values">interest topics</a></td>
+<td><code class="prettyprint">devices.*</code></td>
+<td>map</td>
+<td>percentage of posts per device type. see <a href="#device-type-values">Device Type values</a></td>
 </tr>
 <tr>
-<td>languages</td>
-<td>array of string</td>
-<td><a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1 two letter language codes</a></td>
+<td><code class="prettyprint">os.*</code></td>
+<td>map</td>
+<td>percentage of posts per operating systems. see <a href="#operating-system-values">Operating System values</a></td>
 </tr>
 <tr>
-<td>sentiment</td>
-<td>string</td>
-<td>&ldquo;positive&rdquo;, &ldquo;negative&rdquo; or &ldquo;neutral&rdquo;</td>
+<td><code class="prettyprint">interests.*</code></td>
+<td>map</td>
+<td>percentage of posts per tagged interests. see <a href="#interests-topic-values">Interest category values</a></td>
+</tr>
+<tr>
+<td><code class="prettyprint">top_domains</code></td>
+<td>array[string]</td>
+<td>array of top 20 domains</td>
+</tr>
+<tr>
+<td><code class="prettyprint">top_hashtags</code></td>
+<td>array[string]</td>
+<td>array of top 20 hashtags</td>
+</tr>
+<tr>
+<td><code class="prettyprint">top_interests</code></td>
+<td>array[string]</td>
+<td>array of top 20 interests. see <a href="#interests-topic-values">Interest category values</a></td>
 </tr>
 </tbody></table>
 
-<h4 id="interest-topic-values">Interest topic values</h4>
+<h4 id="interest-category-values">Interest category values</h4>
 
 <ul>
 <li><code class="prettyprint">animals</code></li>
@@ -738,83 +617,6 @@ predicted languages and predicted sentiment</p>
 <li><code class="prettyprint">travel</code></li>
 <li><code class="prettyprint">tv</code></li>
 </ul>
-
-<h3 id="some-pdb-profile-fields">Some pdb profile fields</h3>
-
-<table><thead>
-<tr>
-<th>field</th>
-<th>description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code class="prettyprint">enrichments.account_type</code></td>
-<td>type of account.  see <a href="#account-type-values">Account Type Vaues</a></td>
-</tr>
-<tr>
-<td><code class="prettyprint">enrichments.demographics.race</code></td>
-<td>race.  see <a href="#race-values">Race Values</a></td>
-</tr>
-<tr>
-<td><code class="prettyprint">enrichments.demographics.gender</code></td>
-<td>gender.  see <a href="#gender-values">Gender values</a></td>
-</tr>
-<tr>
-<td><code class="prettyprint">enrichments.place.location.city</code></td>
-<td>the identified city for the profile</td>
-</tr>
-<tr>
-<td><code class="prettyprint">posts.devices.*</code></td>
-<td>type of device used to commonly post with</td>
-</tr>
-<tr>
-<td><code class="prettyprint">posts.os.*</code></td>
-<td>type of operating system used to commonly post with</td>
-</tr>
-<tr>
-<td><code class="prettyprint">posts.top_domains</code></td>
-<td>top domains linked to by the user.</td>
-</tr>
-<tr>
-<td><code class="prettyprint">posts.top_interests</code></td>
-<td>top categories of interest for the user.  see <a href="#interests-topic-values">Interest topic values</a></td>
-</tr>
-<tr>
-<td><code class="prettyprint">posts.top_hashtags</code></td>
-<td>top hashtags for the user.</td>
-</tr>
-</tbody></table>
-
-<h2 id="stitch-input">Stitch (input)</h2>
-
-<p>Persons are objects containing any of the following fields. These are
-provided to the stitch <a href="#stitching-api">Stitching API</a> endpoints</p>
-
-<table><thead>
-<tr>
-<th>field</th>
-<th>type</th>
-<th>description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code class="prettyprint">name</code></td>
-<td>string</td>
-<td>the first and last name of the person</td>
-</tr>
-<tr>
-<td><code class="prettyprint">email</code></td>
-<td>string</td>
-<td>the person&rsquo;s email address, typically the same one used for the social account(s)</td>
-</tr>
-<tr>
-<td><code class="prettyprint">location</code></td>
-<td>string</td>
-<td>the text representation of the person&rsquo;s location</td>
-</tr>
-</tbody></table>
-
-<p>All fields are optional, but a person object containing <em>none</em> of these fields is considered a bad request, and the more fields submitted increase the quality of matches returned.</p>
 
           <h1 id="execute-api">Execute API</h1>
 
@@ -1085,6 +887,37 @@ For examples of the POST_BODY see the different Jobs currently available for the
 <aside class="success">
 Providing more information to the API will increase the likelihood of better matches and increased match rates. Providing just one of the accepted fields (name, location, email address) will be unlikely to produce satisfactory results.
 </aside>
+
+<h2 id="stitch-input">Stitch (input)</h2>
+
+<p>Persons are objects containing any of the following fields. These are
+provided to the stitch <a href="#stitching-api">Stitching API</a> endpoints</p>
+
+<table><thead>
+<tr>
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">name</code></td>
+<td>string</td>
+<td>the first and last name of the person</td>
+</tr>
+<tr>
+<td><code class="prettyprint">email</code></td>
+<td>string</td>
+<td>the person&rsquo;s email address, typically the same one used for the social account(s)</td>
+</tr>
+<tr>
+<td><code class="prettyprint">location</code></td>
+<td>string</td>
+<td>the text representation of the person&rsquo;s location</td>
+</tr>
+</tbody></table>
+
+<p>All fields are optional, but a person object containing <em>none</em> of these fields is considered a bad request, and the more fields submitted increase the quality of matches returned.</p>
 
 <h2 id="stitch-a-single-record">Stitch a single record</h2>
 
@@ -1559,6 +1392,70 @@ Similar to the Twitter API&rsquo;s <a href="https://dev.twitter.com/overview/api
 data structures which contain a &ldquo;text&rdquo; field, the Enrich API
 social media post enrichment call will work with the same tweet JSON
 </aside>
+
+<h2 id="post-input">Post (input)</h2>
+
+<p>A social media post or other text may be passed to the Enrich API
+as a JSON object with a string-valued <code class="prettyprint">text</code> field</p>
+
+<table><thead>
+<tr>
+<th>field</th>
+<th>type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>text</td>
+<td>string</td>
+</tr>
+</tbody></table>
+
+<p>JSON objects containing other fields may be used, and other
+fields are provided back to the client in
+<a href="#enriched-post">enriched post output</a></p>
+
+<h2 id="post-enrichments">Post enrichments</h2>
+
+<blockquote>
+<p>Sample post enrichments as JSON</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"science"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"en"</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"sentiment"</span><span class="p">:</span><span class="w"> </span><span class="s2">"neutral"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Post enrichments consist of a set of predicted interest topics,
+predicted languages and predicted sentiment</p>
+
+<table><thead>
+<tr>
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>interests</td>
+<td>array of string</td>
+<td><a href="#interest-topic-values">interest topics</a></td>
+</tr>
+<tr>
+<td>languages</td>
+<td>array of string</td>
+<td><a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO 639-1 two letter language codes</a></td>
+</tr>
+<tr>
+<td>sentiment</td>
+<td>string</td>
+<td>&ldquo;positive&rdquo;, &ldquo;negative&rdquo; or &ldquo;neutral&rdquo;</td>
+</tr>
+</tbody></table>
 
 <h3 id="enrich-a-single-post">Enrich a single post</h3>
 <pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/post?access_token=$MY_TOKEN'</span> <span class="se">\</span>
