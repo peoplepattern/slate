@@ -10,11 +10,11 @@ All calls require a Content-Type header.
 
 If you're POSTing json, use:
 
-`Content-type: application/json`
+`Content-Type: application/json`
 
 If you're POSTing hocon, use:
 
-`Content-type: application/hocon`
+`Content-Type: application/hocon`
 
 ## Authentication
 

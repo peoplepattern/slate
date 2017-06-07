@@ -1,137 +1,51 @@
-# Data objects
+# Profiles
+
+Profiles are the primary units of information in the PDB.
 
 ## JSON Schema
 
-Most objects returned by the People Pattern Insights API suite
-have JSON schema available
+Most requests, responses, and objects have JSON schemas available.
+
+Those types and their schema URLs are introduced throughout the documentation like this:
 
 type                | schema URL
 --------------------|-----------
-PDB profile         | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile.json](#)
-profile enrichments | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-enrichments.json](#)
-post enrichments    | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-post-enrichments.json](#)
-profile demographics   | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-demographics.json](#)
-profile psychographics | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-psychographics.json](#)
-extended demographics  | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-extended.json](#)
+PDB Profile         | [http://apidocs.peoplepattern.com/schemata/pdb-profile.json](http://apidocs.peoplepattern.com/schemata/pdb-profile.json)
 
-## Profile (input)
+PDB Profiles are loosely based on the Activity Streams format, with modest structural changes and many enhancements.
 
-> Example profile request as JSON
+# Enrichments
 
-```json
-{
-  "name":"Joe User",
-  "username": "juser",
-  "description": "my profile",
-  "location": "Boston, USA"
-}
-```
+The structured enrichments appended to profiles include normalized names, aggregated posts, geolocations, demographics, and psychographic attributes.
 
-Profiles are objects containing any of the following fields. These are
-provided to the profile [Enrich API](#enrich-api) endpoints
+## JSON Schemas
+
+type                           | schema URL
+-------------------------------|-----------
+PDB Profile Enrichments        | [http://apidocs.peoplepattern.com/schemata/pdb-profile-enrichments.json](http://apidocs.peoplepattern.com/schemata/pdb-profile-enrichments.json)
+
+### enrichments
 
 field         | type            | description
 --------------|-----------------|------------
-`name`        | string          | the "display name" or provided profile name
-`handle`      | string          | the screen name of the social profile
-`summary`     | string          | the description or summary provided with the profile
-`location`    | string          | the text representation of the profile location, which often is provided with the social profile
+`account_type`    | enum          | predicted account type of the profile. see [Account Type Vaues](#account-type-values)
+`adult`    | boolean          | flag for extreme posting of adult content.
+`influence`       | number          | calculated influencer score (0-100) of the profile.
+`interestingness` | number          | calculated interestingness score [0-1] of the profile.
+`spam`    | boolean          | flag for extreme posting of spam content.
 
-All fields are optional, but a profile containing *none* of these
-fields is considered a bad request.
+#### Account Type values
+- `person`
+- `organization`
+- `entertainment`
 
-### Enriched profile
-
-An enriched profile consists of a profile data structure --
-all or any of the fields provided in an [input profile](#profile-input),
-plus other optional data the client may have provided to the Enrich
-API -- together with a "peoplepattern" field containing
-[profile enrichments](#profile-enrichments).
-
-field           | type        
-----------------|-------------
-`name`          | string      
-`handle`        | string      
-`summary`       | string      
-`location`      | string      
-`enrichments`   | [profile enrichments](#profile-enrichments)
-
-## Profile enrichments
-
-> Example enrichments as JSON
-
-```json
-{
-  "account_type": "person",
-  "spam": false,
-  "adult": false,
-  "vcard": {
-    "name": {
-      "given-name": "Joe",
-      "family-name": "User",
-      "fn": "Joe User"
-    },
-    "email": []
-  },
-  "demographics": {
-    "birthyear": 1985,
-    "gender": "male",
-    "race": "white"
-  },
-  "place": {
-    "city": true,
-    "geo_name_id": 4930956,
-    "type": "City",
-    "location": {
-      "dma": "Boston, MA-Manchester, NH",
-      "city": "Boston",
-      "state": "Massachusetts",
-      "state_abbreviation": "MA",
-      "utc_offset": "-18000",
-      "time_zone": "America/New_York",
-      "metro_area": "Boston-Cambridge-Newton, MA-NH",
-      "continent": "NA",
-      "language": "en",
-      "population": 617594,
-      "place_type": "City",
-      "country": "United States",
-      "country_code": "US",
-      "coordinates": {
-        "longitude": 42.35843,
-        "latitude": -71.05977
-      }
-    }
-  }
-}
-```
-
-The structured enrichments appended to profile data by the API
-consist of fields for account type, spam, adult content, vcard
-(normalized name), demographics, and normalized location.
-
-### vcard
-
-field           | type            | description
-----------------|-----------------|------------
-`name`          | [vcard.name](#vcard-name)  | name
-`email`         | array of string | emails
-`tel`           | array of string | telephone numbers
-
-### vcard.name
-
-field           | type            | description
-----------------|-----------------|------------
-`given_name`    | string          | given or first name
-`family_name`   | string          | family name, surname or last name
-`fn`            | string          | full name for display
-
-### demographics
+### enrichments.demographics
 
 field         | type            | description
 --------------|-----------------|------------
-`birthyear`   | number          | predicted or stated birth year of the profile
-`gender`      | string          | predicted gender of the profile
-`race`        | string          | predicted racial identify of the profile
+`birthyear`   | number          | predicted or stated birth year of the profile.
+`gender`      | string          | predicted gender of the profile. see [Gender values](#gender-values)
+`race`        | string          | predicted racial identify of the profile. see [Race Values](#race-values)
 
 #### Gender values
 
@@ -148,11 +62,6 @@ field         | type            | description
 - `middle-eastern`
 - `no-prediction`
 
-#### Account Type values
-- `person`
-- `organization`
-- `entertainment`
-
 <aside class="notice">
 Obviously, the values our predictive models use vastly oversimplify
 matters of racial and gender identity; the values chosen align roughly
@@ -164,8 +73,23 @@ marketing analytics, and as such characterize US social media culture
 better than other markets.
 </aside>
 
+### enrichments.vcard
 
-### place/geo
+field           | type            | description
+----------------|-----------------|------------
+`name`          | [enrichments.vcard.name](#vcard-name)  | name
+`email`         | array of string | emails
+`tel`           | array of string | telephone numbers
+
+#### enrichments.vcard.name
+
+field           | type            | description
+----------------|-----------------|------------
+`given_name`    | string          | given or first name
+`family_name`   | string          | family name, surname or last name
+`fn`            | string          | full name for display
+
+### enrichments.place
 
 field           | type            | description
 ----------------|-----------------|------------
@@ -177,7 +101,7 @@ field           | type            | description
 `geo_name_id`   | number          | the ID number of the place in the Geonames DB
 `location`      | [location](#location) | the location record
 
-### location
+### enrichments.place.location
 
 field               | type            | description
 --------------------|-----------------|------------
@@ -196,52 +120,25 @@ field               | type            | description
 `country_code`      | string          | the country code of the location
 `coordinates`       | [coordinates](#coordinates) | Lat/long coordinates
 
-### coordinates
+### enrichments.place.location.coordinates
 
 field               | type   
 --------------------|--------
 `latitude`          | number
 `longitude`         | number
 
-## Post (input)
-
-A social media post or other text may be passed to the Enrich API
-as a JSON object with a string-valued `text` field
-
-field      | type
------------|------
-text       | string
-
-JSON objects containing other fields may be used, and other
-fields are provided back to the client in
-[enriched post output](#enriched-post)
-
-## Post enrichments
-
-> Sample post enrichments as JSON
-
-```json
-{
-  "interests": [
-    "science"
-  ],
-  "languages": [
-    "en"
-  ],
-  "sentiment": "neutral"
-}
-```
-
-Post enrichments consist of a set of predicted interest topics,
-predicted languages and predicted sentiment
+### posts
 
 field           | type            | description
-----------------|-----------------|-----------------------------------------
-interests       | array of string | [interest topics](#interest-topic-values)
-languages       | array of string | [ISO 639-1 two letter language codes](https://en.wikipedia.org/wiki/ISO_639-1)
-sentiment       | string          | "positive", "negative" or "neutral"
+----------------|-----------------|------------
+`devices.*`     | map           | percentage of posts per device type. see [Device Type values](#device-type-values)
+`os.*`          | map           | percentage of posts per operating systems. see [Operating System values](#operating-system-values)
+`interests.*`   | map           | percentage of posts per tagged interests. see [Interest category values](#interests-topic-values)
+`top_domains`   | array[string] | array of top 20 domains
+`top_hashtags`  | array[string] | array of top 20 hashtags
+`top_interests` | array[string] | array of top 20 interests. see [Interest category values](#interests-topic-values)
 
-#### Interest topic values
+#### Interest category values
 
 - `animals`
 - `art`
@@ -293,30 +190,3 @@ sentiment       | string          | "positive", "negative" or "neutral"
 - `toys_and_games`
 - `travel`
 - `tv`
-
-### Some pdb profile fields
-
-field                                  | description   
----------------------------------------|--------
-`enrichments.account_type`             | type of account.  see [Account Type Vaues](#account-type-values)
-`enrichments.demographics.race`        | race.  see [Race Values](#race-values)
-`enrichments.demographics.gender`      | gender.  see [Gender values](#gender-values)
-`enrichments.place.location.city`      | the identified city for the profile
-`posts.devices.*`                      | type of device used to commonly post with
-`posts.os.*`                           | type of operating system used to commonly post with
-`posts.top_domains`                    | top domains linked to by the user.
-`posts.top_interests`                  | top categories of interest for the user.  see [Interest topic values](#interests-topic-values)
-`posts.top_hashtags`                   | top hashtags for the user.
-
-## Stitch (input)
-
-Persons are objects containing any of the following fields. These are
-provided to the stitch [Stitching API](#stitching-api) endpoints
-
-field         | type            | description
---------------|-----------------|------------
-`name`        | string          | the first and last name of the person
-`email`       | string          | the person's email address, typically the same one used for the social account(s)
-`location`    | string          | the text representation of the person's location
-
-All fields are optional, but a person object containing *none* of these fields is considered a bad request, and the more fields submitted increase the quality of matches returned.

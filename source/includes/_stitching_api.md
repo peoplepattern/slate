@@ -10,6 +10,19 @@ Stitching supports the following services:
 Providing more information to the API will increase the likelihood of better matches and increased match rates. Providing just one of the accepted fields (name, location, email address) will be unlikely to produce satisfactory results.
 </aside>
 
+## Stitch (input)
+
+Persons are objects containing any of the following fields. These are
+provided to the stitch [Stitching API](#stitching-api) endpoints
+
+field         | type            | description
+--------------|-----------------|------------
+`name`        | string          | the first and last name of the person
+`email`       | string          | the person's email address, typically the same one used for the social account(s)
+`location`    | string          | the text representation of the person's location
+
+All fields are optional, but a person object containing *none* of these fields is considered a bad request, and the more fields submitted increase the quality of matches returned.
+
 ## Stitch a single record
 
 When stitching a person record the original person record is passed back along with an array of possible matches.

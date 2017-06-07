@@ -288,6 +288,44 @@ data structures which contain a "text" field, the Enrich API
 social media post enrichment call will work with the same tweet JSON
 </aside>
 
+## Post (input)
+
+A social media post or other text may be passed to the Enrich API
+as a JSON object with a string-valued `text` field
+
+field      | type
+-----------|------
+text       | string
+
+JSON objects containing other fields may be used, and other
+fields are provided back to the client in
+[enriched post output](#enriched-post)
+
+## Post enrichments
+
+> Sample post enrichments as JSON
+
+```json
+{
+  "interests": [
+    "science"
+  ],
+  "languages": [
+    "en"
+  ],
+  "sentiment": "neutral"
+}
+```
+
+Post enrichments consist of a set of predicted interest topics,
+predicted languages and predicted sentiment
+
+field           | type            | description
+----------------|-----------------|-----------------------------------------
+interests       | array of string | [interest topics](#interest-topic-values)
+languages       | array of string | [ISO 639-1 two letter language codes](https://en.wikipedia.org/wiki/ISO_639-1)
+sentiment       | string          | "positive", "negative" or "neutral"
+
 ### Enrich a single post
 
 ```shell
