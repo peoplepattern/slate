@@ -26,14 +26,14 @@ Aggregate data is returned for both demographic and psychographic attributes.
 
 ### HTTP GET
 
-To retrieve aggregate insights for a set of profiles, make an HTTP GET request to [PDB Aggregate endpoint](#resource-uri) and submit one or more social profile identifiers.
+To retrieve aggregate insights for a set of profiles, make an HTTP GET request to [PDB Aggregate endpoint](#resource-uri) and submit up to 50,000 social profile identifiers.
 
 #### GET PARAMETERS
 
 PARAMETER     | REQUIRED | DESCRIPTION
 --------------|----------|-------------
+`fields`      | Yes      | an array of [Pdb fields](#pdb-fields) to be aggregated and returned for each indexed profile
 `ids`         | Yes      | the social ids whose attributes will be aggregated, in the format "$service:$service_id" ie. "twitter:12345"
-`fields`      | No       | an array of [Pdb fields](#pdb-fields) to be aggregated and returned for each discovered profile
 
 ### Aggregate profile attributes
 
@@ -138,7 +138,7 @@ To retrieve aggregate insights for a set of profiles, make an HTTP POST request 
 
 PARAMETER     | REQUIRED | DESCRIPTION
 --------------|----------|-------------
-`body`        | Yes      | an array of [Pdb fields](#pdb-fields) to be aggregated and returned for each discovered profile and a second array of the social ids whose attributes will be aggregated, in the format "$service:$service_id" ie. "twitter:12345"
+`body`        | Yes      | a json object containing an array of [Pdb fields](#pdb-fields) to be aggregated and an array of social ids whose attributes will be aggregated, in the format "$service:$service_id" ie. "twitter:12345"
 
 ```shell
 curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&' \

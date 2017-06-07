@@ -4,13 +4,16 @@ All URLs referenced in the documentation have the following base:
 
 `https://api.peoplepattern.com`
 
-The People Pattern API is served over HTTPS. To ensure data privacy, unecrypted HTTP is not supported.
+The People Pattern API is served over HTTPS. To ensure data privacy, unencrypted HTTP is not supported.
 
-All calls require a Content-Type header. If you're POSTing .json files, use:
+All calls require a Content-Type header.
+
+If you're POSTing json, use:
 
 `Content-type: application/json`
 
-For .conf, use:
+If you're POSTing hocon, use:
+
 `Content-type: application/hocon`
 
 ## Authentication

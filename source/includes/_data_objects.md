@@ -7,9 +7,12 @@ have JSON schema available
 
 type                | schema URL
 --------------------|-----------
-profile enrichments | [http://apidocs.peoplepattern.com/schemata/profile-enrichments.json](#)
-post enrichments    | [http://apidocs.peoplepattern.com/schemata/post-enrichments.json](#)
-PDB profile         | [http://apidocs.peoplepattern.com/schemata/profile.json](#)
+PDB profile         | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile.json](#)
+profile enrichments | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-enrichments.json](#)
+post enrichments    | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-post-enrichments.json](#)
+profile demographics   | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-demographics.json](#)
+profile psychographics | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-psychographics.json](#)
+extended demographics  | [http://apidocs.peoplepattern.com/pdb-pojo/pdb-profile-extended.json](#)
 
 ## Profile (input)
 
@@ -30,8 +33,8 @@ provided to the profile [Enrich API](#enrich-api) endpoints
 field         | type            | description
 --------------|-----------------|------------
 `name`        | string          | the "display name" or provided profile name
-`username`    | string          | the screen name of the social profile
-`description` | string          | the description or summary provided with the profile
+`handle`      | string          | the screen name of the social profile
+`summary`     | string          | the description or summary provided with the profile
 `location`    | string          | the text representation of the profile location, which often is provided with the social profile
 
 All fields are optional, but a profile containing *none* of these
@@ -48,10 +51,10 @@ API -- together with a "peoplepattern" field containing
 field           | type        
 ----------------|-------------
 `name`          | string      
-`username`      | string      
-`description`   | string      
+`handle`        | string      
+`summary`       | string      
 `location`      | string      
-`peoplepattern` | [profile enrichments](#profile-enrichments)
+`enrichments`   | [profile enrichments](#profile-enrichments)
 
 ## Profile enrichments
 
@@ -110,17 +113,17 @@ consist of fields for account type, spam, adult content, vcard
 
 field           | type            | description
 ----------------|-----------------|------------
-`name`        | [vcard.name](#vcard-name)  | name
-`email`       | array of string | emails
-`tel`         | array of string | telephone numbers
+`name`          | [vcard.name](#vcard-name)  | name
+`email`         | array of string | emails
+`tel`           | array of string | telephone numbers
 
 ### vcard.name
 
 field           | type            | description
 ----------------|-----------------|------------
-`given-name`  | string          | given or first name
-`family-name` | string          | family name, surname or last name
-`fn`          | string          | full name for display
+`given_name`    | string          | given or first name
+`family_name`   | string          | family name, surname or last name
+`fn`            | string          | full name for display
 
 ### demographics
 
@@ -147,7 +150,7 @@ field         | type            | description
 
 #### Account Type values
 - `person`
-- `organiation`
+- `organization`
 - `entertainment`
 
 <aside class="notice">
@@ -291,18 +294,19 @@ sentiment       | string          | "positive", "negative" or "neutral"
 - `travel`
 - `tv`
 
-### Pdb fields
+### Some pdb profile fields
 
-field                       | description   
-----------------------------|--------
-`peoplepattern.race`        | race.  see [Race Values](#race-values)
-`peoplepattern.birthyear`   | year of birth
-`peoplepattern.account_type`| type of account.  see [Account Type Vaues](#account-type-values)
-`posts.devices`             | type of device used to commonly post with
-`posts.interests`           | top categories of interest for the user.  see [Interest topic values](#interests-topic-values)
-`posts.os`                  | type of operating system used to commonly post with
-`peoplepattern.gender`      | gender.  see [Gender values](#gender-values)
-`place.location.city`       | the identified city for the profile
+field                                  | description   
+---------------------------------------|--------
+`enrichments.account_type`             | type of account.  see [Account Type Vaues](#account-type-values)
+`enrichments.demographics.race`        | race.  see [Race Values](#race-values)
+`enrichments.demographics.gender`      | gender.  see [Gender values](#gender-values)
+`enrichments.place.location.city`      | the identified city for the profile
+`posts.devices.*`                      | type of device used to commonly post with
+`posts.os.*`                           | type of operating system used to commonly post with
+`posts.top_domains`                    | top domains linked to by the user.
+`posts.top_interests`                  | top categories of interest for the user.  see [Interest topic values](#interests-topic-values)
+`posts.top_hashtags`                   | top hashtags for the user.
 
 ## Stitch (input)
 

@@ -26,7 +26,7 @@ send request bodies with HTTP GET requests.
 
 PARAMETER     | REQUIRED | DESCRIPTION
 --------------|----------|------------
-`body`        | Yes      | a [profile object](#profile-input) or an array of proflie objects
+`body`        | Yes      | a [profile object](#profile-input) or an array of profile objects
 
 <aside class="notice">
 The Enrich API also supports document formats provided by social media
