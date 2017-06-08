@@ -14,12 +14,12 @@ toc_footers:
 includes:
   - introduction
   - data_objects
+  - lookup_api
+  - aggregate_api
+  - search_api
+  - enrich_api
   - execute_api
   - stitching_api
-  - enrich_api
-  - lookup_api
-  - search_api
-  - aggregate_api
   - errors
 
 search: true
@@ -40,7 +40,8 @@ functionality -- i.e. the service does not support HTTP PUT,
 POST, or DELETE requests, at least in spirit. Rather, the API
 provides access to resources we've compiled and maintain.
 
-For the [Lookup](#lookup-api), [Search](#search-api) and
+For the [Lookup](#lookup-api), [Search](#search-api), [Stitching](#stitching-api), and
 [Aggregate](#aggregate-api) APIs, the resource accessed is the
 Pdb itself. For the [Enrich API](#enrich-api), the resource
-(or resources) are our compiled predictive models.
+(or resources) are our compiled predictive models.  The [Execute API](#execute-api) compiles
+data from a variety of sources which differ by job.

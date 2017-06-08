@@ -50,10 +50,10 @@ The search results will include all enrichments and predictions for each profile
 ### Search for profiles
 
 ```shell
-curl 'https://api.peoplepattern.com/search?access_token=$MY_TOKEN&queryString=joe&limit=5' \
+curl "https://api.peoplepattern.com/search?access_token=$MY_TOKEN&queryString=joe&limit=5" \
   -H "Accept: application/json"
 
-curl 'https://api.peoplepattern.com/search?access_token=$MY_TOKEN&' \
+curl "https://api.peoplepattern.com/search?access_token=$MY_TOKEN" \
   -X POST \
   -H "Accept: application/json" \
   -d '{"queryString":"john", "limit":"5"}'

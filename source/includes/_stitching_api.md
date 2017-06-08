@@ -44,7 +44,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Stitch a single person record
 
 ```shell
-curl 'https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN' \
+curl "https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
@@ -130,7 +130,7 @@ This API does not currently paginate responses, so as a precaution you should av
 ## Requesting Additional Fields
 
 ```shell
-curl 'https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN' \
+curl "https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \

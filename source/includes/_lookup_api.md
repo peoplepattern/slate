@@ -39,10 +39,10 @@ Lookup Response        | [http://apidocs.peoplepattern.com/schemata/LookupRespon
 When looking up a batch of profiles the response will include each submitted social platform identifier, if a profile is not found in the Pdb it is left out of the response.
 
 ```shell
-curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:14132201,twitter:119837224&fields=handle' \
+curl "https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:14132201,twitter:119837224&fields=handle" \
   -H "Accept: application/json"
 
-curl 'https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN" \
   -X POST \
   -H "Accept: application/json" \
   -d '{"fields": ["name"],"ids": ["twitter:14132201","twitter:119837224"]}'

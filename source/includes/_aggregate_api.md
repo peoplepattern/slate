@@ -40,99 +40,291 @@ Note that the fields to aggregate must be requested in flattened format (see bel
 Also note that map fields must be requested using syntax like `posts.os.*` and `posts.devices.*`.
 
 ```shell
-curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices,posts.top_interests,posts.os,enrichments.demographics.gender,place.location.city&ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104' \
-  -H "Accept: application/json"
-
-curl 'https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&' \
-  -X POST \
+curl -X GET \
   -H "Accept: application/json" \
-  -d '{{"fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices","enrichments.psychographics.interests","posts.os","enrichments.demographics.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'
+  "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104"
+
+curl -X POST "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN" \
+  -H "Accept: application/json" \
+  -d '{"fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'
+
 ```
 
 ```json
 {
-  "posts.os": {
-    "blackberry": 0.017122722477892326,
-    "android": 0.303043739365118,
-    "ios": 0.4897093384161427,
-    "windows": 0.000029898952595411925,
-    "mac": 0.0005055513391365339
-  },
-  "enrichments.account_type": {
-    "person": 1
-  },
-  "enrichments.demographics.gender": {
-    "male": 1
-  },
-  "posts.top_interests": {
-    "home_and_garden": 0.006479821830880409,
-    "tv": 0.017470695748115647,
-    "beauty": 0.017265940367377122,
-    "movies": 0.02177315693013945,
-    "leisure_sports": 0.009359929069074303,
-    "humor": 0.05750853899653545,
-    "music": 0.04453033527860939,
-    "charity": 0.015467887059796497,
-    "fitness": 0.016594441298240083,
-    "health_care": 0.022492142517216828,
-    "military": 0.012983604616798233,
-    "animals": 0.02020837619203906,
-    "dance": 0.012504671719420499,
-    "parenting": 0.023518926659109336,
-    "shopping": 0.01430083006408126,
-    "beverages": 0.019798850600224946,
-    "higher_education": 0.01997958349109464,
-    "crafts": 0.005390732786789505,
-    "nutrition": 0.008311260662030395,
-    "extreme_sports": 0.004636000996369334,
-    "science": 0.011792384132337875,
-    "toys_and_games": 0.004752356058075963,
-    "automotive": 0.016710738588036646,
-    "other_sports": 0.017730743716451315,
-    "politics": 0.03613494964024038,
-    "small_business": 0.010448134933390618,
-    "environmentalism": 0.010380695857038939,
-    "design": 0.00640181713543588,
-    "dating": 0.022347794419577065,
-    "cooking": 0.01538251367896448,
-    "computers": 0.012205600264598536,
-    "local_life": 0.014369243073016447,
-    "art": 0.012545077526130427,
-    "gaming": 0.018551145567494216,
-    "business": 0.02390683426779431,
-    "current_events": 0.024671038437982344,
-    "consumer_electronics": 0.018596074848357905,
-    "reading": 0.018290843933990206,
-    "food": 0.029962990997882917,
-    "outdoor_recreation": 0.0062732319153118625,
-    "religion": 0.04066377046253635,
-    "marketing": 0.010551156193984095,
-    "multimedia": 0.032531002646433584,
-    "major_sports": 0.05873100633715111,
-    "school_life": 0.0417529998414586,
-    "family": 0.04444678359440516,
-    "travel": 0.025538779610336484,
-    "finance": 0.02021575505944901,
-    "pop_culture": 0.00730116640439448,
-    "fashion": 0.016237643973800408
-  },
-  "posts.devices": {
-    "tablet": 0.03444261383528846,
-    "automated": 0.0034475751633945852,
-    "desktop": 0.040294415836302486,
-    "mobile": 0.9218153951650144
-  },
-  "place.location.city": {
-    "Austin": 1
-  },
-  "enrichments.demographics.birthyear": {
-    "1972": 0.3333333333333333,
-    "1975": 0.3333333333333333,
-    "1993": 0.3333333333333333
-  },
-  "enrichments.demographics.race": {
-    "white": 0.6666666666666666,
-    "east-asian": 0.3333333333333333
-  }
+	"enrichments.account_type": {
+		"person": 1.0
+	},
+	"enrichments.psychographics.top_interests": {
+		"marketing": 0.06666666666666667,
+		"business": 0.13333333333333333,
+		"current_events": 0.06666666666666667,
+		"major_sports": 0.06666666666666667,
+		"small_business": 0.06666666666666667,
+		"fitness": 0.06666666666666667,
+		"science": 0.13333333333333333,
+		"health_care": 0.06666666666666667,
+		"higher_education": 0.06666666666666667,
+		"reading": 0.06666666666666667,
+		"family": 0.06666666666666667,
+		"computers": 0.13333333333333333
+	},
+	"enrichments.demographics.gender": {
+		"male": 1.0
+	},
+	"enrichments.demographics.race": {
+		"white": 0.6666666666666666,
+		"east-asian": 0.3333333333333333
+	},
+	"posts.os.*": {
+		"blackberry": 0.0,
+		"android": 0.0,
+		"ios": 1.0,
+		"windows": 0.0,
+		"mac": 0.0,
+		"unknown": 0.0
+	},
+	"posts.devices.*": {
+		"tablet": 0.0,
+		"automated": 0.0,
+		"desktop": 0.004219409282700422,
+		"mobile": 0.9957805907172995,
+		"unknown": 0.0
+	},
+	"enrichments.demographics.birthyear": {
+		"1975": 0.5,
+		"1972": 0.5
+	}
+}
+
+{
+	"enrichments.account_type": {
+		"person": 1.0
+	},
+	"enrichments.psychographics.top_interests": {
+		"marketing": 0.06666666666666667,
+		"business": 0.13333333333333333,
+		"current_events": 0.06666666666666667,
+		"major_sports": 0.06666666666666667,
+		"small_business": 0.06666666666666667,
+		"fitness": 0.06666666666666667,
+		"science": 0.13333333333333333,
+		"health_care": 0.06666666666666667,
+		"higher_education": 0.06666666666666667,
+		"reading": 0.06666666666666667,
+		"family": 0.06666666666666667,
+		"computers": 0.13333333333333333
+	},
+	"enrichments.demographics.gender": {
+		"male": 1.0
+	},
+	"enrichments.demographics.race": {
+		"white": 0.6666666666666666,
+		"east-asian": 0.3333333333333333
+	},
+	"posts.os.*": {
+		"blackberry": 0.0,
+		"android": 0.0,
+		"ios": 1.0,
+		"windows": 0.0,
+		"mac": 0.0,
+		"unknown": 0.0
+	},
+	"posts.devices.*": {
+		"tablet": 0.0,
+		"automated": 0.0,
+		"desktop": 0.004219409282700422,
+		"mobile": 0.9957805907172995,
+		"unknown": 0.0
+	},
+	"enrichments.demographics.birthyear": {
+		"1975": 0.5,
+		"1972": 0.5
+	}
+}
+```
+
+## Search/Aggregate Profiles
+
+We also offer aggregation based on search criteria.  
+
+### Resource URI
+
+`/aggregatesearch`
+
+#### Json Schema
+
+type                     | schema URL
+-------------------------|-----------
+AggregateSearch Request        | [http://apidocs.peoplepattern.com/schemata/AggregateSearchRequest.json](http://apidocs.peoplepattern.com/schemata/AggregateSearchRequest.json)
+AggregateSearch Response       | [http://apidocs.peoplepattern.com/schemata/AggregateSearchResponse.json](http://apidocs.peoplepattern.com/schemata/AggregateSearchResponse.json)
+
+```shell
+curl -X GET \
+  -H "Accept: application/json"
+  "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&queryString=john" \
+
+curl -X POST "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN" \
+  -H "Accept: application/json" \
+  -d '{"queryString":"jill","fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"]}'
+```
+
+```json
+{
+	"enrichments.account_type": {
+		"entertainment": 1.8391506376973333E-4,
+		"person": 0.9947953288076048,
+		"organization": 0.005020756128625441
+	},
+	"enrichments.psychographics.top_interests": {
+		"politics": 0.035818697462143584,
+		"other_sports": 0.03053666076128402,
+		"gaming": 0.02761313182126375,
+		"beverages": 0.023741825419391526,
+		"current_events": 0.037120068823224925,
+		"business": 0.030066417328288242,
+		"consumer_electronics": 0.025108812143216464,
+		"higher_education": 0.02272478729686577,
+		"food": 0.02682574746834059,
+		"religion": 0.04243855850338648,
+		"multimedia": 0.02148538600059783,
+		"humor": 0.0640369487398205,
+		"music": 0.03406895445564766,
+		"major_sports": 0.06896174624352049,
+		"school_life": 0.038760452891814845,
+		"animals": 0.020428249600839877,
+		"family": 0.056301626531936454,
+		"travel": 0.026927815810386183,
+		"automotive": 0.024911966054985673,
+		"finance": 0.02719027726136057
+	},
+	"enrichments.demographics.gender": {
+		"female": 0.011415977072219231,
+		"male": 0.9885840229277808
+	},
+	"enrichments.demographics.race": {
+		"middle-eastern": 2.807261232695993E-4,
+		"white": 0.8984420511505714,
+		"south-asian": 0.001572390829180588,
+		"hispanic": 0.051822366894438865,
+		"black": 0.034495236580723364,
+		"east-asian": 0.013387228421816152
+	},
+	"posts.os.*": {
+		"blackberry": 0.02681955952155928,
+		"android": 0.3538655259396014,
+		"ios": 0.6097575035076012,
+		"windows": 9.160855311759634E-4,
+		"mac": 0.003519898918088746,
+		"unknown": 0.005121426581973373
+	},
+	"posts.devices.*": {
+		"tablet": 0.054544731549693456,
+		"automated": 0.003470887228310001,
+		"desktop": 0.0428197705361852,
+		"mobile": 0.8949874598895574,
+		"unknown": 0.004177150796253883
+	},
+	"enrichments.demographics.birthyear": {
+		"1990": 0.021262022202317505,
+		"1987": 0.049928869902849664,
+		"1986": 0.06093680972395037,
+		"1997": 0.02167137489816845,
+		"1985": 0.06690282129120378,
+		"1996": 0.03187276831853314,
+		"1984": 0.0660516919235929,
+		"1995": 0.033445331150118954,
+		"1983": 0.05902784814230883,
+		"1994": 0.028342607941442298,
+		"1982": 0.04858732789961537,
+		"1993": 0.023130453814072815,
+		"1981": 0.037976581783399736,
+		"1992": 0.01916662275919929,
+		"1980": 0.028820861586099842,
+		"1991": 0.018692422111530372,
+		"1979": 0.021675427895157074,
+		"1968": 0.018218221463861452,
+		"1989": 0.027896778272693743,
+		"1988": 0.03941944871134961
+	}
+}
+
+{
+	"enrichments.account_type": {
+		"entertainment": 1.7386356451918822E-4,
+		"person": 0.9961275842447999,
+		"organization": 0.003698552190680913
+	},
+	"enrichments.psychographics.top_interests": {
+		"politics": 0.023585975416156393,
+		"beverages": 0.026942441148455572,
+		"business": 0.027169229373610923,
+		"current_events": 0.021182020229509685,
+		"beauty": 0.018914137977956186,
+		"higher_education": 0.025853857667709892,
+		"reading": 0.020547013199074704,
+		"food": 0.041683675783553316,
+		"religion": 0.042908332199392205,
+		"multimedia": 0.022542749580441782,
+		"humor": 0.0752483331065451,
+		"music": 0.02848460107951195,
+		"major_sports": 0.03356465732299179,
+		"charity": 0.02558171179752347,
+		"health_care": 0.024402413026715652,
+		"school_life": 0.06327391481834263,
+		"animals": 0.0386900712115027,
+		"family": 0.09184923118791673,
+		"travel": 0.02957318456025763,
+		"parenting": 0.024629201251871003
+	},
+	"enrichments.demographics.gender": {
+		"female": 0.9968667493717593,
+		"male": 0.003133250628240608
+	},
+	"enrichments.demographics.race": {
+		"middle-eastern": 3.677214142565592E-5,
+		"white": 0.9725128242843222,
+		"south-asian": 3.1256320211807534E-4,
+		"hispanic": 0.01000202246777841,
+		"black": 0.009781389619224475,
+		"east-asian": 0.007354428285131185
+	},
+	"posts.os.*": {
+		"blackberry": 0.015055618724203267,
+		"android": 0.21980291455853063,
+		"ios": 0.7600062143666229,
+		"windows": 4.383875793916797E-5,
+		"mac": 3.5016552631090994E-4,
+		"unknown": 0.004741248066393187
+	},
+	"posts.devices.*": {
+		"tablet": 0.06077353367721411,
+		"automated": 0.004644188990242093,
+		"desktop": 0.03712638231824077,
+		"mobile": 0.8936350940424981,
+		"unknown": 0.0038208009718047322
+	},
+	"enrichments.demographics.birthyear": {
+		"1987": 0.028461114175399888,
+		"1976": 0.014120242691671264,
+		"1986": 0.04569773855488141,
+		"1985": 0.08066740209597352,
+		"1984": 0.11265857694429122,
+		"1983": 0.115857694429123,
+		"1972": 0.015747380033094317,
+		"1982": 0.10157198014340872,
+		"1971": 0.0163265306122449,
+		"1981": 0.0753723110865968,
+		"1970": 0.017539988968560398,
+		"1980": 0.050082735797021515,
+		"1969": 0.019332597904026475,
+		"1979": 0.03143960286817429,
+		"1968": 0.017402095973524545,
+		"1978": 0.023965802537231108,
+		"1967": 0.01643684500827358,
+		"1977": 0.0197738554881412,
+		"1988": 0.01693325979040265,
+		"1966": 0.0151130722559294
+	}
 }
 ```

@@ -18,7 +18,7 @@ The following endpoints are used to interact with the Execute API.
 
 * `/resources/{job_hash}/result.json`
 
-# Workflow
+## Workflow
 
 The basic workflow is this:
 
@@ -59,10 +59,16 @@ type                  | schema URL
 Execute Response     | [http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json](http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json)
 
 ```shell
-curl 'https://api.peoplepattern.com/execute/{job_type}?access_token=$MY_TOKEN' \
-  -X POST \
-  -H "Content-type: {application/json} OR {application/hocon}" \
+curl -X POST \
+  -H "Content-type: application/json" \
   -H "Accept: application/json" \
+  "https://api.peoplepattern.com/execute/{job_type}?access_token=$MY_TOKEN" \
+  -d '{POST_BODY}'
+
+curl -X POST \
+  -H "Content-type: application/hocon" \
+  -H "Accept: application/json" \
+  "https://api.peoplepattern.com/execute/{job_type}?access_token=$MY_TOKEN" \
   -d '{POST_BODY}'
 ```
 ```json
@@ -125,7 +131,7 @@ Status Request      | [http://apidocs.peoplepattern.com/schemata/StatusRequest.j
 Status Response     | [http://apidocs.peoplepattern.com/schemata/StatusResponse.json](http://apidocs.peoplepattern.com/schemata/StatusResponse.json)
 
 ```shell
-curl 'https://api.peoplepattern.com/status?execution={job_hash}?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/status?execution={job_hash}?access_token=$MY_TOKEN" \
   -X GET \
   -H "Content-type: application/json" \
   -H "Accept: application/json"
@@ -170,13 +176,13 @@ type                  | schema URL
 AnalyzePublicProfilesRequest      | [http://apidocs.peoplepattern.com/schemata/AnalyzePublicProfilesRequest.json](http://apidocs.peoplepattern.com/schemata/AnalyzePublicProfilesRequest.json)
 
 ```shell
-curl 'https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"ids":["twitter:116679528","twitter:118710202", "twitter:119772680"]}'
 
-curl 'https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/hocon" \
   -H "Accept: application/json" \
@@ -197,13 +203,13 @@ AudienceInfluencersReportRequest      | [http://apidocs.peoplepattern.com/schema
 AudienceInfluencersReportResult      | [http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json](http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json)
 
 ```shell
-curl 'https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
 
-curl 'https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/hocon" \
   -H "Accept: application/json" \
@@ -224,13 +230,13 @@ ExternalInfluencersReportRequest      | [http://apidocs.peoplepattern.com/schema
 ExternalInfluencersReportResult      | [http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json](http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json)
 
 ```shell
-curl 'https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
 
-curl 'https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/hocon" \
   -H "Accept: application/json" \
@@ -251,13 +257,13 @@ FollowerBreakdownReportRequest      | [http://apidocs.peoplepattern.com/schemata
 FollowerBreakdownReportResult      | [http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json](http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json)
 
 ```shell
-curl 'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
 
-curl 'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/hocon" \
   -H "Accept: application/json" \

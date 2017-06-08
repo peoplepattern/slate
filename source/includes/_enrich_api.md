@@ -442,7 +442,7 @@ Here we have displayed what a same error response would look like from the Enric
 > Example invalid format call with output
 
 ```shell
-curl 'https://api.peoplepattern.com/post?access_token=$MY_TOKEN' \
+curl "https://api.peoplepattern.com/post?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
