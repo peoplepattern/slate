@@ -43,5 +43,5 @@ provides access to resources we've compiled and maintain.
 For the [Lookup](#lookup-api), [Search](#search-api), [Stitching](#stitching-api), and
 [Aggregate](#aggregate-api) APIs, the resource accessed is the
 Pdb itself. For the [Enrich API](#enrich-api), the resource
-(or resources) are our compiled predictive models.  The [Execute API](#execute-api) compiles
+(or resources) is our predictive models.  The [Execute API](#execute-api) fetches
 data from a variety of sources which differ by job.
