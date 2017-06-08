@@ -680,10 +680,6 @@ For examples of the POST_BODY see the different Jobs currently available for the
 </tr>
 </thead><tbody>
 <tr>
-<td>Execute Request</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/ExecuteRequest.json">http://apidocs.peoplepattern.com/schemata/ExecuteRequest.json</a></td>
-</tr>
-<tr>
 <td>Execute Response</td>
 <td><a href="http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json">http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json</a></td>
 </tr>
@@ -842,12 +838,12 @@ curl <span class="s1">'https://api.peoplepattern.com/execute/AnalyzePublicProfil
 </tr>
 </thead><tbody>
 <tr>
-<td>AudienceInfluencersRequest</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/AudienceInfluencersRequest.json">http://apidocs.peoplepattern.com/schemata/AudienceInfluencersRequest.json</a></td>
+<td>AudienceInfluencersReportRequest</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json">http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json</a></td>
 </tr>
 <tr>
-<td>AudienceInfluencersResult</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/AudienceInfluencersResult.json">http://apidocs.peoplepattern.com/schemata/AudienceInfluencersResult.json</a></td>
+<td>AudienceInfluencersReportResult</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json">http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json</a></td>
 </tr>
 </tbody></table>
 <pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=$MY_TOKEN'</span> <span class="se">\</span>
@@ -878,12 +874,12 @@ curl <span class="s1">'https://api.peoplepattern.com/execute/AudienceInfluencers
 </tr>
 </thead><tbody>
 <tr>
-<td>ExternalInfluencersRequest</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/ExternalInfluencersRequest.json">http://apidocs.peoplepattern.com/schemata/ExternalInfluencersRequest.json</a></td>
+<td>ExternalInfluencersReportRequest</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json">http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json</a></td>
 </tr>
 <tr>
-<td>ExternalInfluencersResult</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/ExternalInfluencersResult.json">http://apidocs.peoplepattern.com/schemata/ExternalInfluencersResult.json</a></td>
+<td>ExternalInfluencersReportResult</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json">http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json</a></td>
 </tr>
 </tbody></table>
 <pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY_TOKEN'</span> <span class="se">\</span>
@@ -914,12 +910,12 @@ curl <span class="s1">'https://api.peoplepattern.com/execute/ExternalInfluencers
 </tr>
 </thead><tbody>
 <tr>
-<td>FollowerBreakdownRequest</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/FollowerBreakdownRequest.json">http://apidocs.peoplepattern.com/schemata/FollowerBreakdownRequest.json</a></td>
+<td>FollowerBreakdownReportRequest</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json">http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json</a></td>
 </tr>
 <tr>
-<td>FollowerBreakdownResult</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/FollowerBreakdownResult.json">http://apidocs.peoplepattern.com/schemata/FollowerBreakdownResult.json</a></td>
+<td>FollowerBreakdownReportResult</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json">http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json</a></td>
 </tr>
 </tbody></table>
 <pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN'</span> <span class="se">\</span>
@@ -927,6 +923,13 @@ curl <span class="s1">'https://api.peoplepattern.com/execute/ExternalInfluencers
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
   -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
+
+curl <span class="s1">'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN'</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
+
 </code></pre>
 
           <h1 id="stitching-api">Stitching API</h1>
