@@ -146,7 +146,7 @@ curl -X POST "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN" \
 
 ## Search/Aggregate Profiles
 
-We also offer aggregation based on search criteria.  
+We also offer aggregation based on search criteria. The `queryString` parameter is the easiest to use, but we also offer a `querySource` parameter which takes structured elasticsearch json data.
 
 ### Resource URI
 
