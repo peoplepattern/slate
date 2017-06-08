@@ -56,7 +56,6 @@ For examples of the POST_BODY see the different Jobs currently available for the
 
 type                  | schema URL
 ----------------------|-----------
-Execute Request      | [http://apidocs.peoplepattern.com/schemata/ExecuteRequest.json](http://apidocs.peoplepattern.com/schemata/ExecuteRequest.json)
 Execute Response     | [http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json](http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json)
 
 ```shell
@@ -194,8 +193,8 @@ To get an Audience Influencers report for one or more users, make an HTTP POST r
 
 type                  | schema URL
 ----------------------|-----------
-AudienceInfluencersRequest      | [http://apidocs.peoplepattern.com/schemata/AudienceInfluencersRequest.json](http://apidocs.peoplepattern.com/schemata/AudienceInfluencersRequest.json)
-AudienceInfluencersResult      | [http://apidocs.peoplepattern.com/schemata/AudienceInfluencersResult.json](http://apidocs.peoplepattern.com/schemata/AudienceInfluencersResult.json)
+AudienceInfluencersReportRequest      | [http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json](http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json)
+AudienceInfluencersReportResult      | [http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json](http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json)
 
 ```shell
 curl 'https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=$MY_TOKEN' \
@@ -221,8 +220,8 @@ To get an External Influencers report for one or more users, make an HTTP POST r
 
 type                  | schema URL
 ----------------------|-----------
-ExternalInfluencersRequest      | [http://apidocs.peoplepattern.com/schemata/ExternalInfluencersRequest.json](http://apidocs.peoplepattern.com/schemata/ExternalInfluencersRequest.json)
-ExternalInfluencersResult      | [http://apidocs.peoplepattern.com/schemata/ExternalInfluencersResult.json](http://apidocs.peoplepattern.com/schemata/ExternalInfluencersResult.json)
+ExternalInfluencersReportRequest      | [http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json](http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json)
+ExternalInfluencersReportResult      | [http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json](http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json)
 
 ```shell
 curl 'https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY_TOKEN' \
@@ -248,8 +247,8 @@ To get a follower breakdown for one or more users, make an HTTP POST request to 
 
 type                  | schema URL
 ----------------------|-----------
-FollowerBreakdownRequest      | [http://apidocs.peoplepattern.com/schemata/FollowerBreakdownRequest.json](http://apidocs.peoplepattern.com/schemata/FollowerBreakdownRequest.json)
-FollowerBreakdownResult      | [http://apidocs.peoplepattern.com/schemata/FollowerBreakdownResult.json](http://apidocs.peoplepattern.com/schemata/FollowerBreakdownResult.json)
+FollowerBreakdownReportRequest      | [http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json](http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json)
+FollowerBreakdownReportResult      | [http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json](http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json)
 
 ```shell
 curl 'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN' \
@@ -257,4 +256,11 @@ curl 'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_T
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
+
+curl 'https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN' \
+  -X POST \
+  -H "Content-type: application/hocon" \
+  -H "Accept: application/json" \
+  -d 'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'
+
 ```
