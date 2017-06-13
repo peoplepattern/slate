@@ -244,7 +244,7 @@ curl "https://api.peoplepattern.com/search?access_token=$MY_TOKEN&queryString=jo
 }
 ```
 
-### GET Example
+### POST Example
 ```shell
 curl "https://api.peoplepattern.com/search?access_token=$MY_TOKEN" \
   -X POST \

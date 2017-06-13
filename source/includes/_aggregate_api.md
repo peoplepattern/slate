@@ -155,14 +155,14 @@ We also offer aggregation based on search criteria. The `queryString` parameter 
 
 `/aggregatesearch`
 
-#### Json Schema
+### Json Schema
 
 type                     | schema URL
 -------------------------|-----------
 AggregateSearch Request        | [http://apidocs.peoplepattern.com/schemata/AggregateSearchRequest.json](http://apidocs.peoplepattern.com/schemata/AggregateSearchRequest.json)
 AggregateSearch Response       | [http://apidocs.peoplepattern.com/schemata/AggregateSearchResponse.json](http://apidocs.peoplepattern.com/schemata/AggregateSearchResponse.json)
 
-#### GET Example
+### GET Example
 ```shell
 curl -X GET \
   -H "Accept: application/json"
@@ -250,7 +250,7 @@ curl -X GET \
 }
 ```
 
-#### POST Example
+### POST Example
 ```shell
 curl -X POST "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN" \
   -H "Accept: application/json" \

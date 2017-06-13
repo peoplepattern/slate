@@ -56,14 +56,14 @@ curl "https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:141
 
 ### POST example
 
-```
+```shell
 curl "https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN" \
   -X POST \
   -H "Accept: application/json" \
   -d '{"fields": ["name"],"ids": ["twitter:14132201","twitter:119837224"]}'
 ```
 
-```
+```json
 {
   "twitter:14132201": {
     "name": "Kenneth Cho"
