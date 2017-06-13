@@ -326,7 +326,7 @@ marketing analytics, and as such characterize US social media culture
 better than other markets.
 </aside>
 
-<h3 id="enrichments-vcard">enrichments.vcard</h3>
+<h3 id="enrichments-demographics">enrichments.demographics</h3>
 
 <table><thead>
 <tr>
@@ -336,23 +336,23 @@ better than other markets.
 </tr>
 </thead><tbody>
 <tr>
-<td><code class="prettyprint">name</code></td>
-<td><a href="#vcard-name">enrichments.vcard.name</a></td>
-<td>name</td>
+<td><code class="prettyprint">birthyear</code></td>
+<td>number</td>
+<td>predicted or stated birth year of the profile.</td>
 </tr>
 <tr>
-<td><code class="prettyprint">email</code></td>
-<td>array of string</td>
-<td>emails</td>
+<td><code class="prettyprint">gender</code></td>
+<td>string</td>
+<td>predicted gender of the profile. see <a href="#gender-values">Gender values</a></td>
 </tr>
 <tr>
-<td><code class="prettyprint">tel</code></td>
-<td>array of string</td>
-<td>telephone numbers</td>
+<td><code class="prettyprint">race</code></td>
+<td>string</td>
+<td>predicted racial identify of the profile. see <a href="#race-values">Race values</a></td>
 </tr>
 </tbody></table>
 
-<h4 id="enrichments-vcard-name">enrichments.vcard.name</h4>
+<h3 id="enrichments-psychographics">enrichments.psychographics</h3>
 
 <table><thead>
 <tr>
@@ -362,19 +362,29 @@ better than other markets.
 </tr>
 </thead><tbody>
 <tr>
-<td><code class="prettyprint">given_name</code></td>
-<td>string</td>
-<td>given or first name</td>
+<td><code class="prettyprint">interests.*</code></td>
+<td>map</td>
+<td>percentage of posts per tagged interests. see <a href="#interests-values">Interest values</a></td>
 </tr>
 <tr>
-<td><code class="prettyprint">family_name</code></td>
-<td>string</td>
-<td>family name, surname or last name</td>
+<td><code class="prettyprint">languages.*</code></td>
+<td>map</td>
+<td>percentage of posts per ISO language code.</td>
 </tr>
 <tr>
-<td><code class="prettyprint">fn</code></td>
-<td>string</td>
-<td>full name for display</td>
+<td><code class="prettyprint">sentiment.*</code></td>
+<td>map</td>
+<td>percentage of posts per sentiment classification. see <a href="#sentiment-values">Sentiment values</a></td>
+</tr>
+<tr>
+<td><code class="prettyprint">top_interests</code></td>
+<td>array[string]</td>
+<td>array of top 20 interests. see <a href="#interests-values">Interestvalues</a></td>
+</tr>
+<tr>
+<td><code class="prettyprint">top_languages</code></td>
+<td>array[string]</td>
+<td>array of top 20 ISO language code.</td>
 </tr>
 </tbody></table>
 
@@ -523,6 +533,58 @@ better than other markets.
 </tr>
 </tbody></table>
 
+<h3 id="enrichments-vcard">enrichments.vcard</h3>
+
+<table><thead>
+<tr>
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">name</code></td>
+<td><a href="#vcard-name">enrichments.vcard.name</a></td>
+<td>name</td>
+</tr>
+<tr>
+<td><code class="prettyprint">email</code></td>
+<td>array of string</td>
+<td>emails</td>
+</tr>
+<tr>
+<td><code class="prettyprint">tel</code></td>
+<td>array of string</td>
+<td>telephone numbers</td>
+</tr>
+</tbody></table>
+
+<h4 id="enrichments-vcard-name">enrichments.vcard.name</h4>
+
+<table><thead>
+<tr>
+<th>field</th>
+<th>type</th>
+<th>description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">given_name</code></td>
+<td>string</td>
+<td>given or first name</td>
+</tr>
+<tr>
+<td><code class="prettyprint">family_name</code></td>
+<td>string</td>
+<td>family name, surname or last name</td>
+</tr>
+<tr>
+<td><code class="prettyprint">fn</code></td>
+<td>string</td>
+<td>full name for display</td>
+</tr>
+</tbody></table>
+
 <h3 id="posts">posts</h3>
 
 <table><thead>
@@ -543,11 +605,6 @@ better than other markets.
 <td>percentage of posts per operating systems. see <a href="#operating-system-values">Operating System values</a></td>
 </tr>
 <tr>
-<td><code class="prettyprint">interests.*</code></td>
-<td>map</td>
-<td>percentage of posts per tagged interests. see <a href="#interests-topic-values">Interest category values</a></td>
-</tr>
-<tr>
 <td><code class="prettyprint">top_domains</code></td>
 <td>array[string]</td>
 <td>array of top 20 domains</td>
@@ -558,9 +615,9 @@ better than other markets.
 <td>array of top 20 hashtags</td>
 </tr>
 <tr>
-<td><code class="prettyprint">top_interests</code></td>
+<td><code class="prettyprint">top_mentions</code></td>
 <td>array[string]</td>
-<td>array of top 20 interests. see <a href="#interests-topic-values">Interest category values</a></td>
+<td>array of top 20 hashtags</td>
 </tr>
 </tbody></table>
 
@@ -585,7 +642,7 @@ better than other markets.
 <li><code class="prettyprint">unknown</code></li>
 </ul>
 
-<h4 id="interest-category-values">Interest category values</h4>
+<h4 id="interest-values">Interest values</h4>
 
 <ul>
 <li><code class="prettyprint">animals</code></li>
@@ -638,6 +695,14 @@ better than other markets.
 <li><code class="prettyprint">toys_and_games</code></li>
 <li><code class="prettyprint">travel</code></li>
 <li><code class="prettyprint">tv</code></li>
+</ul>
+
+<h4 id="sentiment-values">Sentiment values</h4>
+
+<ul>
+<li><code class="prettyprint">positive</code></li>
+<li><code class="prettyprint">negative</code></li>
+<li><code class="prettyprint">neutral</code></li>
 </ul>
 
           <h1 id="lookup-api">Lookup API</h1>
