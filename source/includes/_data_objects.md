@@ -34,11 +34,6 @@ field         | type            | description
 `interestingness` | number          | calculated interestingness score [0-1] of the profile.
 `spam`    | boolean          | flag for extreme posting of spam content.
 
-#### Account Type values
-- `person`
-- `organization`
-- `entertainment`
-
 ### enrichments.demographics
 
 field         | type            | description
@@ -46,21 +41,6 @@ field         | type            | description
 `birthyear`   | number          | predicted or stated birth year of the profile.
 `gender`      | string          | predicted gender of the profile. see [Gender values](#gender-values)
 `race`        | string          | predicted racial identify of the profile. see [Race values](#race-values)
-
-#### Gender values
-
-- `male`
-- `female`
-
-#### Race values
-
-- `white`
-- `black`
-- `east-asian`
-- `south-asian`
-- `hispanic`
-- `middle-eastern`
-- `no-prediction`
 
 <aside class="notice">
 Obviously, the values our predictive models use vastly oversimplify
@@ -72,14 +52,6 @@ variation of the US Census categories commonly used in media and
 marketing analytics, and as such characterize US social media culture
 better than other markets.
 </aside>
-
-### enrichments.demographics
-
-field         | type            | description
---------------|-----------------|------------
-`birthyear`   | number          | predicted or stated birth year of the profile.
-`gender`      | string          | predicted gender of the profile. see [Gender values](#gender-values)
-`race`        | string          | predicted racial identify of the profile. see [Race values](#race-values)
 
 ### enrichments.psychographics
 field         | type            | description
@@ -153,6 +125,26 @@ field           | type            | description
 `top_domains`   | array[string] | array of top 20 domains
 `top_hashtags`  | array[string] | array of top 20 hashtags
 `top_mentions`  | array[string] | array of top 20 hashtags
+
+#### Account Type values
+- `person`
+- `organization`
+- `entertainment`
+
+#### Gender values
+
+- `male`
+- `female`
+
+#### Race values
+
+- `white`
+- `black`
+- `east-asian`
+- `south-asian`
+- `hispanic`
+- `middle-eastern`
+- `no-prediction`
 
 #### Device Type values
 
