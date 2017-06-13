@@ -73,21 +73,22 @@ marketing analytics, and as such characterize US social media culture
 better than other markets.
 </aside>
 
-### enrichments.vcard
+### enrichments.demographics
 
-field           | type            | description
-----------------|-----------------|------------
-`name`          | [enrichments.vcard.name](#vcard-name)  | name
-`email`         | array of string | emails
-`tel`           | array of string | telephone numbers
+field         | type            | description
+--------------|-----------------|------------
+`birthyear`   | number          | predicted or stated birth year of the profile.
+`gender`      | string          | predicted gender of the profile. see [Gender values](#gender-values)
+`race`        | string          | predicted racial identify of the profile. see [Race values](#race-values)
 
-#### enrichments.vcard.name
-
-field           | type            | description
-----------------|-----------------|------------
-`given_name`    | string          | given or first name
-`family_name`   | string          | family name, surname or last name
-`fn`            | string          | full name for display
+### enrichments.psychographics
+field         | type            | description
+--------------|-----------------|------------
+`interests.*`   | map           | percentage of posts per tagged interests. see [Interest values](#interests-values)
+`languages.*`   | map           | percentage of posts per ISO language code.
+`sentiment.*`   | map           | percentage of posts per sentiment classification. see [Sentiment values](#sentiment-values)
+`top_interests` | array[string] | array of top 20 interests. see [Interestvalues](#interests-values)
+`top_languages` | array[string] | array of top 20 ISO language code.
 
 ### enrichments.place
 
@@ -127,16 +128,31 @@ field               | type
 `latitude`          | number
 `longitude`         | number
 
+### enrichments.vcard
+
+field           | type            | description
+----------------|-----------------|------------
+`name`          | [enrichments.vcard.name](#vcard-name)  | name
+`email`         | array of string | emails
+`tel`           | array of string | telephone numbers
+
+#### enrichments.vcard.name
+
+field           | type            | description
+----------------|-----------------|------------
+`given_name`    | string          | given or first name
+`family_name`   | string          | family name, surname or last name
+`fn`            | string          | full name for display
+
 ### posts
 
 field           | type            | description
 ----------------|-----------------|------------
 `devices.*`     | map           | percentage of posts per device type. see [Device Type values](#device-type-values)
 `os.*`          | map           | percentage of posts per operating systems. see [Operating System values](#operating-system-values)
-`interests.*`   | map           | percentage of posts per tagged interests. see [Interest category values](#interests-topic-values)
 `top_domains`   | array[string] | array of top 20 domains
 `top_hashtags`  | array[string] | array of top 20 hashtags
-`top_interests` | array[string] | array of top 20 interests. see [Interest category values](#interests-topic-values)
+`top_mentions`  | array[string] | array of top 20 hashtags
 
 #### Device Type values
 
@@ -155,7 +171,7 @@ field           | type            | description
 - `blackberry`
 - `unknown`
 
-#### Interest category values
+#### Interest values
 
 - `animals`
 - `art`
@@ -207,3 +223,9 @@ field           | type            | description
 - `toys_and_games`
 - `travel`
 - `tv`
+
+#### Sentiment values
+
+- `positive`
+- `negative`
+- `neutral`
