@@ -58,13 +58,20 @@ type                  | schema URL
 ----------------------|-----------
 Execute Response     | [http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json](http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json)
 
+### POST example (json)
 ```shell
 curl -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   "https://api.peoplepattern.com/execute/{job_type}?access_token=$MY_TOKEN" \
   -d '{POST_BODY}'
+```
+```json
+{"execution":"{job_hash}","status":"SUBMITTED"}
+```
 
+### POST example (hocon)
+```shell
 curl -X POST \
   -H "Content-type: application/hocon" \
   -H "Accept: application/json" \
@@ -92,6 +99,7 @@ Estimate Response     | [http://apidocs.peoplepattern.com/schemata/EstimateRespo
 
 The potential errors and warnings returned differ by job type.
 
+### POST example
 ```shell
 curl 'https://api.peoplepattern.com/estimate/{job_type}?access_token=$MY_TOKEN' \
   -X POST \
@@ -121,7 +129,7 @@ The Status endpoint used to check the status of jobs you've already started. To 
 
 ### Resource URI
 
-`/status`
+`/status?execution={job_hash}`
 
 ### Json Schema
 
@@ -130,6 +138,7 @@ type                  | schema URL
 Status Request      | [http://apidocs.peoplepattern.com/schemata/StatusRequest.json](http://apidocs.peoplepattern.com/schemata/StatusRequest.json)
 Status Response     | [http://apidocs.peoplepattern.com/schemata/StatusResponse.json](http://apidocs.peoplepattern.com/schemata/StatusResponse.json)
 
+### GET example
 ```shell
 curl "https://api.peoplepattern.com/status?execution={job_hash}?access_token=$MY_TOKEN" \
   -X GET \
@@ -142,7 +151,6 @@ curl "https://api.peoplepattern.com/status?execution={job_hash}?access_token=$MY
 ```json
 {"execution":"{job_hash}","status":"FINISHED"}
 ```
-`/status?execution={job_hash}`
 
 ## Result
 
@@ -152,6 +160,7 @@ The Result endpoint used to retrieve the results of a job after the `/status` en
 
 `/resources/{job_hash}`
 
+### GET example
 ```shell
 curl 'https://api.peoplepattern.com/resources/{job_hash}?access_token=$MY_TOKEN' \
   -X GET \
@@ -175,13 +184,16 @@ type                  | schema URL
 ----------------------|-----------
 AnalyzePublicProfilesRequest      | [http://apidocs.peoplepattern.com/schemata/AnalyzePublicProfilesRequest.json](http://apidocs.peoplepattern.com/schemata/AnalyzePublicProfilesRequest.json)
 
+### POST example (json)
 ```shell
 curl "https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"ids":["twitter:116679528","twitter:118710202", "twitter:119772680"]}'
-
+```
+### POST example (hocon)
+```shell
 curl "https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/hocon" \
@@ -202,13 +214,17 @@ type                  | schema URL
 AudienceInfluencersReportRequest      | [http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json](http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json)
 AudienceInfluencersReportResult      | [http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json](http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json)
 
+### POST example (json)
 ```shell
 curl "https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
+```
 
+### POST example (hocon)
+```shell
 curl "https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/hocon" \
@@ -229,13 +245,17 @@ type                  | schema URL
 ExternalInfluencersReportRequest      | [http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json](http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json)
 ExternalInfluencersReportResult      | [http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json](http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json)
 
+### POST example (json)
 ```shell
 curl "https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
+```
 
+### POST example (hocon)
+```shell
 curl "https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/hocon" \
@@ -256,17 +276,20 @@ type                  | schema URL
 FollowerBreakdownReportRequest      | [http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json](http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json)
 FollowerBreakdownReportResult      | [http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json](http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json)
 
+### POST example (json)
 ```shell
 curl "https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
+```
 
+### POST example (hocon)
+```shell
 curl "https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=$MY_TOKEN" \
   -X POST \
   -H "Content-type: application/hocon" \
   -H "Accept: application/json" \
   -d 'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'
-
 ```

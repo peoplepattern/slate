@@ -45,7 +45,7 @@ field         | type            | description
 --------------|-----------------|------------
 `birthyear`   | number          | predicted or stated birth year of the profile.
 `gender`      | string          | predicted gender of the profile. see [Gender values](#gender-values)
-`race`        | string          | predicted racial identify of the profile. see [Race Values](#race-values)
+`race`        | string          | predicted racial identify of the profile. see [Race values](#race-values)
 
 #### Gender values
 
@@ -137,6 +137,23 @@ field           | type            | description
 `top_domains`   | array[string] | array of top 20 domains
 `top_hashtags`  | array[string] | array of top 20 hashtags
 `top_interests` | array[string] | array of top 20 interests. see [Interest category values](#interests-topic-values)
+
+#### Device Type values
+
+- `desktop`
+- `tablet`
+- `mobile`
+- `automated`
+- `unknown`
+
+#### Operating System values
+
+- `ios`
+- `android`
+- `windows`
+- `mac`
+- `blackberry`
+- `unknown`
 
 #### Interest category values
 

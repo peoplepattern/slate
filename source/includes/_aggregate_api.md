@@ -1,6 +1,6 @@
 # Aggregate API
 
-The Aggregate API allows you to retrieve aggregate insights from the Portrait database (Pdb) which contains
+The Aggregate API allows you to retrieve aggregate insights from the Portrait database (PDB) which contains
 hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.
 
 Aggregate supports the following services:
@@ -12,19 +12,16 @@ Aggregate supports the following services:
 - `twitter`
 - `youtube`
 
-This endpoint supports both HTTP POST and HTTP GET calls.
-
-
 ## Aggregate Profiles
 
-Get aggregate insights for a set of profiles by submitting their social profile identifiers to the Pdb.  
+Get aggregate insights for a set of profiles by submitting their social profile identifiers to the PDB.  
 Aggregate data is returned for both demographic and psychographic attributes.
 
 ### Resource URI
 
 `/aggregate`
 
-#### Json Schema
+### Json Schema
 
 type                     | schema URL
 -------------------------|-----------
@@ -33,17 +30,69 @@ Aggregate Response       | [http://apidocs.peoplepattern.com/schemata/AggregateR
 
 ### Aggregate profile attributes
 
-Aggregate supports all enum, numeric, date-time, array, and map fields defined on a [Pdb profile](#pdb-profile).
+Aggregate supports all enum, numeric, date-time, array, and map fields defined on a [PDB profile](#pdb-profile).
 
 Note that the fields to aggregate must be requested in flattened format (see below).
 
 Also note that map fields must be requested using syntax like `posts.os.*` and `posts.devices.*`.
 
+### GET Example
 ```shell
 curl -X GET \
   -H "Accept: application/json" \
   "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104"
+```
 
+```json
+{
+	"enrichments.account_type": {
+		"person": 1.0
+	},
+	"enrichments.psychographics.top_interests": {
+		"marketing": 0.06666666666666667,
+		"business": 0.13333333333333333,
+		"current_events": 0.06666666666666667,
+		"major_sports": 0.06666666666666667,
+		"small_business": 0.06666666666666667,
+		"fitness": 0.06666666666666667,
+		"science": 0.13333333333333333,
+		"health_care": 0.06666666666666667,
+		"higher_education": 0.06666666666666667,
+		"reading": 0.06666666666666667,
+		"family": 0.06666666666666667,
+		"computers": 0.13333333333333333
+	},
+	"enrichments.demographics.gender": {
+		"male": 1.0
+	},
+	"enrichments.demographics.race": {
+		"white": 0.6666666666666666,
+		"east-asian": 0.3333333333333333
+	},
+	"posts.os.*": {
+		"blackberry": 0.0,
+		"android": 0.0,
+		"ios": 1.0,
+		"windows": 0.0,
+		"mac": 0.0,
+		"unknown": 0.0
+	},
+	"posts.devices.*": {
+		"tablet": 0.0,
+		"automated": 0.0,
+		"desktop": 0.004219409282700422,
+		"mobile": 0.9957805907172995,
+		"unknown": 0.0
+	},
+	"enrichments.demographics.birthyear": {
+		"1975": 0.5,
+		"1972": 0.5
+	}
+}
+```
+
+### POST Example
+```shell
 curl -X POST "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN" \
   -H "Accept: application/json" \
   -d '{"fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'
@@ -96,57 +145,11 @@ curl -X POST "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN" \
 		"1972": 0.5
 	}
 }
-
-{
-	"enrichments.account_type": {
-		"person": 1.0
-	},
-	"enrichments.psychographics.top_interests": {
-		"marketing": 0.06666666666666667,
-		"business": 0.13333333333333333,
-		"current_events": 0.06666666666666667,
-		"major_sports": 0.06666666666666667,
-		"small_business": 0.06666666666666667,
-		"fitness": 0.06666666666666667,
-		"science": 0.13333333333333333,
-		"health_care": 0.06666666666666667,
-		"higher_education": 0.06666666666666667,
-		"reading": 0.06666666666666667,
-		"family": 0.06666666666666667,
-		"computers": 0.13333333333333333
-	},
-	"enrichments.demographics.gender": {
-		"male": 1.0
-	},
-	"enrichments.demographics.race": {
-		"white": 0.6666666666666666,
-		"east-asian": 0.3333333333333333
-	},
-	"posts.os.*": {
-		"blackberry": 0.0,
-		"android": 0.0,
-		"ios": 1.0,
-		"windows": 0.0,
-		"mac": 0.0,
-		"unknown": 0.0
-	},
-	"posts.devices.*": {
-		"tablet": 0.0,
-		"automated": 0.0,
-		"desktop": 0.004219409282700422,
-		"mobile": 0.9957805907172995,
-		"unknown": 0.0
-	},
-	"enrichments.demographics.birthyear": {
-		"1975": 0.5,
-		"1972": 0.5
-	}
-}
 ```
 
 ## Search/Aggregate Profiles
 
-We also offer aggregation based on search criteria. The `queryString` parameter is the easiest to use, but we also offer a `querySource` parameter which takes structured elasticsearch json data.
+We also offer aggregation based on search criteria. The `queryString` parameter is the easiest to use, but we also provide a way to search with any valid elasticsearch `_search` request.  Reach out to our support team if your search is more complex than you can express using `queryString`.
 
 ### Resource URI
 
@@ -159,14 +162,11 @@ type                     | schema URL
 AggregateSearch Request        | [http://apidocs.peoplepattern.com/schemata/AggregateSearchRequest.json](http://apidocs.peoplepattern.com/schemata/AggregateSearchRequest.json)
 AggregateSearch Response       | [http://apidocs.peoplepattern.com/schemata/AggregateSearchResponse.json](http://apidocs.peoplepattern.com/schemata/AggregateSearchResponse.json)
 
+#### GET Example
 ```shell
 curl -X GET \
   -H "Accept: application/json"
   "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN&fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&queryString=john" \
-
-curl -X POST "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN" \
-  -H "Accept: application/json" \
-  -d '{"queryString":"jill","fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"]}'
 ```
 
 ```json
@@ -248,7 +248,16 @@ curl -X POST "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN" \
 		"1988": 0.03941944871134961
 	}
 }
+```
 
+#### POST Example
+```shell
+curl -X POST "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN" \
+  -H "Accept: application/json" \
+  -d '{"queryString":"jill","fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"]}'
+```
+
+```json
 {
 	"enrichments.account_type": {
 		"entertainment": 1.7386356451918822E-4,

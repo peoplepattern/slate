@@ -15,10 +15,10 @@ includes:
   - introduction
   - data_objects
   - lookup_api
-  - aggregate_api
   - search_api
-  - enrich_api
+  - aggregate_api
   - execute_api
+  - enrich_api
   - stitching_api
   - errors
 
@@ -28,8 +28,8 @@ search: true
 # People Pattern Audience Intelligence API
 
 The People Pattern Audience Intelligence API provides access People Pattern's
-audience intelligence and model predictions as well as our Portrait Database (Pdb).
-You can query the Pdb directly to retrieve portraits with psychographic and demographic attributes pre-appended,
+audience intelligence and model predictions as well as our Portrait Database (PDB).
+You can query the PDB directly to retrieve portraits with psychographic and demographic attributes pre-appended,
 or you can submit profile and post data to the API and get it enriched.  These are the same services and machine
 learning-based models which we use in the
 [People Pattern](http://app.peoplepattern.com) application.
@@ -42,6 +42,6 @@ provides access to resources we've compiled and maintain.
 
 For the [Lookup](#lookup-api), [Search](#search-api), [Stitching](#stitching-api), and
 [Aggregate](#aggregate-api) APIs, the resource accessed is the
-Pdb itself. For the [Enrich API](#enrich-api), the resource
+PDB itself. For the [Enrich API](#enrich-api), the resource
 (or resources) is our predictive models.  The [Execute API](#execute-api) fetches
 data from a variety of sources which differ by job.
