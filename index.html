@@ -705,10 +705,10 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </span></code></pre>
 
 <h3 id="post-example">POST example</h3>
-<pre class="highlight plaintext"><code>curl "https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN" \
-  -X POST \
-  -H "Accept: application/json" \
-  -d '{"fields": ["name"],"ids": ["twitter:14132201","twitter:119837224"]}'
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/lookup?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"fields": ["name"],"ids": ["twitter:14132201","twitter:119837224"]}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"twitter:14132201"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1005,7 +1005,7 @@ hundreds of millions of social profiles with pre-calculated demographic and psyc
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<h3 id="get-example">GET Example</h3>
+<h3 id="post-example">POST Example</h3>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/search?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -X POST <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
@@ -1261,7 +1261,7 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 
 <p><code class="prettyprint">/aggregatesearch</code></p>
 
-<h4 id="json-schema">Json Schema</h4>
+<h3 id="json-schema">Json Schema</h3>
 
 <table><thead>
 <tr>
@@ -1279,7 +1279,7 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 </tr>
 </tbody></table>
 
-<h4 id="get-example">GET Example</h4>
+<h3 id="get-example">GET Example</h3>
 <pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>
   <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&amp;queryString=john"</span> <span class="se">\</span>
@@ -1364,7 +1364,7 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<h4 id="post-example">POST Example</h4>
+<h3 id="post-example">POST Example</h3>
 <pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
   -d <span class="s1">'{"queryString":"jill","fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"]}'</span>
@@ -2437,53 +2437,50 @@ This API does not currently paginate responses, so as a precaution you should av
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
   -d <span class="s1">'{"query":{"name":"Elias Ponvert","location":"Austin, Texas"},"fields":["name", "twitter", "peoplepattern"]}'</span>
 </code></pre>
-
-<p>TODO: rerun this, response format out of date
-<code class="prettyprint">json
-{
-  &quot;hits&quot;: {
-    &quot;hits&quot;: [
-      {
-        &quot;peoplepattern&quot;: {
-          &quot;account_type&quot;: &quot;person&quot;,
-          &quot;birthyear&quot;: 1979,
-          &quot;gender&quot;: &quot;male&quot;,
-          &quot;race&quot;: &quot;white&quot;,
-          &quot;interestingness&quot;: 0.9938160676130328,
-          &quot;ageQuantiles&quot;: [
-            29,
-            29.25,
-            29.5,
-            29.75,
-            30,
-            30.25,
-            30.5,
-            31.303387682248616,
-            32.860457271189546
-          ],
-          &quot;numAgeQuantiles&quot;: 9,
-          &quot;adult&quot;: false,
-          &quot;spam&quot;: false,
-          &quot;version&quot;: &quot;0.10&quot;,
-          &quot;age&quot;: 37
-        },
-        &quot;name&quot;: &quot;elias ponvert&quot;,
-        &quot;twitter&quot;: {
-          &quot;friends_count&quot;: 1233,
-          &quot;listed_count&quot;: &quot;27&quot;,
-          &quot;screen_name&quot;: &quot;eponvert&quot;,
-          &quot;statuses_count&quot;: 857,
-          &quot;favourites_count&quot;: 87,
-          &quot;followers_count&quot;: 417,
-          &quot;verified&quot;: false
-        },
-        &quot;_score&quot;: 10
-      }
-    ],
-    &quot;total&quot;: 1
-  }
-}
-</code></p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"hits"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"peoplepattern"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1979</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9938160676130328</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"ageQuantiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="mi">29</span><span class="p">,</span><span class="w">
+            </span><span class="mf">29.25</span><span class="p">,</span><span class="w">
+            </span><span class="mf">29.5</span><span class="p">,</span><span class="w">
+            </span><span class="mf">29.75</span><span class="p">,</span><span class="w">
+            </span><span class="mi">30</span><span class="p">,</span><span class="w">
+            </span><span class="mf">30.25</span><span class="p">,</span><span class="w">
+            </span><span class="mf">30.5</span><span class="p">,</span><span class="w">
+            </span><span class="mf">31.303387682248616</span><span class="p">,</span><span class="w">
+            </span><span class="mf">32.860457271189546</span><span class="w">
+          </span><span class="p">],</span><span class="w">
+          </span><span class="nt">"numAgeQuantiles"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.10"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"age"</span><span class="p">:</span><span class="w"> </span><span class="mi">37</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"elias ponvert"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1233</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="s2">"27"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"screen_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eponvert"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">857</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">87</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">417</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nt">"_score"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
 <p>You can request that the response you receive be annotated with additional fields for each match found. Those additional fields are:</p>
 
