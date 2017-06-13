@@ -124,8 +124,8 @@
         <h1 id="people-pattern-audience-intelligence-api">People Pattern Audience Intelligence API</h1>
 
 <p>The People Pattern Audience Intelligence API provides access People Pattern&rsquo;s
-audience intelligence and model predictions as well as our Portrait Database (Pdb).
-You can query the Pdb directly to retrieve portraits with psychographic and demographic attributes pre-appended,
+audience intelligence and model predictions as well as our Portrait Database (PDB).
+You can query the PDB directly to retrieve portraits with psychographic and demographic attributes pre-appended,
 or you can submit profile and post data to the API and get it enriched.  These are the same services and machine
 learning-based models which we use in the
 <a href="http://app.peoplepattern.com">People Pattern</a> application.</p>
@@ -138,8 +138,8 @@ provides access to resources we&rsquo;ve compiled and maintain.</p>
 
 <p>For the <a href="#lookup-api">Lookup</a>, <a href="#search-api">Search</a>, <a href="#stitching-api">Stitching</a>, and
 <a href="#aggregate-api">Aggregate</a> APIs, the resource accessed is the
-Pdb itself. For the <a href="#enrich-api">Enrich API</a>, the resource
-(or resources) are our compiled predictive models.  The <a href="#execute-api">Execute API</a> compiles
+PDB itself. For the <a href="#enrich-api">Enrich API</a>, the resource
+(or resources) is our predictive models.  The <a href="#execute-api">Execute API</a> fetches
 data from a variety of sources which differ by job.</p>
 
           <h2 id="base-url">Base URL</h2>
@@ -292,7 +292,7 @@ You must replace <code>$MY_TOKEN</code> with your personal API security token.
 <tr>
 <td><code class="prettyprint">race</code></td>
 <td>string</td>
-<td>predicted racial identify of the profile. see <a href="#race-values">Race Values</a></td>
+<td>predicted racial identify of the profile. see <a href="#race-values">Race values</a></td>
 </tr>
 </tbody></table>
 
@@ -564,6 +564,27 @@ better than other markets.
 </tr>
 </tbody></table>
 
+<h4 id="device-type-values">Device Type values</h4>
+
+<ul>
+<li><code class="prettyprint">desktop</code></li>
+<li><code class="prettyprint">tablet</code></li>
+<li><code class="prettyprint">mobile</code></li>
+<li><code class="prettyprint">automated</code></li>
+<li><code class="prettyprint">unknown</code></li>
+</ul>
+
+<h4 id="operating-system-values">Operating System values</h4>
+
+<ul>
+<li><code class="prettyprint">ios</code></li>
+<li><code class="prettyprint">android</code></li>
+<li><code class="prettyprint">windows</code></li>
+<li><code class="prettyprint">mac</code></li>
+<li><code class="prettyprint">blackberry</code></li>
+<li><code class="prettyprint">unknown</code></li>
+</ul>
+
 <h4 id="interest-category-values">Interest category values</h4>
 
 <ul>
@@ -621,13 +642,13 @@ better than other markets.
 
           <h1 id="lookup-api">Lookup API</h1>
 
-<p>The Lookup API provides access to the Portrait database (Pdb) which contains
+<p>The Lookup API provides access to the Portrait database (PDB) which contains
 hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.<br>
 This endpoint supports both HTTP POST and HTTP GET calls.</p>
 
 <h2 id="profile-lookup">Profile Lookup</h2>
 
-<p>Retrieve one or more profiles from the Pdb by submitting their relevant social profile identifiers.  If found, an enriched profile (referred to as a portrait) will be returned.</p>
+<p>Retrieve one or more profiles from the PDB by submitting their relevant social profile identifiers.  If found, an enriched profile (referred to as a portrait) will be returned.</p>
 
 <p>Lookup supports the following services:</p>
 
@@ -644,6 +665,8 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 
 <p>twitter:12345
   instagram:56789</p>
+
+<p>When looking up a batch of profiles the response will include each submitted social platform identifier, if a profile is not found in the PDB it is left out of the response.</p>
 
 <h3 id="resource-uri">Resource URI</h3>
 
@@ -667,16 +690,9 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </tr>
 </tbody></table>
 
-<h3 id="lookup-a-batch-of-profiles">Lookup a batch of profiles</h3>
-
-<p>When looking up a batch of profiles the response will include each submitted social platform identifier, if a profile is not found in the Pdb it is left out of the response.</p>
+<h3 id="get-example">GET example</h3>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/lookup?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;id=twitter:14132201,twitter:119837224&amp;fields=handle"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>
-
-curl <span class="s2">"https://api.peoplepattern.com/lookup?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"fields": ["name"],"ids": ["twitter:14132201","twitter:119837224"]}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"twitter:14132201"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -686,8 +702,15 @@ curl <span class="s2">"https://api.peoplepattern.com/lookup?access_token=</span>
     </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jasonbaldridge"</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
+</span></code></pre>
 
-</span><span class="p">{</span><span class="w">
+<h3 id="post-example">POST example</h3>
+<pre class="highlight plaintext"><code>curl "https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN" \
+  -X POST \
+  -H "Accept: application/json" \
+  -d '{"fields": ["name"],"ids": ["twitter:14132201","twitter:119837224"]}'
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"twitter:14132201"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Kenneth Cho"</span><span class="w">
   </span><span class="p">},</span><span class="w">
@@ -697,355 +720,9 @@ curl <span class="s2">"https://api.peoplepattern.com/lookup?access_token=</span>
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-          <h1 id="aggregate-api">Aggregate API</h1>
-
-<p>The Aggregate API allows you to retrieve aggregate insights from the Portrait database (Pdb) which contains
-hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.</p>
-
-<p>Aggregate supports the following services:</p>
-
-<ul>
-<li><code class="prettyprint">foursquare</code></li>
-<li><code class="prettyprint">googleplus</code></li>
-<li><code class="prettyprint">instagram</code></li>
-<li><code class="prettyprint">tumblr</code></li>
-<li><code class="prettyprint">twitter</code></li>
-<li><code class="prettyprint">youtube</code></li>
-</ul>
-
-<p>This endpoint supports both HTTP POST and HTTP GET calls.</p>
-
-<h2 id="aggregate-profiles">Aggregate Profiles</h2>
-
-<p>Get aggregate insights for a set of profiles by submitting their social profile identifiers to the Pdb.<br>
-Aggregate data is returned for both demographic and psychographic attributes.</p>
-
-<h3 id="resource-uri">Resource URI</h3>
-
-<p><code class="prettyprint">/aggregate</code></p>
-
-<h4 id="json-schema">Json Schema</h4>
-
-<table><thead>
-<tr>
-<th>type</th>
-<th>schema URL</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>Aggregate Request</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/AggregateRequest.json">http://apidocs.peoplepattern.com/schemata/AggregateRequest.json</a></td>
-</tr>
-<tr>
-<td>Aggregate Response</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/AggregateResponse.json">http://apidocs.peoplepattern.com/schemata/AggregateResponse.json</a></td>
-</tr>
-</tbody></table>
-
-<h3 id="aggregate-profile-attributes">Aggregate profile attributes</h3>
-
-<p>Aggregate supports all enum, numeric, date-time, array, and map fields defined on a <a href="#pdb-profile">Pdb profile</a>.</p>
-
-<p>Note that the fields to aggregate must be requested in flattened format (see below).</p>
-
-<p>Also note that map fields must be requested using syntax like <code class="prettyprint">posts.os.*</code> and <code class="prettyprint">posts.devices.*</code>.</p>
-<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&amp;ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104"</span>
-
-curl -X POST <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'</span>
-
-</code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"marketing"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"small_business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"fitness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6666666666666666</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004219409282700422</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9957805907172995</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"1975"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1972"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-
-</span><span class="p">{</span><span class="w">
-    </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"marketing"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"small_business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"fitness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6666666666666666</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004219409282700422</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9957805907172995</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"1975"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1972"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<h2 id="search-aggregate-profiles">Search/Aggregate Profiles</h2>
-
-<p>We also offer aggregation based on search criteria.  </p>
-
-<h3 id="resource-uri">Resource URI</h3>
-
-<p><code class="prettyprint">/aggregatesearch</code></p>
-
-<h4 id="json-schema">Json Schema</h4>
-
-<table><thead>
-<tr>
-<th>type</th>
-<th>schema URL</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>AggregateSearch Request</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/AggregateSearchRequest.json">http://apidocs.peoplepattern.com/schemata/AggregateSearchRequest.json</a></td>
-</tr>
-<tr>
-<td>AggregateSearch Response</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/AggregateSearchResponse.json">http://apidocs.peoplepattern.com/schemata/AggregateSearchResponse.json</a></td>
-</tr>
-</tbody></table>
-<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>
-  <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&amp;queryString=john"</span> <span class="se">\</span>
-
-curl -X POST <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"queryString":"jill","fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"]}'</span>
-</code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"entertainment"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.8391506376973333E-4</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9947953288076048</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.005020756128625441</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"politics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.035818697462143584</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"other_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03053666076128402</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"gaming"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02761313182126375</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023741825419391526</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.037120068823224925</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.030066417328288242</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.025108812143216464</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02272478729686577</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02682574746834059</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"religion"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04243855850338648</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02148538600059783</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"humor"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0640369487398205</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"music"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03406895445564766</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06896174624352049</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"school_life"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.038760452891814845</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"animals"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.020428249600839877</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.056301626531936454</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.026927815810386183</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"automotive"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024911966054985673</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"finance"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02719027726136057</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"female"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.011415977072219231</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9885840229277808</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"middle-eastern"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.807261232695993E-4</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8984420511505714</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"south-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.001572390829180588</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"hispanic"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.051822366894438865</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"black"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.034495236580723364</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.013387228421816152</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02681955952155928</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3538655259396014</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6097575035076012</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">9.160855311759634E-4</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003519898918088746</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.005121426581973373</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.054544731549693456</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003470887228310001</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0428197705361852</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8949874598895574</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004177150796253883</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"1990"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.021262022202317505</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1987"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.049928869902849664</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1986"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06093680972395037</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1997"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02167137489816845</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1985"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06690282129120378</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1996"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03187276831853314</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1984"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0660516919235929</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1995"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.033445331150118954</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1983"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05902784814230883</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1994"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.028342607941442298</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1982"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04858732789961537</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1993"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023130453814072815</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1981"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.037976581783399736</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1992"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01916662275919929</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1980"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.028820861586099842</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1991"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018692422111530372</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1979"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.021675427895157074</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1968"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018218221463861452</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1989"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.027896778272693743</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1988"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03941944871134961</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-
-</span><span class="p">{</span><span class="w">
-    </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"entertainment"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.7386356451918822E-4</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9961275842447999</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003698552190680913</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"politics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023585975416156393</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.026942441148455572</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.027169229373610923</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.021182020229509685</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"beauty"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018914137977956186</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.025853857667709892</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.020547013199074704</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.041683675783553316</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"religion"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.042908332199392205</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.022542749580441782</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"humor"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0752483331065451</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"music"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02848460107951195</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03356465732299179</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"charity"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02558171179752347</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024402413026715652</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"school_life"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06327391481834263</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"animals"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0386900712115027</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.09184923118791673</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02957318456025763</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"parenting"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024629201251871003</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"female"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9968667493717593</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003133250628240608</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"middle-eastern"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.677214142565592E-5</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9725128242843222</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"south-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.1256320211807534E-4</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"hispanic"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01000202246777841</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"black"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.009781389619224475</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.007354428285131185</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.015055618724203267</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.21980291455853063</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7600062143666229</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.383875793916797E-5</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.5016552631090994E-4</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004741248066393187</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06077353367721411</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004644188990242093</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03712638231824077</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8936350940424981</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0038208009718047322</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"1987"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.028461114175399888</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1976"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.014120242691671264</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1986"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04569773855488141</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1985"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.08066740209597352</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1984"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.11265857694429122</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1983"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.115857694429123</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1972"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.015747380033094317</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1982"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.10157198014340872</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1971"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0163265306122449</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1981"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0753723110865968</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1970"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017539988968560398</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1980"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.050082735797021515</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1969"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.019332597904026475</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1979"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03143960286817429</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1968"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017402095973524545</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1978"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023965802537231108</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1967"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01643684500827358</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1977"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0197738554881412</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1988"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01693325979040265</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"1966"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0151130722559294</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
           <h1 id="search-api">Search API</h1>
 
-<p>The Search API allows you to search the Portrait database (Pdb) which contains
+<p>The Search API allows you to search the Portrait database (PDB) which contains
 hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.  </p>
 
 <p>Search supports the following services:</p>
@@ -1068,13 +745,17 @@ hundreds of millions of social profiles with pre-calculated demographic and psyc
 
 <h2 id="profile-search">Profile Search</h2>
 
-<p>Search the Pdb by defining a search string using specific demographic and psychographic criteria.  This will return 0 or more profiles that match the submitted criteria.  The search syntax is based on <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a></p>
+<p>Search the PDB by defining a search string using specific demographic and psychographic criteria.  This will return 0 or more profiles that match the submitted criteria.  The search syntax is based on <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a></p>
+
+<p>The <code class="prettyprint">queryString</code> parameter is the easiest to use, but we also provide a way to search with any valid elasticsearch <code class="prettyprint">_search</code> request.  Reach out to our support team if your search is more complex than you can express using <code class="prettyprint">queryString</code>.</p>
+
+<p>The search results will include all enrichments and predictions for each profile returned.  The available enriched set of fields may not be the same across all profiles.</p>
 
 <h3 id="resource-uri">Resource URI</h3>
 
 <p><code class="prettyprint">/search</code></p>
 
-<h4 id="json-schema">Json Schema</h4>
+<h3 id="json-schema">Json Schema</h3>
 
 <table><thead>
 <tr>
@@ -1092,7 +773,7 @@ hundreds of millions of social profiles with pre-calculated demographic and psyc
 </tr>
 </tbody></table>
 
-<h4 id="parameters">PARAMETERS</h4>
+<h3 id="get-parameters">GET Parameters</h3>
 
 <table><thead>
 <tr>
@@ -1109,7 +790,7 @@ hundreds of millions of social profiles with pre-calculated demographic and psyc
 <tr>
 <td><code class="prettyprint">fields</code></td>
 <td>No</td>
-<td>an array of <a href="#pdb-fields">Pdb fields</a> to be returned for each discovered profile.  Not including this parameter will return all fields.</td>
+<td>an array of <a href="#pdb-fields">PDB fields</a> to be returned for each discovered profile.  Not including this parameter will return all fields.</td>
 </tr>
 <tr>
 <td><code class="prettyprint">limit</code></td>
@@ -1124,7 +805,7 @@ hundreds of millions of social profiles with pre-calculated demographic and psyc
 <tr>
 <td><code class="prettyprint">sortField</code></td>
 <td>No</td>
-<td>a numeric <a href="#pdb-fields">Pdb field</a> to be used to sort</td>
+<td>a numeric <a href="#pdb-fields">PDB field</a> to be used to sort</td>
 </tr>
 <tr>
 <td><code class="prettyprint">sortOrder</code></td>
@@ -1133,20 +814,14 @@ hundreds of millions of social profiles with pre-calculated demographic and psyc
 </tr>
 </tbody></table>
 
-<p>The search results will include all enrichments and predictions for each profile returned.  The available enriched set of fields may not be the same across all profiles.</p>
-
-<h3 id="search-for-profiles">Search for profiles</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/search?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;queryString=joe&amp;limit=5"</span> <span class="se">\</span>
+<h3 id="get-example">GET Example</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/search?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;queryString=joe&amp;limit=2"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span>
-
-curl <span class="s2">"https://api.peoplepattern.com/search?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"queryString":"john", "limit":"5"}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"totalItems"</span><span class="p">:</span><span class="w"> </span><span class="mi">55659</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+    </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
         </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.11.0/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Jordyn Derham"</span><span class="p">,</span><span class="w">
@@ -1193,54 +868,6 @@ curl <span class="s2">"https://api.peoplepattern.com/search?access_token=</span>
         </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"posts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">11112</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.11.0/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mimi ☺"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"handle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"karlaperazal"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cheer; my first true love❤"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3578</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1156</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1224</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">22165</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"female"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"psychographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mimi"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Peraza"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mimi Peraza"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7487148062153075</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.11.3.1-RC2"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"influence"</span><span class="p">:</span><span class="w"> </span><span class="mi">39</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:307534922"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/550208318103642113/-5yGhgR3_normal.jpeg"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤Joe Luque❤"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2011-05-29T20:24:52.000Z"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"service_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"307534922"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"es"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"posts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">22165</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.11.0/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
@@ -1373,239 +1000,21 @@ curl <span class="s2">"https://api.peoplepattern.com/search?access_token=</span>
             </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">708</span><span class="p">,</span><span class="w">
             </span><span class="nt">"top_mentions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"twitter:960481315"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:122302784"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:14120151"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:2166412230"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:2576461322"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:15092616"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:3746042353"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:71983360"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:106915372"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:14511951"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:326380075"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:335942140"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:347258974"</span><span class="p">,</span><span class="w"> </span><span class="s2">"twitter:871351657"</span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.11.0/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"super Joe kelly"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"handle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SuPeRJoEKeLlY"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">58</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">136</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1983</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"age"</span><span class="p">:</span><span class="w"> </span><span class="mi">34</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"psychographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Kelly"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Super Kelly"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7677059520465661</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.11.3.1-RC2"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"influence"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:1330050266"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/3481688817/5617b0cf08dfa4706b7d6dad040e7f69_normal.jpeg"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe joe super joe,Joe joe super joe kelly"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2013-04-05T20:43:03.000Z"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"service_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1330050266"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"posts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.11.0/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe McElderry Page"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"handle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JMcElderryFPage"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">125</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">39</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1963</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"age"</span><span class="p">:</span><span class="w"> </span><span class="mi">54</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"psychographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Page"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Page"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7668147231688995</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.11.3.1-RC2"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"influence"</span><span class="p">:</span><span class="w"> </span><span class="mi">21</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:413240858"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/1640600800/Joe_McElderry_Celebrities_Front_Row_Day_Six_dMI-qs2-TAMl_normal.jpg"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe McElderry Joe McElderry Joe McElderry Joe McElderry Joe McElderry Joe McElderry Joe McElderry Joe McElderry x"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2011-11-15T17:02:50.000Z"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"service_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"413240858"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"posts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">39</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.11.0/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stuff"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"handle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe-photo"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tumblr"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-        </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"psychographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stuff"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Stuff"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7495088055987297</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.11.3.1-RC2"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tumblr:joe-photo"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://api.tumblr.com/v2/blog/joe-photo.tumblr.com/avatar"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://joe-photo.tumblr.com/"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-12-07T19:29:21.785Z"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"service_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe-photo"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"posts"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
-    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.11.0/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joseph Gallagher"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"handle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gallagherisgood"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1491</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">288</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">329</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2257</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"birthyear"</span><span class="p">:</span><span class="w"> </span><span class="mi">1984</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"race"</span><span class="p">:</span><span class="w"> </span><span class="s2">"white"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"gender"</span><span class="p">:</span><span class="w"> </span><span class="s2">"male"</span><span class="p">,</span><span class="w">
-                </span><span class="nt">"age"</span><span class="p">:</span><span class="w"> </span><span class="mi">33</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"psychographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joseph"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Gallagher"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joseph Gallagher"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9003294839947167</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.11.3.1-RC2"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"influence"</span><span class="p">:</span><span class="w"> </span><span class="mi">29</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:929149687"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/2813686105/8f15f431b88ea758cbdcf00150b8bed2_normal.jpeg"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joe Gallagher doesn't do what Joe Gallagher does for Joe Gallagher. Joe Gallagher does what Joe Gallagher does because he is Joe Gallagher."</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-11-06T06:39:18.000Z"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"service_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"929149687"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"posts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">2257</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.11.0/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joena"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"handle"</span><span class="p">:</span><span class="w"> </span><span class="s2">"johantilberry"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"provider"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"twitter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"favourites_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"followers_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"friends_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"listed_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"statuses_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"verified"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"enrichments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"account_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"person"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"spam"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"adult"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"demographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="nt">"psychographics"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-            </span><span class="nt">"vcard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-                    </span><span class="nt">"given_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joena"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"family_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Berry"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"fn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Joena Berry"</span><span class="w">
-                </span><span class="p">}</span><span class="w">
-            </span><span class="p">},</span><span class="w">
-            </span><span class="nt">"interestingness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.49993866618341076</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.11.3.1-RC2"</span><span class="p">,</span><span class="w">
-            </span><span class="nt">"influence"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"twitter:2874358820"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"image"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://pbs.twimg.com/profile_images/525458130075803648/pFIg7gLY_normal.jpeg"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe joe joe"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2014-10-24T01:25:17.000Z"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"service_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2874358820"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"lang"</span><span class="p">:</span><span class="w"> </span><span class="s2">"en"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"posts"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nt">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="get-example">GET Example</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/search?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"queryString":"john", "limit":"2","random":"true"}'</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"totalItems"</span><span class="p">:</span><span class="w"> </span><span class="mi">55659</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
         </span><span class="nt">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://streams.peoplepattern.com.s3-website-us-east-1.amazonaws.com/streams-internal/0.11.0/pdb-pojo/pdb-profile.json"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe-joint"</span><span class="p">,</span><span class="w">
@@ -1683,9 +1092,707 @@ curl <span class="s2">"https://api.peoplepattern.com/search?access_token=</span>
         </span><span class="nt">"published"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2014-09-02T00:06:17.338Z"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"service_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"joe-wagner"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"posts"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
-    </span><span class="p">}]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+
+          <h1 id="aggregate-api">Aggregate API</h1>
+
+<p>The Aggregate API allows you to retrieve aggregate insights from the Portrait database (PDB) which contains
+hundreds of millions of social profiles with pre-calculated demographic and psychographic attributes appended to each.</p>
+
+<p>Aggregate supports the following services:</p>
+
+<ul>
+<li><code class="prettyprint">foursquare</code></li>
+<li><code class="prettyprint">googleplus</code></li>
+<li><code class="prettyprint">instagram</code></li>
+<li><code class="prettyprint">tumblr</code></li>
+<li><code class="prettyprint">twitter</code></li>
+<li><code class="prettyprint">youtube</code></li>
+</ul>
+
+<h2 id="aggregate-profiles">Aggregate Profiles</h2>
+
+<p>Get aggregate insights for a set of profiles by submitting their social profile identifiers to the PDB.<br>
+Aggregate data is returned for both demographic and psychographic attributes.</p>
+
+<h3 id="resource-uri">Resource URI</h3>
+
+<p><code class="prettyprint">/aggregate</code></p>
+
+<h3 id="json-schema">Json Schema</h3>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Aggregate Request</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AggregateRequest.json">http://apidocs.peoplepattern.com/schemata/AggregateRequest.json</a></td>
+</tr>
+<tr>
+<td>Aggregate Response</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AggregateResponse.json">http://apidocs.peoplepattern.com/schemata/AggregateResponse.json</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="aggregate-profile-attributes">Aggregate profile attributes</h3>
+
+<p>Aggregate supports all enum, numeric, date-time, array, and map fields defined on a <a href="#pdb-profile">PDB profile</a>.</p>
+
+<p>Note that the fields to aggregate must be requested in flattened format (see below).</p>
+
+<p>Also note that map fields must be requested using syntax like <code class="prettyprint">posts.os.*</code> and <code class="prettyprint">posts.devices.*</code>.</p>
+
+<h3 id="get-example">GET Example</h3>
+<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&amp;ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104"</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"marketing"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"small_business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"fitness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6666666666666666</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004219409282700422</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9957805907172995</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"1975"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1972"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="post-example">POST Example</h3>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'</span>
+
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"marketing"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"small_business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"fitness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6666666666666666</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004219409282700422</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9957805907172995</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"1975"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1972"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h2 id="search-aggregate-profiles">Search/Aggregate Profiles</h2>
+
+<p>We also offer aggregation based on search criteria. The <code class="prettyprint">queryString</code> parameter is the easiest to use, but we also provide a way to search with any valid elasticsearch <code class="prettyprint">_search</code> request.  Reach out to our support team if your search is more complex than you can express using <code class="prettyprint">queryString</code>.</p>
+
+<h3 id="resource-uri">Resource URI</h3>
+
+<p><code class="prettyprint">/aggregatesearch</code></p>
+
+<h4 id="json-schema">Json Schema</h4>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>AggregateSearch Request</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AggregateSearchRequest.json">http://apidocs.peoplepattern.com/schemata/AggregateSearchRequest.json</a></td>
+</tr>
+<tr>
+<td>AggregateSearch Response</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AggregateSearchResponse.json">http://apidocs.peoplepattern.com/schemata/AggregateSearchResponse.json</a></td>
+</tr>
+</tbody></table>
+
+<h4 id="get-example">GET Example</h4>
+<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>
+  <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&amp;queryString=john"</span> <span class="se">\</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"entertainment"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.8391506376973333E-4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9947953288076048</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.005020756128625441</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"politics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.035818697462143584</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"other_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03053666076128402</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"gaming"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02761313182126375</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023741825419391526</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.037120068823224925</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.030066417328288242</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.025108812143216464</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02272478729686577</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02682574746834059</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"religion"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04243855850338648</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02148538600059783</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"humor"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0640369487398205</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"music"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03406895445564766</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06896174624352049</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"school_life"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.038760452891814845</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"animals"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.020428249600839877</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.056301626531936454</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.026927815810386183</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"automotive"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024911966054985673</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"finance"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02719027726136057</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"female"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.011415977072219231</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9885840229277808</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"middle-eastern"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.807261232695993E-4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8984420511505714</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"south-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.001572390829180588</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"hispanic"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.051822366894438865</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"black"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.034495236580723364</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.013387228421816152</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02681955952155928</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3538655259396014</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6097575035076012</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">9.160855311759634E-4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003519898918088746</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.005121426581973373</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.054544731549693456</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003470887228310001</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0428197705361852</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8949874598895574</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004177150796253883</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"1990"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.021262022202317505</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1987"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.049928869902849664</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1986"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06093680972395037</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1997"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02167137489816845</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1985"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06690282129120378</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1996"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03187276831853314</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1984"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0660516919235929</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1995"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.033445331150118954</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1983"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05902784814230883</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1994"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.028342607941442298</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1982"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04858732789961537</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1993"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023130453814072815</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1981"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.037976581783399736</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1992"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01916662275919929</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1980"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.028820861586099842</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1991"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018692422111530372</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1979"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.021675427895157074</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1968"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018218221463861452</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1989"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.027896778272693743</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1988"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03941944871134961</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h4 id="post-example">POST Example</h4>
+<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"queryString":"jill","fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"]}'</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"entertainment"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.7386356451918822E-4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9961275842447999</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003698552190680913</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"politics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023585975416156393</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.026942441148455572</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.027169229373610923</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.021182020229509685</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"beauty"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018914137977956186</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.025853857667709892</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.020547013199074704</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.041683675783553316</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"religion"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.042908332199392205</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.022542749580441782</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"humor"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0752483331065451</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"music"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02848460107951195</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03356465732299179</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"charity"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02558171179752347</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024402413026715652</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"school_life"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06327391481834263</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"animals"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0386900712115027</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.09184923118791673</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02957318456025763</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"parenting"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024629201251871003</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"female"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9968667493717593</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003133250628240608</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"middle-eastern"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.677214142565592E-5</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9725128242843222</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"south-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.1256320211807534E-4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"hispanic"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01000202246777841</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"black"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.009781389619224475</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.007354428285131185</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.015055618724203267</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.21980291455853063</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7600062143666229</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.383875793916797E-5</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.5016552631090994E-4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004741248066393187</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06077353367721411</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004644188990242093</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03712638231824077</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8936350940424981</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0038208009718047322</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"1987"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.028461114175399888</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1976"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.014120242691671264</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1986"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04569773855488141</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1985"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.08066740209597352</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1984"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.11265857694429122</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1983"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.115857694429123</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1972"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.015747380033094317</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1982"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.10157198014340872</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1971"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0163265306122449</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1981"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0753723110865968</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1970"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017539988968560398</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1980"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.050082735797021515</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1969"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.019332597904026475</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1979"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03143960286817429</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1968"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.017402095973524545</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1978"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023965802537231108</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1967"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01643684500827358</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1977"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0197738554881412</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1988"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01693325979040265</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"1966"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0151130722559294</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+          <h1 id="execute-api">Execute API</h1>
+
+<p>The Execute API allows for programmatic, real-time access to some of People Pattern’s most computationally heavy analytics processes.</p>
+
+<p>Execute supports the following services:</p>
+
+<ul>
+<li><code class="prettyprint">twitter</code></li>
+</ul>
+
+<p>The following endpoints are used to interact with the Execute API.</p>
+
+<ul>
+<li><p><code class="prettyprint">/estimate/{job_type}</code></p></li>
+<li><p><code class="prettyprint">/execute/{job_type}</code></p></li>
+<li><p><code class="prettyprint">/status?execution={job_hash}</code></p></li>
+<li><p><code class="prettyprint">/stop?execution={job_hash}</code></p></li>
+<li><p><code class="prettyprint">/resources/{job_hash}/result.json</code></p></li>
+</ul>
+
+<h2 id="workflow">Workflow</h2>
+
+<p>The basic workflow is this:</p>
+
+<ol>
+<li><p>Validate a job request using the <code class="prettyprint">/estimate</code> endpoint.</p></li>
+<li><p>Kick off a job using the <code class="prettyprint">/execute</code> endpoint.</p></li>
+<li><p>Using the job hash that the above step returns, periodically check the status of your job using the <code class="prettyprint">/status</code> endpoint.</p></li>
+<li><p>When the status endpoint reports that your job has finished, retrieve the resulting JSON using the <code class="prettyprint">/resources</code> endpoint.</p></li>
+</ol>
+
+<h2 id="execute">Execute</h2>
+
+<p>This is the endpoint used to kick off jobs. To start a job, send an HTTP POST request to this endpoint, specifying one of the service_type values enumerated below. You&rsquo;ll need the following headers in your HTTP request:</p>
+
+<p><code class="prettyprint">Accept: application/json</code></p>
+
+<p>If the body of your POST request is a JSON file:</p>
+
+<p><code class="prettyprint">Content-Type: application/json</code></p>
+
+<p>Or, if the body of your POST request is a CONF file:</p>
+
+<p><code class="prettyprint">Content-Type: application/hocon</code></p>
+
+<aside class="notice">
+For examples of the POST_BODY see the different Jobs currently available for the Execute API.
+</aside>
+
+<h3 id="resource-uri">Resource URI</h3>
+
+<p><code class="prettyprint">/execute/{job_type}</code></p>
+
+<h3 id="json-schema">Json Schema</h3>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Execute Response</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json">http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="post-example-json">POST example (json)</h3>
+<pre class="highlight shell"><code>curl -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -d <span class="s1">'{POST_BODY}'</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"SUBMITTED"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="post-example-hocon">POST example (hocon)</h3>
+<pre class="highlight shell"><code>curl -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -d <span class="s1">'{POST_BODY}'</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"SUBMITTED"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h2 id="estimate">Estimate</h2>
+
+<p>Estimate determines whether a job request is valid, and estimates how long the job will take to begin and then to complete execution.</p>
+
+<h3 id="resource-uri">Resource URI</h3>
+
+<p><code class="prettyprint">/estimate</code></p>
+
+<h3 id="json-schema">Json Schema</h3>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Estimate Request</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/EstimateRequest.json">http://apidocs.peoplepattern.com/schemata/EstimateRequest.json</a></td>
+</tr>
+<tr>
+<td>Estimate Response</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/EstimateResponse.json">http://apidocs.peoplepattern.com/schemata/EstimateResponse.json</a></td>
+</tr>
+</tbody></table>
+
+<p>The potential errors and warnings returned differ by job type.</p>
+
+<h3 id="post-example">POST example</h3>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/estimate/{job_type}?access_token=$MY_TOKEN'</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: {application/json} OR {application/hocon}"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{POST_BODY}'</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"runMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">,</span><span class="w"> </span><span class="nt">"waitMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"errors"</span><span class="p">:[</span><span class="s2">"Invalid job type"</span><span class="p">]}</span><span class="w">
+</span></code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"errors"</span><span class="p">:[</span><span class="s2">"Maximum of 1000 ids may be provided"</span><span class="p">]}</span><span class="w">
+</span></code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"runMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">,</span><span class="w"> </span><span class="nt">"waitMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">,</span><span class="w"> </span><span class="nt">"warnings"</span><span class="p">:[</span><span class="s2">"At least 50 ids must be provided"</span><span class="p">]}</span><span class="w">
+</span></code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"errors"</span><span class="p">:[</span><span class="s2">"A list of ids must be present"</span><span class="p">]}</span><span class="w">
+</span></code></pre>
+
+<h2 id="status">Status</h2>
+
+<p>The Status endpoint used to check the status of jobs you&rsquo;ve already started. To check job status, send an HTTP GET request to this endpoint specifying your job hash from the <code class="prettyprint">/execute</code> endpoint as a URL parameter.</p>
+
+<h3 id="resource-uri">Resource URI</h3>
+
+<p><code class="prettyprint">/status?execution={job_hash}</code></p>
+
+<h3 id="json-schema">Json Schema</h3>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>Status Request</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/StatusRequest.json">http://apidocs.peoplepattern.com/schemata/StatusRequest.json</a></td>
+</tr>
+<tr>
+<td>Status Response</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/StatusResponse.json">http://apidocs.peoplepattern.com/schemata/StatusResponse.json</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="get-example">GET example</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/status?execution={job_hash}?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X GET <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"RUNNING"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"FINISHED"</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h2 id="result">Result</h2>
+
+<p>The Result endpoint used to retrieve the results of a job after the <code class="prettyprint">/status</code> endpoint indicates that it has finished executing. To retrieve these results, send an HTTP GET request to this endpoint, specifying your job hash. Note that calling this endpoint for a job which has not yet finished will result in an empty response body. The content of an appropriate response will depend on which kind of job is being executed, but will always be in JSON form.</p>
+
+<h3 id="resource-uri">Resource URI</h3>
+
+<p><code class="prettyprint">/resources/{job_hash}</code></p>
+
+<h3 id="get-example">GET example</h3>
+<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/resources/{job_hash}?access_token=$MY_TOKEN'</span> <span class="se">\</span>
+  -X GET <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span>
+</code></pre>
+
+<h2 id="jobs">Jobs</h2>
+
+<p>The jobs listed here represent the current set of reports or analysis the supported by the execute API.</p>
+
+<h3 id="analyze-public-profiles">Analyze Public Profiles</h3>
+
+<p>To run the Analyze Public Profiles stream for one or more users, make an HTTP POST request to the <a href="#resource-uri-analyze-public-profiles">Analyze Public Profiles endpoint</a>.</p>
+
+<p><code class="prettyprint">/AnalyzePublicProfiles</code></p>
+
+<h4 id="json-schema">Json Schema</h4>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>AnalyzePublicProfilesRequest</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AnalyzePublicProfilesRequest.json">http://apidocs.peoplepattern.com/schemata/AnalyzePublicProfilesRequest.json</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="post-example-json">POST example (json)</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"ids":["twitter:116679528","twitter:118710202", "twitter:119772680"]}'</span>
+</code></pre>
+
+<h3 id="post-example-hocon">POST example (hocon)</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
+</code></pre>
+
+<h3 id="audience-influencers">Audience Influencers</h3>
+
+<p>To get an Audience Influencers report for one or more users, make an HTTP POST request to the <a href="#resource-uri-audience-influencers">Audience Influencers endpoint</a>.</p>
+
+<p><code class="prettyprint">/AudienceInfluencers</code></p>
+
+<h4 id="json-schema">Json Schema</h4>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>AudienceInfluencersReportRequest</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json">http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json</a></td>
+</tr>
+<tr>
+<td>AudienceInfluencersReportResult</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json">http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="post-example-json">POST example (json)</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
+</code></pre>
+
+<h3 id="post-example-hocon">POST example (hocon)</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
+</code></pre>
+
+<h3 id="external-influencers">External Influencers</h3>
+
+<p>To get an External Influencers report for one or more users, make an HTTP POST request to the <a href="#resource-uri-external-influencers">External Influencers endpoint</a>.</p>
+
+<p><code class="prettyprint">/ExternalInfluencers</code></p>
+
+<h4 id="json-schema">Json Schema</h4>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>ExternalInfluencersReportRequest</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json">http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json</a></td>
+</tr>
+<tr>
+<td>ExternalInfluencersReportResult</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json">http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="post-example-json">POST example (json)</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
+</code></pre>
+
+<h3 id="post-example-hocon">POST example (hocon)</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
+</code></pre>
+
+<h3 id="follower-breakdown">Follower Breakdown</h3>
+
+<p>To get a follower breakdown for one or more users, make an HTTP POST request to the <a href="#resource-uri-follower-breakdown">Follower Breakdown endpoint</a>.</p>
+
+<p><code class="prettyprint">/FollowerBreakdown</code></p>
+
+<h4 id="json-schema">Json Schema</h4>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>FollowerBreakdownReportRequest</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json">http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json</a></td>
+</tr>
+<tr>
+<td>FollowerBreakdownReportResult</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json">http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="post-example-json">POST example (json)</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
+</code></pre>
+
+<h3 id="post-example-hocon">POST example (hocon)</h3>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -X POST <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
+</code></pre>
 
           <h1 id="enrich-api">Enrich API</h1>
 
@@ -2169,326 +2276,6 @@ Here we have displayed what a same error response would look like from the Enric
   -d <span class="s1">'[{}]'</span>
 
 <span class="o">[{</span><span class="s2">"status"</span>:<span class="s2">"error"</span>,<span class="s2">"code"</span>:400,<span class="s2">"error"</span>:<span class="o">{</span><span class="s2">"input"</span>:<span class="o">{}</span>,<span class="s2">"message"</span>:<span class="s2">"No valid fields provided for profile content"</span><span class="o">}}]</span>
-</code></pre>
-
-          <h1 id="execute-api">Execute API</h1>
-
-<p>The Execute API allows for programmatic, real-time access to some of People Pattern’s most computationally heavy analytics processes.</p>
-
-<p>Execute supports the following services:</p>
-
-<ul>
-<li><code class="prettyprint">twitter</code></li>
-</ul>
-
-<p>The following endpoints are used to interact with the Execute API.</p>
-
-<ul>
-<li><p><code class="prettyprint">/estimate/{job_type}</code></p></li>
-<li><p><code class="prettyprint">/execute/{job_type}</code></p></li>
-<li><p><code class="prettyprint">/status?execution={job_hash}</code></p></li>
-<li><p><code class="prettyprint">/stop?execution={job_hash}</code></p></li>
-<li><p><code class="prettyprint">/resources/{job_hash}/result.json</code></p></li>
-</ul>
-
-<h2 id="workflow">Workflow</h2>
-
-<p>The basic workflow is this:</p>
-
-<ol>
-<li><p>Validate a job request using the <code class="prettyprint">/estimate</code> endpoint.</p></li>
-<li><p>Kick off a job using the <code class="prettyprint">/execute</code> endpoint.</p></li>
-<li><p>Using the job hash that the above step returns, periodically check the status of your job using the <code class="prettyprint">/status</code> endpoint.</p></li>
-<li><p>When the status endpoint reports that your job has finished, retrieve the resulting JSON using the <code class="prettyprint">/resources</code> endpoint.</p></li>
-</ol>
-
-<h2 id="execute">Execute</h2>
-
-<p>This is the endpoint used to kick off jobs. To start a job, send an HTTP POST request to this endpoint, specifying one of the service_type values enumerated below. You&rsquo;ll need the following headers in your HTTP request:</p>
-
-<p><code class="prettyprint">Accept: application/json</code></p>
-
-<p>If the body of your POST request is a JSON file:</p>
-
-<p><code class="prettyprint">Content-Type: application/json</code></p>
-
-<p>Or, if the body of your POST request is a CONF file:</p>
-
-<p><code class="prettyprint">Content-Type: application/hocon</code></p>
-
-<aside class="notice">
-For examples of the POST_BODY see the different Jobs currently available for the Execute API.
-</aside>
-
-<h3 id="resource-uri">Resource URI</h3>
-
-<p><code class="prettyprint">/execute/{job_type}</code></p>
-
-<h3 id="json-schema">Json Schema</h3>
-
-<table><thead>
-<tr>
-<th>type</th>
-<th>schema URL</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>Execute Response</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json">http://apidocs.peoplepattern.com/schemata/ExecuteResponse.json</a></td>
-</tr>
-</tbody></table>
-<pre class="highlight shell"><code>curl -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -d <span class="s1">'{POST_BODY}'</span>
-
-curl -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -d <span class="s1">'{POST_BODY}'</span>
-</code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"SUBMITTED"</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<h2 id="estimate">Estimate</h2>
-
-<p>Estimate determines whether a job request is valid, and estimates how long the job will take to begin and then to complete execution.</p>
-
-<h3 id="resource-uri">Resource URI</h3>
-
-<p><code class="prettyprint">/estimate</code></p>
-
-<h3 id="json-schema">Json Schema</h3>
-
-<table><thead>
-<tr>
-<th>type</th>
-<th>schema URL</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>Estimate Request</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/EstimateRequest.json">http://apidocs.peoplepattern.com/schemata/EstimateRequest.json</a></td>
-</tr>
-<tr>
-<td>Estimate Response</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/EstimateResponse.json">http://apidocs.peoplepattern.com/schemata/EstimateResponse.json</a></td>
-</tr>
-</tbody></table>
-
-<p>The potential errors and warnings returned differ by job type.</p>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/estimate/{job_type}?access_token=$MY_TOKEN'</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: {application/json} OR {application/hocon}"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{POST_BODY}'</span>
-</code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"runMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">,</span><span class="w"> </span><span class="nt">"waitMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"errors"</span><span class="p">:[</span><span class="s2">"Invalid job type"</span><span class="p">]}</span><span class="w">
-</span></code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"errors"</span><span class="p">:[</span><span class="s2">"Maximum of 1000 ids may be provided"</span><span class="p">]}</span><span class="w">
-</span></code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"runMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">,</span><span class="w"> </span><span class="nt">"waitMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">,</span><span class="w"> </span><span class="nt">"warnings"</span><span class="p">:[</span><span class="s2">"At least 50 ids must be provided"</span><span class="p">]}</span><span class="w">
-</span></code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"errors"</span><span class="p">:[</span><span class="s2">"A list of ids must be present"</span><span class="p">]}</span><span class="w">
-</span></code></pre>
-
-<h2 id="status">Status</h2>
-
-<p>The Status endpoint used to check the status of jobs you&rsquo;ve already started. To check job status, send an HTTP GET request to this endpoint specifying your job hash from the <code class="prettyprint">/execute</code> endpoint as a URL parameter.</p>
-
-<h3 id="resource-uri">Resource URI</h3>
-
-<p><code class="prettyprint">/status</code></p>
-
-<h3 id="json-schema">Json Schema</h3>
-
-<table><thead>
-<tr>
-<th>type</th>
-<th>schema URL</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>Status Request</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/StatusRequest.json">http://apidocs.peoplepattern.com/schemata/StatusRequest.json</a></td>
-</tr>
-<tr>
-<td>Status Response</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/StatusResponse.json">http://apidocs.peoplepattern.com/schemata/StatusResponse.json</a></td>
-</tr>
-</tbody></table>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/status?execution={job_hash}?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X GET <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>
-</code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"RUNNING"</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"FINISHED"</span><span class="p">}</span><span class="w">
-</span></code></pre>
-
-<p><code class="prettyprint">/status?execution={job_hash}</code></p>
-
-<h2 id="result">Result</h2>
-
-<p>The Result endpoint used to retrieve the results of a job after the <code class="prettyprint">/status</code> endpoint indicates that it has finished executing. To retrieve these results, send an HTTP GET request to this endpoint, specifying your job hash. Note that calling this endpoint for a job which has not yet finished will result in an empty response body. The content of an appropriate response will depend on which kind of job is being executed, but will always be in JSON form.</p>
-
-<h3 id="resource-uri">Resource URI</h3>
-
-<p><code class="prettyprint">/resources/{job_hash}</code></p>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/resources/{job_hash}?access_token=$MY_TOKEN'</span> <span class="se">\</span>
-  -X GET <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>
-</code></pre>
-
-<h2 id="jobs">Jobs</h2>
-
-<p>The jobs listed here represent the current set of reports or analysis the supported by the execute API.</p>
-
-<h3 id="analyze-public-profiles">Analyze Public Profiles</h3>
-
-<p>To run the Analyze Public Profiles stream for one or more users, make an HTTP POST request to the <a href="#resource-uri-analyze-public-profiles">Analyze Public Profiles endpoint</a>.</p>
-
-<p><code class="prettyprint">/AnalyzePublicProfiles</code></p>
-
-<h4 id="json-schema">Json Schema</h4>
-
-<table><thead>
-<tr>
-<th>type</th>
-<th>schema URL</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>AnalyzePublicProfilesRequest</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/AnalyzePublicProfilesRequest.json">http://apidocs.peoplepattern.com/schemata/AnalyzePublicProfilesRequest.json</a></td>
-</tr>
-</tbody></table>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"ids":["twitter:116679528","twitter:118710202", "twitter:119772680"]}'</span>
-
-curl <span class="s2">"https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
-</code></pre>
-
-<h3 id="audience-influencers">Audience Influencers</h3>
-
-<p>To get an Audience Influencers report for one or more users, make an HTTP POST request to the <a href="#resource-uri-audience-influencers">Audience Influencers endpoint</a>.</p>
-
-<p><code class="prettyprint">/AudienceInfluencers</code></p>
-
-<h4 id="json-schema">Json Schema</h4>
-
-<table><thead>
-<tr>
-<th>type</th>
-<th>schema URL</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>AudienceInfluencersReportRequest</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json">http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json</a></td>
-</tr>
-<tr>
-<td>AudienceInfluencersReportResult</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json">http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json</a></td>
-</tr>
-</tbody></table>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
-
-curl <span class="s2">"https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
-</code></pre>
-
-<h3 id="external-influencers">External Influencers</h3>
-
-<p>To get an External Influencers report for one or more users, make an HTTP POST request to the <a href="#resource-uri-external-influencers">External Influencers endpoint</a>.</p>
-
-<p><code class="prettyprint">/ExternalInfluencers</code></p>
-
-<h4 id="json-schema">Json Schema</h4>
-
-<table><thead>
-<tr>
-<th>type</th>
-<th>schema URL</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>ExternalInfluencersReportRequest</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json">http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json</a></td>
-</tr>
-<tr>
-<td>ExternalInfluencersReportResult</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json">http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json</a></td>
-</tr>
-</tbody></table>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
-
-curl <span class="s2">"https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
-</code></pre>
-
-<h3 id="follower-breakdown">Follower Breakdown</h3>
-
-<p>To get a follower breakdown for one or more users, make an HTTP POST request to the <a href="#resource-uri-follower-breakdown">Follower Breakdown endpoint</a>.</p>
-
-<p><code class="prettyprint">/FollowerBreakdown</code></p>
-
-<h4 id="json-schema">Json Schema</h4>
-
-<table><thead>
-<tr>
-<th>type</th>
-<th>schema URL</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>FollowerBreakdownReportRequest</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json">http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json</a></td>
-</tr>
-<tr>
-<td>FollowerBreakdownReportResult</td>
-<td><a href="http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json">http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json</a></td>
-</tr>
-</tbody></table>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
-
-curl <span class="s2">"https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
-
 </code></pre>
 
           <h1 id="stitching-api">Stitching API</h1>
