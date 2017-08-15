@@ -1307,8 +1307,9 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 </span></code></pre>
 
 <h3 id="post-example">POST Example</h3>
-<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X GET -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/aggregate"</span> <span class="se">\</span>
   -d <span class="s1">'{"queryString":"jill","fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","enrichments.demographics.gender"]}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
@@ -1470,10 +1471,10 @@ For examples of the POST_BODY see the different Jobs currently available for the
 <p>The potential errors and warnings returned differ by job type.</p>
 
 <h3 id="post-example">POST example</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/estimate/{job_type}?access_token=$MY_TOKEN'</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: {application/json} OR {application/hocon}"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s1">'https://api.peoplepattern.com/estimate/{job_type}'</span> <span class="se">\</span>
   -d <span class="s1">'{POST_BODY}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="nt">"valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"runMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">,</span><span class="w"> </span><span class="nt">"waitMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">}</span><span class="w">
@@ -2179,7 +2180,7 @@ Here we have displayed what a same error response would look like from the Enric
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/post?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/post"</span> <span class="se">\</span>
   -d <span class="s1">'[{}]'</span>
 
 <span class="o">[{</span><span class="s2">"status"</span>:<span class="s2">"error"</span>,<span class="s2">"code"</span>:400,<span class="s2">"error"</span>:<span class="o">{</span><span class="s2">"input"</span>:<span class="o">{}</span>,<span class="s2">"message"</span>:<span class="s2">"No valid fields provided for profile content"</span><span class="o">}}]</span>
