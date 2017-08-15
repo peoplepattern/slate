@@ -1833,7 +1833,7 @@ back to the client with a <code class="prettyprint">peoplepattern</code> field f
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://eapi.peoplepattern.com/profile"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/profile"</span> <span class="se">\</span>
   -d <span class="s1">'[{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}, {"name": "Mary Brown", "username": "mbrown", "description": "This is Marys profile"}]'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
@@ -2264,7 +2264,7 @@ The appropriate headers and default body schema can be seen in the example reque
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://stitching.peoplepattern.com/stitch"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/stitch"</span> <span class="se">\</span>
   -d <span class="s1">'{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
@@ -2293,7 +2293,7 @@ back to the client with a score indicating the confidence of each match.</p>
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s1">'https://stitching.peoplepattern.com/stitch'</span> <span class="se">\</span>
+  <span class="s1">'https://api.peoplepattern.com/stitch'</span> <span class="se">\</span>
   -d <span class="s1">'[{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}},{"query":{"name":"Jason Baldridge","location":"Austin, Texas"}}]'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
@@ -2342,7 +2342,7 @@ This API does not currently paginate responses, so as a precaution you should av
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://stitching.peoplepattern.com/stitch"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/stitch"</span> <span class="se">\</span>
   -d <span class="s1">'{"query":{"name":"Elias Ponvert","location":"Austin, Texas"},"fields":["name", "twitter", "peoplepattern"]}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
