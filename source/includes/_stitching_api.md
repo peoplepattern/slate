@@ -44,10 +44,10 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### Stitch a single person record
 
 ```shell
-curl "https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN" \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
+  "https://stitching.peoplepattern.com/stitch" \
   -d '{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}}'
 ```
 
@@ -77,10 +77,10 @@ back to the client with a score indicating the confidence of each match.
 ### Stitch a batch of records
 
 ```shell
-curl 'https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN' \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
+  'https://stitching.peoplepattern.com/stitch' \
   -d '[{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}},{"query":{"name":"Jason Baldridge","location":"Austin, Texas"}}]'
 ```
 
@@ -130,10 +130,10 @@ This API does not currently paginate responses, so as a precaution you should av
 ## Requesting Additional Fields
 
 ```shell
-curl "https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN" \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
+  "https://stitching.peoplepattern.com/stitch" \
   -d '{"query":{"name":"Elias Ponvert","location":"Austin, Texas"},"fields":["name", "twitter", "peoplepattern"]}'
 ```
 

@@ -52,8 +52,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 ### GET Example
 
 ```shell
-curl "https://api.peoplepattern.com/search?access_token=$MY_TOKEN&queryString=joe&limit=2" \
-  -H "Accept: application/json"
+curl -H "Authorization: $MY_TOKEN" -H "Accept: application/json" "https://api.peoplepattern.com/search?queryString=joe&limit=2"
 ```
 
 ```json
@@ -246,10 +245,7 @@ curl "https://api.peoplepattern.com/search?access_token=$MY_TOKEN&queryString=jo
 
 ### POST Example
 ```shell
-curl "https://api.peoplepattern.com/search?access_token=$MY_TOKEN" \
-  -X POST \
-  -H "Accept: application/json" \
-  -d '{"queryString":"john", "limit":"2","random":"true"}'
+curl -H "Authorization: $MY_TOKEN" -X POST -H "Accept: application/json" -H "Content-Type: application/json" "https://api-qa.peoplepattern.com/search" -d '{"queryString":"john", "limit":"2","random":"true"}'
 ```
 
 ```json

@@ -40,10 +40,10 @@ as above.
 ### Enrich a single profile
 
 ```shell
-curl 'https://api.peoplepattern.com/profile?access_token=$MY_TOKEN' \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
+  "https://api.peoplepattern.com/profile" \
   -d '{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}'
 ```
 
@@ -121,10 +121,10 @@ back to the client with a `peoplepattern` field filled with
 ### Enrich a batch of profiles
 
 ```shell
-curl 'https://eapi.peoplepattern.com/profile?access_token=$MY_TOKEN' \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
+  "https://eapi.peoplepattern.com/profile" \
   -d '[{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}, {"name": "Mary Brown", "username": "mbrown", "description": "This is Marys profile"}]'
 ```
 
@@ -254,10 +254,10 @@ Here we have displayed what a same error response would look like from the Enric
 > Example invalid format call with output
 
 ```shell
-curl 'https://api.peoplepattern.com/profile?access_token=$MY_TOKEN' \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
+  "https://api.peoplepattern.com/profile" \
   -d '[{}]'
 
 [{"status":"error","code":400,"error":{"input":{},"message":"No valid fields provided for profile content"}}]
@@ -329,10 +329,10 @@ sentiment       | string          | "positive", "negative" or "neutral"
 ### Enrich a single post
 
 ```shell
-curl 'https://api.peoplepattern.com/post?access_token=$MY_TOKEN' \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
+  "https://api.peoplepattern.com/post" \
   -d '{"text":"Bowling tonight? or kung-fu?"}'
 ```
 
@@ -361,10 +361,10 @@ back to the client with a `peoplepattern` field filled with
 ### Enrich a batch of posts
 
 ```shell
-curl 'https://api.peoplepattern.com/post?access_token=$MY_TOKEN' \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
+  "https://api.peoplepattern.com/post" \
   -d '[{"text":"Bowling tonight? or kung-fu?"},{"text":"I love bowling with friends"},{"text":"But I also love eating at home with the family"}]'
 ```
 
@@ -442,10 +442,10 @@ Here we have displayed what a same error response would look like from the Enric
 > Example invalid format call with output
 
 ```shell
-curl "https://api.peoplepattern.com/post?access_token=$MY_TOKEN" \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
+  "https://api.peoplepattern.com/post?access_token=$MY_TOKEN" \
   -d '[{}]'
 
 [{"status":"error","code":400,"error":{"input":{},"message":"No valid fields provided for profile content"}}]

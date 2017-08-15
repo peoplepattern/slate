@@ -39,8 +39,9 @@ Lookup Response        | [http://apidocs.peoplepattern.com/schemata/LookupRespon
 ### GET example
 
 ```shell
-curl "https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:14132201,twitter:119837224&fields=handle" \
-  -H "Accept: application/json"
+curl -X GET -H "Authorization: $MY_TOKEN" \
+  -H "Accept: application/json" \
+  "https://api.peoplepattern.com/lookup?ids=twitter:14132201,twitter:119837224&fields=handle"
 ```
 
 ```json
@@ -57,9 +58,9 @@ curl "https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN&id=twitter:141
 ### POST example
 
 ```shell
-curl "https://api.peoplepattern.com/lookup?access_token=$MY_TOKEN" \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Accept: application/json" \
+  "https://api.peoplepattern.com/lookup" \
   -d '{"fields": ["name"],"ids": ["twitter:14132201","twitter:119837224"]}'
 ```
 
