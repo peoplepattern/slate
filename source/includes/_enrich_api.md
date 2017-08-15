@@ -445,7 +445,7 @@ Here we have displayed what a same error response would look like from the Enric
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
-  "https://api.peoplepattern.com/post?access_token=$MY_TOKEN" \
+  "https://api.peoplepattern.com/post" \
   -d '[{}]'
 
 [{"status":"error","code":400,"error":{"input":{},"message":"No valid fields provided for profile content"}}]

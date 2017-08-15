@@ -158,8 +158,9 @@ curl -X GET -H "Authorization: $MY_TOKEN" \
 
 ### POST Example
 ```shell
-curl -X POST "https://api.peoplepattern.com/aggregate?access_token=$MY_TOKEN" \
+curl -X GET -H "Authorization: $MY_TOKEN" \
   -H "Accept: application/json" \
+  "https://api.peoplepattern.com/aggregate" \
   -d '{"queryString":"jill","fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","enrichments.demographics.gender"]}'
 ```
 

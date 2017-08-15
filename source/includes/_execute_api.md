@@ -101,10 +101,10 @@ The potential errors and warnings returned differ by job type.
 
 ### POST example
 ```shell
-curl 'https://api.peoplepattern.com/estimate/{job_type}?access_token=$MY_TOKEN' \
-  -X POST \
+curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: {application/json} OR {application/hocon}" \
   -H "Accept: application/json" \
+  'https://api.peoplepattern.com/estimate/{job_type}' \
   -d '{POST_BODY}'
 ```
 ```json
