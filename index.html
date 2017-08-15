@@ -165,18 +165,18 @@ data from a variety of sources which differ by job.</p>
 <blockquote>
 <p>To authorize, use this code:</p>
 </blockquote>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the access token as a url parameter with each request</span>
-curl https://api.peoplepattern.com/lookup?access_token<span class="o">=</span><span class="nv">$MY_TOKEN</span>
+<pre class="highlight shell"><code><span class="c"># Supply your access token the Authorization header with each request</span>
+curl -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="s2">"https://api.peoplepattern.com/lookup?ids=twitter:783214"</span>
 
+<span class="c"># You can also pass the access token as a url parameter</span>
+curl <span class="s2">"https://api.peoplepattern.com/lookup?ids=twitter:783214&amp;access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span>
 </code></pre>
 
 <blockquote>
 <p>Make sure to replace <code class="prettyprint">$MY_TOKEN</code> with your API access token.</p>
 </blockquote>
 
-<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.  The People Pattern API expects the API security token to be included in all API requests to the server as a url parameter that looks like the following:</p>
-
-<p><code class="prettyprint">access_token=$MY_TOKEN</code></p>
+<p>HTTP requests to the API are protected with <a href="https://www.w3.org/2001/sw/Europe/events/foaf-galway/papers/fp/token_based_authentication/">Token Based authentication</a>.</p>
 
 <p>You can find your security token <a href="https://app.peoplepattern.com/edit">on your account page</a>.</p>
 
@@ -730,8 +730,9 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </tbody></table>
 
 <h3 id="get-example">GET example</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/lookup?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;id=twitter:14132201,twitter:119837224&amp;fields=handle"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>
+<pre class="highlight shell"><code>curl -X GET -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/lookup?ids=twitter:14132201,twitter:119837224&amp;fields=handle"</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"twitter:14132201"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -744,9 +745,9 @@ This endpoint supports both HTTP POST and HTTP GET calls.</p>
 </span></code></pre>
 
 <h3 id="post-example">POST example</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/lookup?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/lookup"</span> <span class="se">\</span>
   -d <span class="s1">'{"fields": ["name"],"ids": ["twitter:14132201","twitter:119837224"]}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
@@ -854,8 +855,7 @@ hundreds of millions of social profiles with pre-calculated demographic and psyc
 </tbody></table>
 
 <h3 id="get-example">GET Example</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/search?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;queryString=joe&amp;limit=2"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> -H <span class="s2">"Accept: application/json"</span> <span class="s2">"https://api.peoplepattern.com/search?queryString=joe&amp;limit=2"</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"totalItems"</span><span class="p">:</span><span class="w"> </span><span class="mi">55659</span><span class="p">,</span><span class="w">
@@ -1045,10 +1045,7 @@ hundreds of millions of social profiles with pre-calculated demographic and psyc
 </span></code></pre>
 
 <h3 id="post-example">POST Example</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/search?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"queryString":"john", "limit":"2","random":"true"}'</span>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> -X POST -H <span class="s2">"Accept: application/json"</span> -H <span class="s2">"Content-Type: application/json"</span> <span class="s2">"https://api-qa.peoplepattern.com/search"</span> -d <span class="s1">'{"queryString":"john", "limit":"2","random":"true"}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"totalItems"</span><span class="p">:</span><span class="w"> </span><span class="mi">55659</span><span class="p">,</span><span class="w">
@@ -1188,27 +1185,13 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 <p>Also note that map fields must be requested using syntax like <code class="prettyprint">posts.os.*</code> and <code class="prettyprint">posts.devices.*</code>.</p>
 
 <h3 id="get-example">GET Example</h3>
-<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X GET -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&amp;ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104"</span>
+  <span class="s2">"https://api.peoplepattern.com/aggregate?fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type&amp;ids=twitter:14132201,twitter:119837224,twitter:391705374,twitter:20092104"</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"marketing"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"small_business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"fitness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
@@ -1216,21 +1199,6 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
     </span><span class="nt">"enrichments.demographics.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6666666666666666</span><span class="p">,</span><span class="w">
         </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004219409282700422</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9957805907172995</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"1975"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
@@ -1240,28 +1208,15 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 </span></code></pre>
 
 <h3 id="post-example">POST Example</h3>
-<pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'</span>
+  <span class="s2">"https://api.peoplepattern.com/aggregate"</span> <span class="se">\</span>
+  -d <span class="s1">'{"fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type""enrichments.demographics.gender"], "ids":["twitter:14132201","twitter:119837224","twitter:391705374","twitter:20092104"]}'</span>
 
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"marketing"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"small_business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"fitness"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"science"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06666666666666667</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"computers"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.13333333333333333</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"male"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="w">
@@ -1269,21 +1224,6 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
     </span><span class="nt">"enrichments.demographics.race"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"white"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6666666666666666</span><span class="p">,</span><span class="w">
         </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3333333333333333</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004219409282700422</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9957805907172995</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"1975"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span><span class="w">
@@ -1319,37 +1259,15 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 </tbody></table>
 
 <h3 id="get-example">GET Example</h3>
-<pre class="highlight shell"><code>curl -X GET <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>
-  <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">&amp;fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,posts.devices.*,enrichments.psychographics.top_interests,posts.os.*,enrichments.demographics.gender,place.location.city&amp;queryString=john"</span> <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X GET -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/aggregate?fields=enrichments.demographics.race,enrichments.demographics.birthyear,enrichments.account_type,enrichments.demographics.gender&amp;queryString=john"</span> <span class="se">\</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"entertainment"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.8391506376973333E-4</span><span class="p">,</span><span class="w">
         </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9947953288076048</span><span class="p">,</span><span class="w">
         </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.005020756128625441</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"politics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.035818697462143584</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"other_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03053666076128402</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"gaming"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02761313182126375</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023741825419391526</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.037120068823224925</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.030066417328288242</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"consumer_electronics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.025108812143216464</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02272478729686577</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02682574746834059</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"religion"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04243855850338648</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02148538600059783</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"humor"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0640369487398205</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"music"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03406895445564766</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06896174624352049</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"school_life"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.038760452891814845</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"animals"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.020428249600839877</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.056301626531936454</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.026927815810386183</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"automotive"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024911966054985673</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"finance"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02719027726136057</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"female"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.011415977072219231</span><span class="p">,</span><span class="w">
@@ -1362,21 +1280,6 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
         </span><span class="nt">"hispanic"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.051822366894438865</span><span class="p">,</span><span class="w">
         </span><span class="nt">"black"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.034495236580723364</span><span class="p">,</span><span class="w">
         </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.013387228421816152</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02681955952155928</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.3538655259396014</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.6097575035076012</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">9.160855311759634E-4</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003519898918088746</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.005121426581973373</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.054544731549693456</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003470887228310001</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0428197705361852</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8949874598895574</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004177150796253883</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"1990"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.021262022202317505</span><span class="p">,</span><span class="w">
@@ -1406,35 +1309,13 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 <h3 id="post-example">POST Example</h3>
 <pre class="highlight shell"><code>curl -X POST <span class="s2">"https://api.peoplepattern.com/aggregate?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  -d <span class="s1">'{"queryString":"jill","fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","posts.devices.*","enrichments.psychographics.top_interests","posts.os.*","enrichments.demographics.gender","place.location.city"]}'</span>
+  -d <span class="s1">'{"queryString":"jill","fields":["enrichments.demographics.race","enrichments.demographics.birthyear","enrichments.account_type","enrichments.demographics.gender"]}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"enrichments.account_type"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"entertainment"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.7386356451918822E-4</span><span class="p">,</span><span class="w">
         </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9961275842447999</span><span class="p">,</span><span class="w">
         </span><span class="nt">"organization"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.003698552190680913</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"enrichments.psychographics.top_interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"politics"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.023585975416156393</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"beverages"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.026942441148455572</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"business"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.027169229373610923</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"current_events"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.021182020229509685</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"beauty"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.018914137977956186</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"higher_education"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.025853857667709892</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"reading"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.020547013199074704</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.041683675783553316</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"religion"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.042908332199392205</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"multimedia"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.022542749580441782</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"humor"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0752483331065451</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"music"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02848460107951195</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"major_sports"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03356465732299179</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"charity"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02558171179752347</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"health_care"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024402413026715652</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"school_life"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06327391481834263</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"animals"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0386900712115027</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"family"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.09184923118791673</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"travel"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.02957318456025763</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"parenting"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.024629201251871003</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"enrichments.demographics.gender"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"female"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.9968667493717593</span><span class="p">,</span><span class="w">
@@ -1447,21 +1328,6 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
         </span><span class="nt">"hispanic"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.01000202246777841</span><span class="p">,</span><span class="w">
         </span><span class="nt">"black"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.009781389619224475</span><span class="p">,</span><span class="w">
         </span><span class="nt">"east-asian"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.007354428285131185</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.os.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"blackberry"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.015055618724203267</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"android"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.21980291455853063</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"ios"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7600062143666229</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"windows"</span><span class="p">:</span><span class="w"> </span><span class="mf">4.383875793916797E-5</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mac"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.5016552631090994E-4</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004741248066393187</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nt">"posts.devices.*"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"tablet"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.06077353367721411</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"automated"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.004644188990242093</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"desktop"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.03712638231824077</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"mobile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8936350940424981</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"unknown"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0038208009718047322</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nt">"enrichments.demographics.birthyear"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"1987"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.028461114175399888</span><span class="p">,</span><span class="w">
@@ -1556,20 +1422,20 @@ For examples of the POST_BODY see the different Jobs currently available for the
 </tbody></table>
 
 <h3 id="post-example-json">POST example (json)</h3>
-<pre class="highlight shell"><code>curl -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}"</span> <span class="se">\</span>
   -d <span class="s1">'{POST_BODY}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"SUBMITTED"</span><span class="p">}</span><span class="w">
 </span></code></pre>
 
 <h3 id="post-example-hocon">POST example (hocon)</h3>
-<pre class="highlight shell"><code>curl -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}"</span> <span class="se">\</span>
   -d <span class="s1">'{POST_BODY}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"SUBMITTED"</span><span class="p">}</span><span class="w">
@@ -1648,10 +1514,10 @@ For examples of the POST_BODY see the different Jobs currently available for the
 </tbody></table>
 
 <h3 id="get-example">GET example</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/status?execution={job_hash}?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X GET <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X GET -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/status?execution={job_hash}"</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"RUNNING"</span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -1667,10 +1533,11 @@ For examples of the POST_BODY see the different Jobs currently available for the
 <p><code class="prettyprint">/resources/{job_hash}</code></p>
 
 <h3 id="get-example">GET example</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/resources/{job_hash}?access_token=$MY_TOKEN'</span> <span class="se">\</span>
-  -X GET <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X GET -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
-  -H <span class="s2">"Accept: application/json"</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/resources/{job_hash}"</span>
+
 </code></pre>
 
 <h2 id="jobs">Jobs</h2>
@@ -1698,18 +1565,19 @@ For examples of the POST_BODY see the different Jobs currently available for the
 </tbody></table>
 
 <h3 id="post-example-json">POST example (json)</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl  <span class="se">\</span>
+  -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/AnalyzePublicProfiles"</span> <span class="se">\</span>
   -d <span class="s1">'{"ids":["twitter:116679528","twitter:118710202", "twitter:119772680"]}'</span>
 </code></pre>
 
 <h3 id="post-example-hocon">POST example (hocon)</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/AnalyzePublicProfiles?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/AnalyzePublicProfiles"</span> <span class="se">\</span>
   -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
 </code></pre>
 
@@ -1738,18 +1606,18 @@ For examples of the POST_BODY see the different Jobs currently available for the
 </tbody></table>
 
 <h3 id="post-example-json">POST example (json)</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/AudienceInfluencers"</span> <span class="se">\</span>
   -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
 </code></pre>
 
 <h3 id="post-example-hocon">POST example (hocon)</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/AudienceInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/AudienceInfluencers"</span> <span class="se">\</span>
   -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
 </code></pre>
 
@@ -1778,18 +1646,18 @@ For examples of the POST_BODY see the different Jobs currently available for the
 </tbody></table>
 
 <h3 id="post-example-json">POST example (json)</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/ExternalInfluencers"</span> <span class="se">\</span>
   -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
 </code></pre>
 
 <h3 id="post-example-hocon">POST example (hocon)</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/ExternalInfluencers?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/ExternalInfluencers"</span> <span class="se">\</span>
   -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
 </code></pre>
 
@@ -1818,18 +1686,18 @@ For examples of the POST_BODY see the different Jobs currently available for the
 </tbody></table>
 
 <h3 id="post-example-json">POST example (json)</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/FollowerBreakdown"</span> <span class="se">\</span>
   -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
 </code></pre>
 
 <h3 id="post-example-hocon">POST example (hocon)</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/execute/FollowerBreakdown?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/FollowerBreakdown"</span> <span class="se">\</span>
   -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
 </code></pre>
 
@@ -1884,10 +1752,10 @@ as above.
 </aside>
 
 <h3 id="enrich-a-single-profile">Enrich a single profile</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/profile?access_token=$MY_TOKEN'</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/profile"</span> <span class="se">\</span>
   -d <span class="s1">'{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}'</span>
 </code></pre>
 
@@ -1961,10 +1829,10 @@ back to the client with a <code class="prettyprint">peoplepattern</code> field f
 <a href="#profile-enrichments">profile enrichments</a>.</p>
 
 <h3 id="enrich-a-batch-of-profiles">Enrich a batch of profiles</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://eapi.peoplepattern.com/profile?access_token=$MY_TOKEN'</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://eapi.peoplepattern.com/profile"</span> <span class="se">\</span>
   -d <span class="s1">'[{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}, {"name": "Mary Brown", "username": "mbrown", "description": "This is Marys profile"}]'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
@@ -2092,10 +1960,10 @@ Here we have displayed what a same error response would look like from the Enric
 <blockquote>
 <p>Example invalid format call with output</p>
 </blockquote>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/profile?access_token=$MY_TOKEN'</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/profile"</span> <span class="se">\</span>
   -d <span class="s1">'[{}]'</span>
 
 <span class="o">[{</span><span class="s2">"status"</span>:<span class="s2">"error"</span>,<span class="s2">"code"</span>:400,<span class="s2">"error"</span>:<span class="o">{</span><span class="s2">"input"</span>:<span class="o">{}</span>,<span class="s2">"message"</span>:<span class="s2">"No valid fields provided for profile content"</span><span class="o">}}]</span>
@@ -2202,10 +2070,10 @@ predicted languages and predicted sentiment</p>
 </tbody></table>
 
 <h3 id="enrich-a-single-post">Enrich a single post</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/post?access_token=$MY_TOKEN'</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/post"</span> <span class="se">\</span>
   -d <span class="s1">'{"text":"Bowling tonight? or kung-fu?"}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
@@ -2229,10 +2097,10 @@ back to the client with a <code class="prettyprint">peoplepattern</code> field f
 <a href="#post-enrichments">post enrichments</a>.</p>
 
 <h3 id="enrich-a-batch-of-posts">Enrich a batch of posts</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://api.peoplepattern.com/post?access_token=$MY_TOKEN'</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/post"</span> <span class="se">\</span>
   -d <span class="s1">'[{"text":"Bowling tonight? or kung-fu?"},{"text":"I love bowling with friends"},{"text":"But I also love eating at home with the family"}]'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
@@ -2308,10 +2176,10 @@ Here we have displayed what a same error response would look like from the Enric
 <blockquote>
 <p>Example invalid format call with output</p>
 </blockquote>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.peoplepattern.com/post?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/post?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -d <span class="s1">'[{}]'</span>
 
 <span class="o">[{</span><span class="s2">"status"</span>:<span class="s2">"error"</span>,<span class="s2">"code"</span>:400,<span class="s2">"error"</span>:<span class="o">{</span><span class="s2">"input"</span>:<span class="o">{}</span>,<span class="s2">"message"</span>:<span class="s2">"No valid fields provided for profile content"</span><span class="o">}}]</span>
@@ -2392,10 +2260,10 @@ The appropriate headers and default body schema can be seen in the example reque
 </tbody></table>
 
 <h3 id="stitch-a-single-person-record">Stitch a single person record</h3>
-<pre class="highlight shell"><code>curl <span class="s2">"https://stitching.peoplepattern.com/stitch?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://stitching.peoplepattern.com/stitch"</span> <span class="se">\</span>
   -d <span class="s1">'{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
@@ -2421,10 +2289,10 @@ stitch endpoint, the array of results are passed
 back to the client with a score indicating the confidence of each match.</p>
 
 <h3 id="stitch-a-batch-of-records">Stitch a batch of records</h3>
-<pre class="highlight shell"><code>curl <span class="s1">'https://stitching.peoplepattern.com/stitch?access_token=$MY_TOKEN'</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s1">'https://stitching.peoplepattern.com/stitch'</span> <span class="se">\</span>
   -d <span class="s1">'[{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}},{"query":{"name":"Jason Baldridge","location":"Austin, Texas"}}]'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">[</span><span class="w">
@@ -2470,10 +2338,10 @@ This API does not currently paginate responses, so as a precaution you should av
 </aside>
 
 <h2 id="requesting-additional-fields">Requesting Additional Fields</h2>
-<pre class="highlight shell"><code>curl <span class="s2">"https://stitching.peoplepattern.com/stitch?access_token=</span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -X POST <span class="se">\</span>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://stitching.peoplepattern.com/stitch"</span> <span class="se">\</span>
   -d <span class="s1">'{"query":{"name":"Elias Ponvert","location":"Austin, Texas"},"fields":["name", "twitter", "peoplepattern"]}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
