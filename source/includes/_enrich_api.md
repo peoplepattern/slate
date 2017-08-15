@@ -124,7 +124,7 @@ back to the client with a `peoplepattern` field filled with
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
-  "https://eapi.peoplepattern.com/profile" \
+  "https://api.peoplepattern.com/profile" \
   -d '[{"name":"Joe User", "username": "juser", "description": "my profile", "location": "Boston, USA"}, {"name": "Mary Brown", "username": "mbrown", "description": "This is Marys profile"}]'
 ```
 

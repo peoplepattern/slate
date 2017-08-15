@@ -47,7 +47,7 @@ PARAMETER     | REQUIRED | DESCRIPTION
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
-  "https://stitching.peoplepattern.com/stitch" \
+  "https://api.peoplepattern.com/stitch" \
   -d '{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}}'
 ```
 
@@ -80,7 +80,7 @@ back to the client with a score indicating the confidence of each match.
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
-  'https://stitching.peoplepattern.com/stitch' \
+  'https://api.peoplepattern.com/stitch' \
   -d '[{"query":{"name":"Elias Ponvert","location":"Austin, Texas"}},{"query":{"name":"Jason Baldridge","location":"Austin, Texas"}}]'
 ```
 
@@ -133,7 +133,7 @@ This API does not currently paginate responses, so as a precaution you should av
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
-  "https://stitching.peoplepattern.com/stitch" \
+  "https://api.peoplepattern.com/stitch" \
   -d '{"query":{"name":"Elias Ponvert","location":"Austin, Texas"},"fields":["name", "twitter", "peoplepattern"]}'
 ```
 
