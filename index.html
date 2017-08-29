@@ -1368,11 +1368,11 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 <p>The following endpoints are used to interact with the Execute API.</p>
 
 <ul>
-<li><p><code class="prettyprint">/estimate/{job_type}</code></p></li>
-<li><p><code class="prettyprint">/execute/{job_type}</code></p></li>
-<li><p><code class="prettyprint">/status?execution={job_hash}</code></p></li>
-<li><p><code class="prettyprint">/stop?execution={job_hash}</code></p></li>
-<li><p><code class="prettyprint">/resources/{job_hash}/result.json</code></p></li>
+<li><p><code class="prettyprint">/configuration/{job_type}</code></p></li>
+<li><p><code class="prettyprint">/execute?configuration={config_hash}</code></p></li>
+<li><p><code class="prettyprint">/status?configuration={config_hash}&amp;execution={exec_id}</code></p></li>
+<li><p><code class="prettyprint">/stop?configuration={config_hash}&amp;execution={exec_id}</code></p></li>
+<li><p><code class="prettyprint">/resources/{config_hash}/result.json</code></p></li>
 </ul>
 
 <h2 id="workflow">Workflow</h2>
@@ -1380,15 +1380,19 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 <p>The basic workflow is this:</p>
 
 <ol>
-<li><p>Validate a job request using the <code class="prettyprint">/estimate</code> endpoint.</p></li>
+<li><p>Create a job request using the <code class="prettyprint">/configuration</code> endpoint.</p></li>
 <li><p>Kick off a job using the <code class="prettyprint">/execute</code> endpoint.</p></li>
-<li><p>Using the job hash that the above step returns, periodically check the status of your job using the <code class="prettyprint">/status</code> endpoint.</p></li>
-<li><p>When the status endpoint reports that your job has finished, retrieve the resulting JSON using the <code class="prettyprint">/resources</code> endpoint.</p></li>
+<li><p>Periodically check the status of your job using the <code class="prettyprint">/status</code> endpoint.</p></li>
+<li><p>Once your job has finished, retrieve the resulting JSON using the <code class="prettyprint">/resources</code> endpoint.</p></li>
 </ol>
 
-<h2 id="execute">Execute</h2>
+<h2 id="configuration">Configuration</h2>
 
-<p>This is the endpoint used to kick off jobs. To start a job, send an HTTP POST request to this endpoint, specifying one of the service_type values enumerated below. You&rsquo;ll need the following headers in your HTTP request:</p>
+<p>This is the endpoint used to specify an audience for, and otherwise configure, your jobs.</p>
+
+<p>Basically, you send an HTTP POST request with a job request payload to the configuration endpoint for the job you want to run.</p>
+
+<p>You&rsquo;ll need the following headers in your HTTP request:</p>
 
 <p><code class="prettyprint">Accept: application/json</code></p>
 
@@ -1400,9 +1404,26 @@ Aggregate data is returned for both demographic and psychographic attributes.</p
 
 <p><code class="prettyprint">Content-Type: application/hocon</code></p>
 
+<p>Each job has a request schema against which the submitted configuration will be validated, described later in this document</p>
+
 <aside class="notice">
-For examples of the POST_BODY see the different Jobs currently available for the Execute API.
+When the API finds a request to be invalid, it will return a BAD_REQUEST status code and a swagger document describing proper usage.
 </aside>
+
+<p>When submitting a JSON payload, that payload will be evaluated directly for compliance with the request schema.</p>
+
+<p>When submitting a CONF payload, the API supports <code class="prettyprint">include</code> expressions which allow you to:
+ - Specify audiences using the results of other People Pattern APIs.
+ - Specify audiences using any Apache Streams Provider class.
+ - Reuse or remix previously submitted configurations.</p>
+
+<aside class="notice">
+For examples of proper calls to /configuration with and without `include` expressions, see the different Jobs currently available for the Execute API.
+</aside>
+
+<h2 id="execute">Execute</h2>
+
+<p>This is the endpoint used to kick off jobs. To start a job, send an HTTP POST request to the execute endpoint for the job you want to run, specifying the configuration to use when launching the job.</p>
 
 <h3 id="resource-uri">Resource URI</h3>
 
@@ -1424,22 +1445,18 @@ For examples of the POST_BODY see the different Jobs currently available for the
 
 <h3 id="post-example-json">POST example (json)</h3>
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}"</span> <span class="se">\</span>
-  -d <span class="s1">'{POST_BODY}'</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}?configuration={configuration}"</span>
 </code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"SUBMITTED"</span><span class="p">}</span><span class="w">
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{configuration}"</span><span class="p">,</span><span class="w"> </span><span class="nt">"execution"</span><span class="p">:</span><span class="mi">12345</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"SUBMITTED"</span><span class="p">}</span><span class="w">
 </span></code></pre>
 
 <h3 id="post-example-hocon">POST example (hocon)</h3>
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}"</span> <span class="se">\</span>
-  -d <span class="s1">'{POST_BODY}'</span>
+  <span class="s2">"https://api.peoplepattern.com/execute/{job_type}?configuration={configuration}"</span>
 </code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"SUBMITTED"</span><span class="p">}</span><span class="w">
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{configuration}"</span><span class="p">,</span><span class="w"> </span><span class="nt">"execution"</span><span class="p">:</span><span class="mi">12345</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"SUBMITTED"</span><span class="p">}</span><span class="w">
 </span></code></pre>
 
 <h2 id="estimate">Estimate</h2>
@@ -1472,10 +1489,8 @@ For examples of the POST_BODY see the different Jobs currently available for the
 
 <h3 id="post-example">POST example</h3>
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -H <span class="s2">"Content-type: {application/json} OR {application/hocon}"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s1">'https://api.peoplepattern.com/estimate/{job_type}'</span> <span class="se">\</span>
-  -d <span class="s1">'{POST_BODY}'</span>
+  <span class="s1">'https://api.peoplepattern.com/estimate/{job_type}?configuration={configuration}'</span>
 </code></pre>
 <pre class="highlight json"><code><span class="p">{</span><span class="nt">"valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"runMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">,</span><span class="w"> </span><span class="nt">"waitMs"</span><span class="p">:</span><span class="mi">300000</span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -1494,7 +1509,7 @@ For examples of the POST_BODY see the different Jobs currently available for the
 
 <h3 id="resource-uri">Resource URI</h3>
 
-<p><code class="prettyprint">/status?execution={job_hash}</code></p>
+<p><code class="prettyprint">/status?configuration={configuration}&amp;execution={execution}</code></p>
 
 <h3 id="json-schema">Json Schema</h3>
 
@@ -1516,13 +1531,12 @@ For examples of the POST_BODY see the different Jobs currently available for the
 
 <h3 id="get-example">GET example</h3>
 <pre class="highlight shell"><code>curl -X GET -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
-  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/status?execution={job_hash}"</span>
+  <span class="s2">"https://api.peoplepattern.com/status?configuration={configuration}&amp;execution={execution}"</span>
 </code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"RUNNING"</span><span class="p">}</span><span class="w">
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{configuration}"</span><span class="p">,</span><span class="w"> </span><span class="nt">"execution"</span><span class="p">:</span><span class="mi">12345</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"RUNNING"</span><span class="p">}</span><span class="w">
 </span></code></pre>
-<pre class="highlight json"><code><span class="p">{</span><span class="nt">"execution"</span><span class="p">:</span><span class="s2">"{job_hash}"</span><span class="p">,</span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"FINISHED"</span><span class="p">}</span><span class="w">
+<pre class="highlight json"><code><span class="p">{</span><span class="nt">"configuration"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{configuration}"</span><span class="p">,</span><span class="w"> </span><span class="nt">"execution"</span><span class="p">:</span><span class="mi">12345</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"FINISHED"</span><span class="p">}</span><span class="w">
 </span></code></pre>
 
 <h2 id="result">Result</h2>
@@ -1606,20 +1620,76 @@ For examples of the POST_BODY see the different Jobs currently available for the
 </tr>
 </tbody></table>
 
-<h3 id="post-example-json">POST example (json)</h3>
+<h3 id="post-example-json">POST example (JSON)</h3>
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/execute/AudienceInfluencers"</span> <span class="se">\</span>
-  -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
+  <span class="s2">"https://api.peoplepattern.com/configuration/AudienceInfluencers"</span> <span class="se">\</span>
+  -d <span class="s1">'{ "audience": {"items":["twitter:116679527","twitter:118710202", "twitter:119772680"]} }'</span>
 </code></pre>
 
-<h3 id="post-example-hocon">POST example (hocon)</h3>
+<h3 id="post-example-conf">POST example (CONF)</h3>
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
-  <span class="s2">"https://api.peoplepattern.com/execute/AudienceInfluencers"</span> <span class="se">\</span>
-  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
+  <span class="s2">"https://api.peoplepattern.com/configuration/AudienceInfluencers"</span> <span class="se">\</span>
+  -d <span class="s1">'audience.items = ["twitter:116679527","twitter:118710202", "twitter:119772680"]'</span>
+</code></pre>
+
+<h3 id="audience-summary">Audience Summary</h3>
+
+<p>To get an Audience Summary report for a set of users, make an HTTP POST request to the <a href="#resource-uri-audience-summary">Audience Summary endpoint</a>.</p>
+
+<p><code class="prettyprint">/AudienceSummary</code></p>
+
+<h4 id="json-schema">Json Schema</h4>
+
+<table><thead>
+<tr>
+<th>type</th>
+<th>schema URL</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>AudienceSummaryReportRequest</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AudienceSummaryReportRequest.json">http://apidocs.peoplepattern.com/schemata/AudienceSummaryReportRequest.json</a></td>
+</tr>
+<tr>
+<td>AudienceSummaryReportResult</td>
+<td><a href="http://apidocs.peoplepattern.com/schemata/AudienceSummaryReportResult.json">http://apidocs.peoplepattern.com/schemata/AudienceSummaryReportResult.json</a></td>
+</tr>
+</tbody></table>
+
+<h3 id="post-example-json">POST example (JSON)</h3>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/configuration/AudienceSummary"</span> <span class="se">\</span>
+  -d <span class="s1">'{ "audience": {"items":["twitter:116679527","twitter:118710202", "twitter:119772680"]} }'</span>
+</code></pre>
+
+<h3 id="post-example-conf">POST example (CONF)</h3>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/configuration/AudienceSummary"</span> <span class="se">\</span>
+  -d <span class="s1">'audience = { include url("https://api.peoplepattern.com/search?queryString=baseball&amp;max_items=5000") }'</span>
+</code></pre>
+
+<h3 id="post-example-conf">POST example (CONF)</h3>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/configuration/AudienceSummary"</span> <span class="se">\</span>
+  -d <span class="s1">'audience = { include url("https://api.peoplepattern.com/panels/marketing") }'</span>
+</code></pre>
+
+<h3 id="post-example-conf">POST example (CONF)</h3>
+<pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
+  -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
+  -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
+  <span class="s2">"https://api.peoplepattern.com/configuration/AudienceSummary"</span> <span class="se">\</span>
+  -d <span class="s1">'audience = { include "TwitterFollowingProvider?endpoint=followers&amp;max_items=5000" }'</span>
 </code></pre>
 
 <h3 id="external-influencers">External Influencers</h3>
@@ -1646,7 +1716,7 @@ For examples of the POST_BODY see the different Jobs currently available for the
 </tr>
 </tbody></table>
 
-<h3 id="post-example-json">POST example (json)</h3>
+<h3 id="post-example-json">POST example (JSON)</h3>
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
@@ -1654,7 +1724,7 @@ For examples of the POST_BODY see the different Jobs currently available for the
   -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
 </code></pre>
 
-<h3 id="post-example-hocon">POST example (hocon)</h3>
+<h3 id="post-example-conf">POST example (CONF)</h3>
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
@@ -1686,20 +1756,20 @@ For examples of the POST_BODY see the different Jobs currently available for the
 </tr>
 </tbody></table>
 
-<h3 id="post-example-json">POST example (json)</h3>
+<h3 id="post-example-json">POST example (JSON)</h3>
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/json"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
   <span class="s2">"https://api.peoplepattern.com/execute/FollowerBreakdown"</span> <span class="se">\</span>
-  -d <span class="s1">'{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'</span>
+  -d <span class="s1">'{"ids":["twitter:116679527"]}'</span>
 </code></pre>
 
-<h3 id="post-example-hocon">POST example (hocon)</h3>
+<h3 id="post-example-conf">POST example (CONF)</h3>
 <pre class="highlight shell"><code>curl -X POST -H <span class="s2">"Authorization: </span><span class="nv">$MY_TOKEN</span><span class="s2">"</span> <span class="se">\</span>
   -H <span class="s2">"Content-type: application/hocon"</span> <span class="se">\</span>
   -H <span class="s2">"Accept: application/json"</span> <span class="se">\</span>
   <span class="s2">"https://api.peoplepattern.com/execute/FollowerBreakdown"</span> <span class="se">\</span>
-  -d <span class="s1">'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'</span>
+  -d <span class="s1">'ids = ["twitter:116679528"]'</span>
 </code></pre>
 
           <h1 id="enrich-api">Enrich API</h1>
