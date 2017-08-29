@@ -8,31 +8,35 @@ Execute supports the following services:
 
 The following endpoints are used to interact with the Execute API.
 
-* `/estimate/{job_type}`
+* `/configuration/{job_type}`
 
-* `/execute/{job_type}`
+* `/execute?configuration={config_hash}`
 
-* `/status?execution={job_hash}`
+* `/status?configuration={config_hash}&execution={exec_id}`
 
-* `/stop?execution={job_hash}`
+* `/stop?configuration={config_hash}&execution={exec_id}`
 
-* `/resources/{job_hash}/result.json`
+* `/resources/{config_hash}/result.json`
 
 ## Workflow
 
 The basic workflow is this:
 
-1. Validate a job request using the `/estimate` endpoint.
+1. Create a job request using the `/configuration` endpoint.
 
 2. Kick off a job using the `/execute` endpoint.
 
-3. Using the job hash that the above step returns, periodically check the status of your job using the `/status` endpoint.
+3. Periodically check the status of your job using the `/status` endpoint.
 
-4. When the status endpoint reports that your job has finished, retrieve the resulting JSON using the `/resources` endpoint.
+4. Once your job has finished, retrieve the resulting JSON using the `/resources` endpoint.
 
-## Execute
+## Configuration
 
-This is the endpoint used to kick off jobs. To start a job, send an HTTP POST request to this endpoint, specifying one of the service_type values enumerated below. You'll need the following headers in your HTTP request:
+This is the endpoint used to specify an audience for, and otherwise configure, your jobs.
+
+Basically, you send an HTTP POST request with a job request payload to the configuration endpoint for the job you want to run.
+
+You'll need the following headers in your HTTP request:
 
 `Accept: application/json`
 
@@ -44,9 +48,26 @@ Or, if the body of your POST request is a CONF file:
 
 `Content-Type: application/hocon`
 
+Each job has a request schema against which the submitted configuration will be validated, described later in this document
+
 <aside class="notice">
-For examples of the POST_BODY see the different Jobs currently available for the Execute API.
+When the API finds a request to be invalid, it will return a BAD_REQUEST status code and a swagger document describing proper usage.
 </aside>
+
+When submitting a JSON payload, that payload will be evaluated directly for compliance with the request schema.
+
+When submitting a CONF payload, the API supports `include` expressions which allow you to:
+ - Specify audiences using the results of other People Pattern APIs.
+ - Specify audiences using any Apache Streams Provider class.
+ - Reuse or remix previously submitted configurations.
+
+<aside class="notice">
+For examples of proper calls to /configuration with and without `include` expressions, see the different Jobs currently available for the Execute API.
+</aside>
+
+## Execute
+
+This is the endpoint used to kick off jobs. To start a job, send an HTTP POST request to the execute endpoint for the job you want to run, specifying the configuration to use when launching the job.
 
 ### Resource URI
 
@@ -61,25 +82,21 @@ Execute Response     | [http://apidocs.peoplepattern.com/schemata/ExecuteRespons
 ### POST example (json)
 ```shell
 curl -X POST -H "Authorization: $MY_TOKEN" \
-  -H "Content-type: application/json" \
   -H "Accept: application/json" \
-  "https://api.peoplepattern.com/execute/{job_type}" \
-  -d '{POST_BODY}'
+  "https://api.peoplepattern.com/execute/{job_type}?configuration={configuration}"
 ```
 ```json
-{"execution":"{job_hash}","status":"SUBMITTED"}
+{"configuration": "{configuration}", "execution":12345, "status":"SUBMITTED"}
 ```
 
 ### POST example (hocon)
 ```shell
 curl -X POST -H "Authorization: $MY_TOKEN" \
-  -H "Content-type: application/hocon" \
   -H "Accept: application/json" \
-  "https://api.peoplepattern.com/execute/{job_type}" \
-  -d '{POST_BODY}'
+  "https://api.peoplepattern.com/execute/{job_type}?configuration={configuration}"
 ```
 ```json
-{"execution":"{job_hash}","status":"SUBMITTED"}
+{"configuration": "{configuration}", "execution":12345, "status":"SUBMITTED"}
 ```
 
 ## Estimate
@@ -102,10 +119,8 @@ The potential errors and warnings returned differ by job type.
 ### POST example
 ```shell
 curl -X POST -H "Authorization: $MY_TOKEN" \
-  -H "Content-type: {application/json} OR {application/hocon}" \
   -H "Accept: application/json" \
-  'https://api.peoplepattern.com/estimate/{job_type}' \
-  -d '{POST_BODY}'
+  'https://api.peoplepattern.com/estimate/{job_type}?configuration={configuration}'
 ```
 ```json
 {"valid": true, "runMs":300000, "waitMs":300000}
@@ -129,7 +144,7 @@ The Status endpoint used to check the status of jobs you've already started. To 
 
 ### Resource URI
 
-`/status?execution={job_hash}`
+`/status?configuration={configuration}&execution={execution}`
 
 ### Json Schema
 
@@ -141,15 +156,14 @@ Status Response     | [http://apidocs.peoplepattern.com/schemata/StatusResponse.
 ### GET example
 ```shell
 curl -X GET -H "Authorization: $MY_TOKEN" \
-  -H "Content-type: application/json" \
   -H "Accept: application/json" \
-  "https://api.peoplepattern.com/status?execution={job_hash}"
+  "https://api.peoplepattern.com/status?configuration={configuration}&execution={execution}"
 ```
 ```json
-{"execution":"{job_hash}","status":"RUNNING"}
+{"configuration": "{configuration}", "execution":12345, "status":"RUNNING"}
 ```
 ```json
-{"execution":"{job_hash}","status":"FINISHED"}
+{"configuration": "{configuration}", "execution":12345, "status":"FINISHED"}
 ```
 
 ## Result
@@ -216,22 +230,71 @@ type                  | schema URL
 AudienceInfluencersReportRequest      | [http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json](http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportRequest.json)
 AudienceInfluencersReportResult      | [http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json](http://apidocs.peoplepattern.com/schemata/AudienceInfluencersReportResult.json)
 
-### POST example (json)
+### POST example (JSON)
 ```shell
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
-  "https://api.peoplepattern.com/execute/AudienceInfluencers" \
-  -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
+  "https://api.peoplepattern.com/configuration/AudienceInfluencers" \
+  -d '{ "audience": {"items":["twitter:116679527","twitter:118710202", "twitter:119772680"]} }'
 ```
 
-### POST example (hocon)
+### POST example (CONF)
 ```shell
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/hocon" \
   -H "Accept: application/json" \
-  "https://api.peoplepattern.com/execute/AudienceInfluencers" \
-  -d 'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'
+  "https://api.peoplepattern.com/configuration/AudienceInfluencers" \
+  -d 'audience.items = ["twitter:116679527","twitter:118710202", "twitter:119772680"]'
+```
+
+### Audience Summary
+
+To get an Audience Summary report for a set of users, make an HTTP POST request to the [Audience Summary endpoint](#resource-uri-audience-summary).
+
+`/AudienceSummary`
+
+#### Json Schema
+
+type                  | schema URL
+----------------------|-----------
+AudienceSummaryReportRequest      | [http://apidocs.peoplepattern.com/schemata/AudienceSummaryReportRequest.json](http://apidocs.peoplepattern.com/schemata/AudienceSummaryReportRequest.json)
+AudienceSummaryReportResult      | [http://apidocs.peoplepattern.com/schemata/AudienceSummaryReportResult.json](http://apidocs.peoplepattern.com/schemata/AudienceSummaryReportResult.json)
+
+### POST example (JSON)
+```shell
+curl -X POST -H "Authorization: $MY_TOKEN" \
+  -H "Content-type: application/json" \
+  -H "Accept: application/json" \
+  "https://api.peoplepattern.com/configuration/AudienceSummary" \
+  -d '{ "audience": {"items":["twitter:116679527","twitter:118710202", "twitter:119772680"]} }'
+```
+
+### POST example (CONF)
+```shell
+curl -X POST -H "Authorization: $MY_TOKEN" \
+  -H "Content-type: application/hocon" \
+  -H "Accept: application/json" \
+  "https://api.peoplepattern.com/configuration/AudienceSummary" \
+  -d 'audience = { include url("https://api.peoplepattern.com/search?queryString=baseball&max_items=5000") }'
+```
+
+### POST example (CONF)
+```shell
+curl -X POST -H "Authorization: $MY_TOKEN" \
+  -H "Content-type: application/hocon" \
+  -H "Accept: application/json" \
+  "https://api.peoplepattern.com/configuration/AudienceSummary" \
+  -d 'audience = { include url("https://api.peoplepattern.com/panels/marketing") }'
+```
+
+### POST example (CONF)
+```shell
+curl -X POST -H "Authorization: $MY_TOKEN" \
+  -H "Content-type: application/hocon" \
+  -H "Accept: application/json" \
+  "https://api.peoplepattern.com/configuration/AudienceSummary" \
+  -d 'audience = { include "TwitterFollowingProvider?endpoint=followers&max_items=5000" }'
 ```
 
 ### External Influencers
@@ -247,7 +310,7 @@ type                  | schema URL
 ExternalInfluencersReportRequest      | [http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json](http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportRequest.json)
 ExternalInfluencersReportResult      | [http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json](http://apidocs.peoplepattern.com/schemata/ExternalInfluencersReportResult.json)
 
-### POST example (json)
+### POST example (JSON)
 ```shell
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
@@ -256,7 +319,7 @@ curl -X POST -H "Authorization: $MY_TOKEN" \
   -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
 ```
 
-### POST example (hocon)
+### POST example (CONF)
 ```shell
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/hocon" \
@@ -278,20 +341,20 @@ type                  | schema URL
 FollowerBreakdownReportRequest      | [http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json](http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportRequest.json)
 FollowerBreakdownReportResult      | [http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json](http://apidocs.peoplepattern.com/schemata/FollowerBreakdownReportResult.json)
 
-### POST example (json)
+### POST example (JSON)
 ```shell
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/json" \
   -H "Accept: application/json" \
   "https://api.peoplepattern.com/execute/FollowerBreakdown" \
-  -d '{"ids":["twitter:116679527","twitter:118710202", "twitter:119772680"]}'
+  -d '{"ids":["twitter:116679527"]}'
 ```
 
-### POST example (hocon)
+### POST example (CONF)
 ```shell
 curl -X POST -H "Authorization: $MY_TOKEN" \
   -H "Content-type: application/hocon" \
   -H "Accept: application/json" \
   "https://api.peoplepattern.com/execute/FollowerBreakdown" \
-  -d 'ids = ["twitter:116679528","twitter:118710202", "twitter:119772680"]'
+  -d 'ids = ["twitter:116679528"]'
 ```
